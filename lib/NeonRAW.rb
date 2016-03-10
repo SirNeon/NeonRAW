@@ -1,5 +1,8 @@
-require "NeonRAW/version"
+# rubocop:disable Style/FileName
+require 'NeonRAW/version'
 
+# le module
 module NeonRAW
-  # Your code goes here...
+  def self.new
+  end
 end
