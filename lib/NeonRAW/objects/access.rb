@@ -16,7 +16,9 @@ module NeonRAW
             instance_variable_set("@#{key}", value)
           end
         end
-        @expires_in = Time.now + 3600
+        # I have it expire 10 seconds early to give a small buffer
+        # for requests to avoid getting those icky 401 errors.
+        @expires_in = Time.now + 3590
       end
 
       # @!method expired?
