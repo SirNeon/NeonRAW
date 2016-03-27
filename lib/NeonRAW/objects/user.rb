@@ -5,8 +5,9 @@ module NeonRAW
       # rubocop:disable Metrics/MethodLength
       def initialize(data)
         data.each do |key, value|
-          self.class.send(:define_method, key)
-          instance_variable_set(:"@#{key}", value)
+          self.class.send(:define_method, key) do
+            instance_variable_set(:"@#{key}", value)
+          end
         end
 
         class << self
