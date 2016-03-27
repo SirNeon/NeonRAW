@@ -2,12 +2,23 @@ require 'faraday'
 require 'json'
 require_relative '../objects/subreddit'
 require_relative '../objects/user'
+require_relative '../objects/access'
 
 module NeonRAW
   # The underlying base for the client
   class Base
+    def headers
+      {
+        'User-Agent' => @user_agent,
+        'Authorization' => "bearer #{@access.access_token}"
+      }
+    end
+
     def connection
-      @connection ||= Faraday.new(url: 'https://www.reddit.com')
+      @connection ||= Faraday.new(
+        'https://oauth.reddit.com',
+        headers: headers
+      )
     end
 
     def auth_headers
@@ -19,7 +30,7 @@ module NeonRAW
 
     def auth_connection
       @auth_connection ||= Faraday.new(
-        url: 'https://oauth.reddit.com',
+        'https://www.reddit.com',
         headers: auth_headers
       )
     end
