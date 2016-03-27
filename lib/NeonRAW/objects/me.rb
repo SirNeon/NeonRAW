@@ -1,3 +1,5 @@
+require_relative 'user'
+
 module NeonRAW
   module Objects
     # le me object
@@ -44,7 +46,7 @@ module NeonRAW
     #   @return [Integer] Returns the comment karma of the user.
     # @!attribute [r] id
     #   @return [String] Returns the id of the user.
-    class Me
+    class Me < User
       # rubocop:disable Metrics/MethodLength
       def initialize(data)
         data.each do |key, value|
