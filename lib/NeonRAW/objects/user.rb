@@ -9,7 +9,6 @@ module NeonRAW
             instance_variable_set(:"@#{key}", value)
           end
         end
-
         class << self
           alias_method :friend?, :is_friend
           alias_method :gold?, :is_gold
