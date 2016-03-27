@@ -1,6 +1,7 @@
 require 'faraday'
 require 'json'
 require_relative '../objects/subreddit'
+require_relative '../objects/user'
 
 module NeonRAW
   # The underlying base for the client
@@ -34,6 +35,11 @@ module NeonRAW
     def get_subreddit(name)
       data = request_data("/r/#{name}/about.json")[:data]
       Objects::Subreddit.new(data)
+    end
+
+    def get_user(name)
+      data = request_data("/user/#{name}/about.json")[:data]
+      Objects::User.new(data)
     end
   end
 end
