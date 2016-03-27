@@ -14,12 +14,14 @@ module NeonRAW
     end
 
     def authorize!
-      auth_connection.post(
+      response = auth_connection.post(
         '/api/v1/access_token',
         grant_type: 'password',
         username: @username,
         password: @password
       )
+      data = JSON.parse(response.body, symbolize_names: true)
+      @access = Objects::Access.new(data)
     end
   end
 end
