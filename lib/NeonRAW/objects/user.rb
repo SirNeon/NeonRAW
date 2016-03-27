@@ -1,0 +1,28 @@
+module NeonRAW
+  module Objects
+    # le user object
+    class User
+      # rubocop:disable Metrics/MethodLength
+      def initialize(data)
+        data.each do |key, value|
+          self.class.send(:define_method, key)
+          instance_variable_set(:"@#{key}", value)
+        end
+
+        class << self
+          alias_method :employee?, :is_employee
+          alias_method :friend?, :is_friend
+          alias_method :suspended?, :is_suspended
+          alias_method :over_18?, :over_18
+          alias_method :gold?, :is_gold
+          alias_method :moderator?, :is_mod
+          alias_method :verified_email?, :has_verified_email
+          alias_method :modmail?, :has_mod_mail
+          alias_method :hide_from_robots?, :hide_from_robots
+          alias_method :mail?, :has_mail
+          alias_method :beta?, :in_beta
+        end
+      end
+    end
+  end
+end
