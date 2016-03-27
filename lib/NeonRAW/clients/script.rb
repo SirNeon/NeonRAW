@@ -11,6 +11,7 @@ module NeonRAW
       @secret = secret
       @redirect_uri = opts[:redirect_uri] || 'http://127.0.0.1:'
       @user_agent = opts[:user_agent] || "NeonRAW v#{NeonRAW::VERSION}"
+      authorize!
     end
 
     def authorize!
