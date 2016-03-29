@@ -21,7 +21,49 @@ module NeonRAW
     #   @return [Boolean] Returns whether or not you hid the submission.
     # @!attribute [r] selfpost?
     #   @return [Boolean] Returns whether or not the submission is a selfpost.
-    # @!attribute
+    # @!attribute [r] link_flair_css_class
+    #   @return [String, nil] Returns the CSS class for the submission's link
+    #     flair or nil if there is none.
+    # @!attribute [r] link_flair_text
+    #   @return [String, nil] Returns the Link flair's text or nil if there is
+    #     none.
+    # @!attribute [r] locked?
+    #   @return [Boolean] Returns whether or not the submission is locked.
+    # @!attribute [r] media
+    #   @return [Hash, nil] Returns an object containing information about a
+    #     video and its origins or nil if there is none.
+    # @!attribute [r] media_embed
+    #   @return [Hash, nil] Returns an object containing technical embed
+    #     information or nil if there is none.
+    # @!attribute [r] num_comments
+    #   @return [Integer] Returns the number of comments in the submission.
+    # @!attribute [r] nsfw?
+    #   @return [Boolean] Returns whether or not the post is flagged as NSFW.
+    # @!attribute [r] permalink
+    #   @return [String] Returns the permalink of the submission.
+    # @!attribute [r] saved?
+    #   @return [Boolean] Returns whether or not you saved the submission.
+    # @!attribute [r] score
+    #   @return [Integer] Returns the submission's karma score.
+    # @!attribute [r] selftext
+    #   @return [String, nil] Returns the text of selfposts or nil if there is
+    #     none.
+    # @!attribute [r] selftext_html
+    #   @return [String, nil] Returns the text of selfposts with HTML or nil if
+    #     there is none.
+    # @!attribute [r] subreddit
+    #   @return [String] Returns the subreddit the submission was posted to.
+    # @!attribute [r] subreddit_id
+    #   @return [String] Returns the ID of the subreddit where the submission
+    #     was posted to.
+    # @!attribute [r] thumbnail
+    #   @return [String, nil] Returns the URL to the thumbnail of the post or
+    #     nil if there is none.
+    # @!attribute [r] title
+    #   @return [String] Returns the title of the submission.
+    # @!attribute [r] url
+    #   @return [String] Either the URL submitted (link post) or the
+    #     submission's permalink (selfpost).
     class Submission < Thing
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
@@ -37,6 +79,9 @@ module NeonRAW
           alias_method :clicked?, :clicked
           alias_method :hidden?, :hidden
           alias_method :selfpost?, :is_self
+          alias_method :locked?, :locked
+          alias_method :nsfw?, :over_18
+          alias_method :saved?, :saved
         end
       end
 
