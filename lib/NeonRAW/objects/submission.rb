@@ -1,5 +1,3 @@
-require_relative '../clients/base'
-
 module NeonRAW
   module Objects
     # le submission object
