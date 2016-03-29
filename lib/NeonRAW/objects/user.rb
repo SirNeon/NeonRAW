@@ -56,7 +56,6 @@ module NeonRAW
       # @!method get_downvoted(params = { limit: 25 })
       # @!method get_hidden(params = { limit: 25 })
       # @!method get_saved(params = { limit: 25 })
-      # @param username [String] The username of the user.
       # @param params [Hash] The parameters for the request.
       # @option params :show [String] Show a listing type [overview, comments,
       #   submitted, gilded, upvoted, downvoted, hidden, saved]
