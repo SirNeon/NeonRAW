@@ -62,7 +62,7 @@ module NeonRAW
       # @param params [Hash] The parameters for the request.
       # @option params :show [String] Show a listing type [overview, comments,
       #   submitted, gilded, upvoted, downvoted, hidden, saved]
-      # @option params :sort [String] The sorting algorithm [hot, new top,
+      # @option params :sort [String] The sorting algorithm [hot, new, top,
       #   controversial]
       # @option params :t [String] The time for the relevance sort [hour, day,
       #   week, month, year, all]
@@ -71,7 +71,7 @@ module NeonRAW
       # @option params :before [String] The name of the previous data block.
       # @option params :count [Integer] The number of items already in the
       #   listing.
-      # @option params :limit [Integer] The number of listing items to fetch.
+      # @option params :limit [1..1000] The number of listing items to fetch.
       # @return [NeonRAW::Objects::Listing] Returns the listing object.
       %w(overview comments submitted gilded upvoted downvoted
          hidden saved).each do |type|

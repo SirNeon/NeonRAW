@@ -155,6 +155,7 @@ module NeonRAW
       # @option params :before [String] The name of the previous data block.
       # @option params :count [Integer] The number of items already in the
       #   listing.
+      # @option params :limit [1..1000] The number of items to fetch.
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns the listing object.
       %w(hot top old new controversial comments).each do |type|
