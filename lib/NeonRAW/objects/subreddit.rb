@@ -1,6 +1,7 @@
 require_relative '../objects/submission'
 require_relative '../objects/listing'
 require_relative '../objects/comment'
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
 module NeonRAW
   module Objects
@@ -114,8 +115,9 @@ module NeonRAW
     #   @return [String] Returns the type of submissions allowed
     #     to be posted [any, link, self].
     class Subreddit
-      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-
+      # @!method initialize(client, data)
+      # @param client [NeonRAW::Web/Installed/Script] The client object.
+      # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client
         data.each do |key, value|
