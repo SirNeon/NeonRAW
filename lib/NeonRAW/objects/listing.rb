@@ -3,9 +3,9 @@ module NeonRAW
     # le listing object
     class Listing < Array
       attr_reader :after, :before
-      def initialize
-        @after = ''
-        @before = ''
+      def initialize(after, before)
+        @after = after
+        @before = before
       end
     end
   end
