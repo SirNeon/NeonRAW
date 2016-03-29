@@ -30,11 +30,13 @@ module NeonRAW
     #   @return [String] Returns the id of the user.
     class User
       # rubocop:disable Metrics/MethodLength
-      def initialize(data)
+
+      def initialize(client, data)
+        @client = client
         data.each do |key, value|
-          self.class.send(:define_method, key) do
-            instance_variable_set(:"@#{key}", value)
-          end
+          value = nil if ['', [], {}].include?(value)
+          instance_variable_set(:"@#{key}", value)
+          self.class.send(:attr_reader, key)
         end
         class << self
           alias_method :friend?, :is_friend
@@ -42,6 +44,38 @@ module NeonRAW
           alias_method :moderator?, :is_mod
           alias_method :verified_email?, :has_verified_email
           alias_method :hide_from_robots?, :hide_from_robots
+        end
+      end
+
+      # Fetches a listing from a user.
+      # @!method get_overview(username, params = { limit: 25 })
+      # @!method get_comments(username, params = { limit: 25 })
+      # @!method get_submitted(username, params = { limit: 25 })
+      # @!method get_gilded(username, params = { limit: 25 })
+      # @!method get_upvoted(username, params = { limit: 25 })
+      # @!method get_downvoted(username, params = { limit: 25 })
+      # @!method get_hidden(username, params = { limit: 25 })
+      # @!method get_saved(username, params = { limit: 25 })
+      # @param username [String] The username of the user.
+      # @param params [Hash] The parameters for the request.
+      # @option params :show [String] Show a listing type [overview, comments,
+      #   submitted, gilded, upvoted, downvoted, hidden, saved]
+      # @option params :sort [String] The sorting algorithm [hot, new top,
+      #   controversial]
+      # @option params :t [String] The time for the relevance sort [hour, day,
+      #   week, month, year, all]
+      # @option params :username [String] The username of an existing user.
+      # @option params :after [String] The name of the next data block.
+      # @option params :before [String] The name of the previous data block.
+      # @option params :count [Integer] The number of items already in the
+      #   listing.
+      # @option params :limit [Integer] The number of listing items to fetch.
+      # @return [NeonRAW::Objects::Listing] Returns the listing object.
+      %w(overview comments submitted gilded upvoted downvoted
+         hidden saved).each do |type|
+        define_method :"get_#{type}" do |params = { limit: 25 }|
+          path = "/user/#{name}/#{type}/.json"
+          @client.send(:build_listing, path, params)
         end
       end
     end
