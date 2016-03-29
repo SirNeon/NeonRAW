@@ -48,14 +48,14 @@ module NeonRAW
       end
 
       # Fetches a listing from a user.
-      # @!method get_overview(username, params = { limit: 25 })
-      # @!method get_comments(username, params = { limit: 25 })
-      # @!method get_submitted(username, params = { limit: 25 })
-      # @!method get_gilded(username, params = { limit: 25 })
-      # @!method get_upvoted(username, params = { limit: 25 })
-      # @!method get_downvoted(username, params = { limit: 25 })
-      # @!method get_hidden(username, params = { limit: 25 })
-      # @!method get_saved(username, params = { limit: 25 })
+      # @!method get_overview(params = { limit: 25 })
+      # @!method get_comments(params = { limit: 25 })
+      # @!method get_submitted(params = { limit: 25 })
+      # @!method get_gilded(params = { limit: 25 })
+      # @!method get_upvoted(params = { limit: 25 })
+      # @!method get_downvoted(params = { limit: 25 })
+      # @!method get_hidden(params = { limit: 25 })
+      # @!method get_saved(params = { limit: 25 })
       # @param username [String] The username of the user.
       # @param params [Hash] The parameters for the request.
       # @option params :show [String] Show a listing type [overview, comments,
