@@ -1,13 +1,15 @@
+require_relative '../clients/base'
+
 module NeonRAW
   module Objects
     # le submission object
     class Submission
-      def initialize(data)
+      def initialize(client, data)
+        @client = client
         data.each do |key, value|
-          value = nil if value == ''
-          self.class.send(:define_method, key) do
-            instance_variable_set(:"@#{key}", value)
-          end
+          value = nil if ['', [], {}].include?(value)
+          instance_variable_set(:"@#{key}", value)
+          self.class.send(:attr_reader, key)
         end
       end
 
@@ -20,8 +22,7 @@ module NeonRAW
         params[:api_type] = 'json'
         params[:thing_id] = name
         params[:text] = text
-        data = request_data('/api/comment', 'post', params)
-        JSON.parse(data.body, symbolize_names: true)
+        @client.request_data('/api/comment', 'post', params)
       end
     end
   end
