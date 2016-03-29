@@ -19,13 +19,18 @@ module NeonRAW
     # @!attribute [r] over_18?
     #   @return [Boolean] Returns whether or not you can view adult
     #     content.
+    # @!attribute [r] inbox_count
+    #   @return [Integer] Returns the number of unread messages
+    #     in your inbox.
     class Me < User
-      # rubocop:disable Metrics/MethodLength
-      def initialize(data)
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+
+      def initialize(client, data)
+        @client = client
         data.each do |key, value|
-          self.class.send(:define_method, key) do
-            instance_variable_set("@#{key}", value)
-          end
+          value = nil if ['', [], {}].include?(value)
+          instance_variable_set(:"@#{key}", value)
+          self.class.send(:attr_reader, key)
         end
         class << self
           alias_method :employee?, :is_employee
