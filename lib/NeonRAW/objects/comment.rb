@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/MethodLength
+
 module NeonRAW
   module Objects
     # le comment object
@@ -63,8 +65,9 @@ module NeonRAW
     #   @return [String, nil] Returns who distinguished the comment or nil if
     #     the comment isn't distinguished [moderator, admin, special].
     class Comment
-      # rubocop:disable Metrics/MethodLength
-
+      # @!method initialize(client, data)
+      # @param client [NeonRAW::Web/Installed/Script] The client object.
+      # @param data [Hash] The comment data.
       def initialize(client, data)
         @client = client
         data.each do |key, value|
