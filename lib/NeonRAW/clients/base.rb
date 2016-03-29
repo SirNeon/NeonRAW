@@ -73,7 +73,7 @@ module NeonRAW
     def build_listing(path, params)
       data_arr = []
       until data_arr.length == params[:limit]
-        data = request_data(path, 'get', params)
+        data = request_data(path, :get, params)
         params[:after] = data[:data][:after]
         params[:before] = data[:data][:before]
         data[:data][:children].each do |item|
