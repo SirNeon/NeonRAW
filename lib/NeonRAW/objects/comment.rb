@@ -62,9 +62,6 @@ module NeonRAW
     # @!attribute [r] subreddit_id
     #   @return [String] Returns the ID of the subreddit where the comment was
     #     posted to.
-    # @!attribute [r] distinguished_by
-    #   @return [String, nil] Returns who distinguished the comment or nil if
-    #     the comment isn't distinguished [moderator, admin, special].
     class Comment < Thing
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
@@ -81,39 +78,6 @@ module NeonRAW
           alias_method :gold_count, :gilded
           alias_method :saved?, :saved
           alias_method :score_hidden?, :score_hidden
-          alias_method :distinguished_by, :distinguished
-        end
-      end
-
-      # Checks whether or not the comment was edited.
-      # @!method edited?
-      # @return [Boolean] Returns whether or not the comment was edited.
-      def edited?
-        if @edited != false
-          true
-        else
-          false
-        end
-      end
-
-      # Gets the timestamp of the comment's lastest edit.
-      # @!method last_edit
-      # @return [Float, nil] Returns the UNIX timestamp of the edit or nil if
-      #   the comment hasn't been edited.
-      # @note If you crawl some old comments on /r/reddit.com this may return
-      #   true instead of the timestamp.
-      def last_edit
-        nil || @edited if @edited != false
-      end
-
-      # Checks whether a comment was gilded or not.
-      # @!method gilded?
-      # @return [Boolean] Returns whether or not the comment was gilded.
-      def gilded?
-        if @gilded > 0
-          true
-        else
-          false
         end
       end
 
@@ -139,18 +103,6 @@ module NeonRAW
           data_arr << Comment.new(@client, reply[:data])
         end
         data_arr
-      end
-
-      # Checks whether or not the comment was distinguished by a privileged
-      # user.
-      # @!method distinguished?
-      # @return [Boolean] Returns whether or not the comment was distinguished.
-      def distinguished?
-        if @distinguished.nil?
-          false
-        else
-          true
-        end
       end
 
       # Replies to a comment.
