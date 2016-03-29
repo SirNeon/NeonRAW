@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/MethodLength
+
 module NeonRAW
   module Objects
     # le user object
@@ -29,8 +31,9 @@ module NeonRAW
     # @!attribute [r] id
     #   @return [String] Returns the id of the user.
     class User
-      # rubocop:disable Metrics/MethodLength
-
+      # @!method initialize(client, data)
+      # @param client [NeonRAW::Web/Installed/Script] The client object.
+      # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client
         data.each do |key, value|

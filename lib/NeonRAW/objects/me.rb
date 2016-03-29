@@ -1,4 +1,5 @@
 require_relative 'user'
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
 module NeonRAW
   module Objects
@@ -23,8 +24,9 @@ module NeonRAW
     #   @return [Integer] Returns the number of unread messages
     #     in your inbox.
     class Me < User
-      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-
+      # @!method initialize(client, data)
+      # @param client [NeonRAW::Web/Installed/Script] The client object.
+      # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client
         data.each do |key, value|
