@@ -1,9 +1,9 @@
 module NeonRAW
   # Methods for objects that you can cast votes on.
   module Votable
-    # Checks whether you voted on the comment.
+    # Checks whether you voted on the thing.
     # @!method voted?
-    # @return [Boolean] Returns whether or not you voted on the comment.
+    # @return [Boolean] Returns whether or not you voted on the thing.
     def voted?
       if @likes.nil?
         false
@@ -12,9 +12,9 @@ module NeonRAW
       end
     end
 
-    # Checks whether or not you upvoted the comment.
+    # Checks whether or not you upvoted the thing.
     # @!method upvoted?
-    # @return [Boolean] Returns whether or not you upvoted the comment.
+    # @return [Boolean] Returns whether or not you upvoted the thing.
     def upvoted?
       if @likes == true
         true
@@ -23,9 +23,9 @@ module NeonRAW
       end
     end
 
-    # Checks whether or not you downvoted the comment.
+    # Checks whether or not you downvoted the thing.
     # @!method downvoted?
-    # @return [Boolean] Returns whether or not you downvoted the comment.
+    # @return [Boolean] Returns whether or not you downvoted the thing.
     def downvoted?
       if @likes == false
         true
