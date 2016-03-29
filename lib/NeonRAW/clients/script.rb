@@ -19,11 +19,8 @@ module NeonRAW
     # @!method authorize!
     # @!method refresh_access!
     def authorize!
-      # When the access gets refreshed the api_connection needs to
-      # also be reset so it can use the new api_headers.
-      @api_connection = nil
-      response = auth_connection.post(
-        '/api/v1/access_token',
+      response = auth_connection(
+        '/api/v1/access_token', :post,
         grant_type: 'password',
         username: @username,
         password: @password

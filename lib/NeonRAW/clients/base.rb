@@ -1,4 +1,4 @@
-require 'faraday'
+require 'typhoeus'
 require 'json'
 require_relative '../objects/subreddit'
 require_relative '../objects/user'
@@ -18,35 +18,35 @@ module NeonRAW
       }
     end
 
-    # Creates the connection for oAuth2 requests.
-    # @!method api_connection
-    # @return [Faraday::Connection] Returns the connection.
-    def api_connection
-      @api_connection ||= Faraday.new(
-        'https://oauth.reddit.com',
-        headers: api_headers
-      )
+    # Connects to Reddit for oAuth2 requests.
+    # @!method api_connection(path, meth, params)
+    # @param path [String] The API path.
+    # @param meth [Symbol] The request method.
+    # @param params [Hash] The parameters.
+    # @return [Typhoeus::Response] Returns the response.
+    def api_connection(path, meth, params)
+      Typhoeus::Request.new(
+        'https://oauth.reddit.com' + path,
+        method: meth,
+        headers: api_headers,
+        params: params
+      ).run
     end
 
-    # Creates the headers used to authenticate your account
-    # via oAuth2.
-    # @!method auth_headers
-    # @return [Hash] Returns the headers.
-    def auth_headers
-      {
-        'User-Agent' => @user_agent,
-        'Authorization' => Faraday.basic_auth(@client_id, @secret)
-      }
-    end
-
-    # Creates the connection used to authorize the client.
-    # @!method auth_connection
-    # @return [Faraday::Connection] Returns the connection.
-    def auth_connection
-      @auth_connection ||= Faraday.new(
-        'https://www.reddit.com',
-        headers: auth_headers
-      )
+    # Makes the connection used to authorize the client.
+    # @!method auth_connection(path, meth, params)
+    # @param path [String] The API path.
+    # @param meth [Symbol] The request method.
+    # @param params [Hash] The parameters.
+    # @return [Typhoeus::Response] Returns the response.
+    def auth_connection(path, meth, params)
+      Typhoeus::Request.new(
+        'https://www.reddit.com' + path,
+        method: meth,
+        userpwd: "#{@client_id}:#{@secret}",
+        headers: { 'User-Agent' => @user_agent },
+        params: params
+      ).run
     end
 
     # Requests data from Reddit.
@@ -58,10 +58,7 @@ module NeonRAW
     #   the data.
     def request_data(path, meth, params = {})
       refresh_access! if @access.expired?
-      data = api_connection.send :"#{meth}" do |req|
-        req.url(path)
-        req.params = params
-      end
+      data = api_connection(path, meth, params)
       sleep(1) # API rate limit
       JSON.parse(data.body, symbolize_names: true)
     end
@@ -96,12 +93,12 @@ module NeonRAW
     end
 
     def get_subreddit(name)
-      data = request_data("/r/#{name}/about.json", 'get')[:data]
+      data = request_data("/r/#{name}/about.json", :get)[:data]
       Objects::Subreddit.new(self, data)
     end
 
     def get_user(name)
-      data = request_data("/user/#{name}/about.json", 'get')[:data]
+      data = request_data("/user/#{name}/about.json", :get)[:data]
       Objects::User.new(self, data)
     end
 
