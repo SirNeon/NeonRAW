@@ -1,3 +1,4 @@
+require_relative 'thing'
 # rubocop:disable Metrics/MethodLength
 
 module NeonRAW
@@ -64,7 +65,7 @@ module NeonRAW
     # @!attribute [r] distinguished_by
     #   @return [String, nil] Returns who distinguished the comment or nil if
     #     the comment isn't distinguished [moderator, admin, special].
-    class Comment
+    class Comment < Thing
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
       # @param data [Hash] The comment data.
@@ -110,39 +111,6 @@ module NeonRAW
       # @return [Boolean] Returns whether or not the comment was gilded.
       def gilded?
         if @gilded > 0
-          true
-        else
-          false
-        end
-      end
-
-      # Checks whether you voted on the comment.
-      # @!method voted?
-      # @return [Boolean] Returns whether or not you voted on the comment.
-      def voted?
-        if @likes.nil?
-          false
-        else
-          true
-        end
-      end
-
-      # Checks whether or not you upvoted the comment.
-      # @!method upvoted?
-      # @return [Boolean] Returns whether or not you upvoted the comment.
-      def upvoted?
-        if @likes == true
-          true
-        else
-          false
-        end
-      end
-
-      # Checks whether or not you downvoted the comment.
-      # @!method downvoted?
-      # @return [Boolean] Returns whether or not you downvoted the comment.
-      def downvoted?
-        if @likes == false
           true
         else
           false

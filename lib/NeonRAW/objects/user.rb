@@ -1,3 +1,4 @@
+require_relative 'thing'
 # rubocop:disable Metrics/MethodLength
 
 module NeonRAW
@@ -30,7 +31,7 @@ module NeonRAW
     #   @return [Integer] Returns the comment karma of the user.
     # @!attribute [r] id
     #   @return [String] Returns the id of the user.
-    class User
+    class User < Thing
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
       # @param data [Hash] The object data.
