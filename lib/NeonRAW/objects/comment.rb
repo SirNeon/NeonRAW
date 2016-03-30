@@ -23,7 +23,7 @@ module NeonRAW
     #     there isn't one.
     # @!attribute [r] body_html
     #   @return [String, nil] Returns the text body of the comment with HTML or
-    #   nil if there isn't one.
+    #     nil if there isn't one.
     # @!attribute [r] gold_count
     #   @return [Integer] Returns the amount of gold a comment has been given.
     # @!attribute [r] link_author
