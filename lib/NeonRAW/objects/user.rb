@@ -81,6 +81,16 @@ module NeonRAW
           @client.send(:build_listing, path, params)
         end
       end
+
+      # Give gold to a user.
+      # @!method give_gold(months)
+      # @param [1..36]
+      def give_gold(months)
+        params = {}
+        params[:months] = months
+        @client.request_data("/api/v1/gold/give/#{name}", :post, params)
+        update_gild_count(months)
+      end
     end
   end
 end
