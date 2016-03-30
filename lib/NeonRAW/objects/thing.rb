@@ -3,6 +3,7 @@ require_relative 'thing/editable'
 require_relative 'thing/moderateable'
 require_relative 'thing/gildable'
 require_relative 'thing/createable'
+require_relative 'thing/saveable'
 
 module NeonRAW
   module Objects
@@ -15,6 +16,7 @@ module NeonRAW
       include Editable
       include Gildable
       include Moderateable
+      include Saveable
       include Votable
     end
   end
