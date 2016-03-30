@@ -8,6 +8,8 @@ module NeonRAW
     # @!attribute [r] scope
     #   @return [String] Returns the scope where the token is valid.
     # @!attribute [r] expires_in
+    #   @return [Time] Returns how long until the token expires.
+    # @!attribute [r] expires_at
     #   @return [Time] Returns when the token expires.
     class Access
       def initialize(data)
