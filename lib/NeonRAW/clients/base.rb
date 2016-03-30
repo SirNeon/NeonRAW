@@ -4,10 +4,13 @@ require_relative '../objects/subreddit'
 require_relative '../objects/user'
 require_relative '../objects/me'
 require_relative '../objects/access'
+require_relative '../error'
 
 module NeonRAW
   # The underlying base for the client
   class Base
+    include Error
+
     # Creates headers for oAuth2 requests.
     # @!method api_headers
     # @return [Hash] Returns oAuth2 headers.
@@ -25,12 +28,15 @@ module NeonRAW
     # @param params [Hash] The parameters.
     # @return [Typhoeus::Response] Returns the response.
     def api_connection(path, meth, params)
-      Typhoeus::Request.new(
+      response = Typhoeus::Request.new(
         'https://oauth.reddit.com' + path,
         method: meth,
         headers: api_headers,
         params: params
       ).run
+      error = assign_errors(response)
+      fail error unless error.nil?
+      handle_ratelimit(response.headers)
     end
 
     # Makes the connection used to authorize the client.
@@ -40,13 +46,16 @@ module NeonRAW
     # @param params [Hash] The parameters.
     # @return [Typhoeus::Response] Returns the response.
     def auth_connection(path, meth, params)
-      Typhoeus::Request.new(
+      response = Typhoeus::Request.new(
         'https://www.reddit.com' + path,
         method: meth,
         userpwd: "#{@client_id}:#{@secret}",
         headers: { 'User-Agent' => @user_agent },
         params: params
       ).run
+      error = assign_errors(response)
+      fail error unless error.nil?
+      handle_ratelimit(response.headers)
     end
 
     # Requests data from Reddit.
@@ -59,7 +68,6 @@ module NeonRAW
     def request_data(path, meth, params = {})
       refresh_access! if @access.expired?
       data = api_connection(path, meth, params)
-      sleep(1) # API rate limit
       JSON.parse(data.body, symbolize_names: true)
     end
 
@@ -79,8 +87,7 @@ module NeonRAW
         data[:data][:children].each do |item|
           if item[:kind] == 't3'
             data_arr << Objects::Submission.new(self, item[:data])
-          end
-          if item[:kind] == 't1'
+          elsif item[:kind] == 't1'
             data_arr << Objects::Comment.new(self, item[:data])
           end
           break if data_arr.length == params[:limit]
