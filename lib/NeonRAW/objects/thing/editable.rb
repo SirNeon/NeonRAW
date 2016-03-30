@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+
 module NeonRAW
   # Methods for editing.
   module Editable
@@ -30,7 +32,17 @@ module NeonRAW
       params[:api_type] = 'json'
       params[:text] = text
       params[:thing_id] = name
-      @client.request_data('/api/editusertext', :post, params)
+      data = @client.request_data('/api/editusertext', :post, params)
+      if name[0..1] == 't1'
+        # Could this data structure be more convoluted? Like really now.
+        body = data[:json][:data][:things][0][:data][:body]
+        body_html = data[:json][:data][:things][0][:data][:body_html]
+        update_text_body(name[0..1], body, body_html)
+      elsif name[0..1] == 't3'
+        selftext = data[:json][:data][:things][0][:data][:selftext]
+        selftext_html = data[:json][:data][:things][0][:data][:selftext_html]
+        update_text_body(name[0..1], selftext, selftext_html)
+      end
     end
 
     # Updates the text body of the thing.
