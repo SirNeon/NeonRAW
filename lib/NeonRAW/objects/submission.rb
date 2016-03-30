@@ -1,5 +1,7 @@
 require_relative 'thing'
-# rubocop:disable Metrics/MethodLength
+require_relative 'comment'
+require_relative 'morecomments'
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
 module NeonRAW
   module Objects
@@ -84,6 +86,43 @@ module NeonRAW
           alias_method :nsfw?, :over_18
           alias_method :saved?, :saved
         end
+      end
+
+      # Fetches the comments for a submission.
+      # @!method comments
+      # @return [Array] Returns an array full of Comments and MoreComments
+      #   objects.
+      def comments
+        data = @client.request_data(permalink + '.json', :get)
+        data_arr = []
+        data[1][:data][:children].each do |comment|
+          if comment[:kind] == 't1'
+            data_arr << Objects::Comment.new(@client, comment[:data])
+          elsif comment[:kind] == 'more'
+            data_arr << Objects::MoreComments.new(@client, comment[:data])
+          end
+        end
+        data_arr
+      end
+
+      # Flattens comment trees into a single array.
+      # @!method flatten_comments(comments)
+      # @param comments [Array] A list of comments to be checked for replies to
+      #   flatten.
+      # @return [Array] Returns a list of the flattened comments.
+      def flatten_comments(comments)
+        flattened = []
+        stack = comments.dup
+
+        until stack.empty?
+          comment = stack.shift
+          if comment.is_a?(Comment)
+            replies = comment.replies
+            stack = replies + stack unless replies.nil?
+          end
+          flattened << comment
+        end
+        flattened
       end
 
       # Adds a comment to the submission.
