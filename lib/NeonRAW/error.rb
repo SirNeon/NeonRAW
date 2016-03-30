@@ -106,6 +106,10 @@ module NeonRAW
     # You don't have the right scope to perform the request.
     InvalidScope = Class.new(StandardError)
 
+    # The thing you requested wasn't found. Could also mean that a user has
+    # been shadowbanned or a subreddit has been banned.
+    NotFound = Class.new(StandardError)
+
     # No access token was given.
     NoTokenGiven = Class.new(StandardError)
 
