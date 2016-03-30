@@ -42,8 +42,8 @@ module NeonRAW
             update_text_body(name[0..1], body, body_html)
           elsif name[0..1] == 't3'
             selftext = data[:json][:data][:things][0][:data][:selftext]
-            selftext_html = data[:json][:data][:things][0]
-            [:data][:selftext_html]
+            selftext_html =
+              data[:json][:data][:things][0][:data][:selftext_html]
             update_text_body(name[0..1], selftext, selftext_html)
           end
         end
