@@ -12,19 +12,18 @@ module NeonRAW
     class Access
       def initialize(data)
         data.each do |key, value|
-          self.class.send(:define_method, key) do
-            instance_variable_set("@#{key}", value)
-          end
+          instance_variable_set("@#{key}", value)
+          self.class.send(:attr_reader, key)
         end
         # I have it expire 10 seconds early to give a small buffer
         # for requests to avoid getting those icky 401 errors.
-        @expires_in = Time.now + 3590
+        @expires_at = Time.now + 3590
       end
 
       # @!method expired?
       # @return [Boolean] Returns whether or not the token is expired.
       def expired?
-        Time.now > @expires_in
+        Time.now > @expires_at
       end
     end
   end
