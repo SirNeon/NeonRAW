@@ -6,8 +6,8 @@ module NeonRAW
         # Saves the thing.
         # @!method save(opts = {})
         # @param opts [Hash] Stores optional parameters.
-        # @option opts :category [String] The category you want to save to.
-        #   @note Only works if you have Reddit gold.
+        # @option opts :category [String] The category you want to save to
+        #   (Reddit Gold Feature).
         def save(opts = {})
           params[:category] = opts[:category] if opts[:category]
           params[:id] = name
