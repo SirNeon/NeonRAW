@@ -53,8 +53,8 @@ module NeonRAW
     # @!method handle_ratelimit(headers)
     # @param headers [Hash] The Typhoeus response headers.
     def handle_ratelimit(headers)
-      requests_remaining = headers['X-Ratelimit-Remaining']
-      ratelimit_reset = headers['X-Ratelimit-Reset']
+      requests_remaining = headers['X-Ratelimit-Remaining'].to_i
+      ratelimit_reset = headers['X-Ratelimit-Reset'].to_i
       sleep(ratelimit_reset) unless requests_remaining > 0
     end
 
