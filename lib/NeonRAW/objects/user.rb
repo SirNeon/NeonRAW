@@ -79,7 +79,7 @@ module NeonRAW
 
       # Give gold to a user.
       # @!method give_gold(months)
-      # @param [1..36]
+      # @param months [1..36]
       def give_gold(months)
         params = {}
         params[:months] = months
