@@ -2,6 +2,10 @@ module NeonRAW
   module Objects
     class Thing
       # Methods for objects that you can cast votes on.
+      # @!attribute [r] ups
+      #   @return [Integer] Returns the number of upvotes the thing has.
+      # @!attribute [r] downs
+      #   @return [Integer] Returns the number of downvotes the thing has.
       module Votable
         # Checks whether you voted on the thing.
         # @!method voted?
