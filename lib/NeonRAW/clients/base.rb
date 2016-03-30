@@ -37,6 +37,7 @@ module NeonRAW
       error = assign_errors(response)
       fail error unless error.nil?
       handle_ratelimit(response.headers)
+      response
     end
 
     # Makes the connection used to authorize the client.
@@ -55,7 +56,7 @@ module NeonRAW
       ).run
       error = assign_errors(response)
       fail error unless error.nil?
-      handle_ratelimit(response.headers)
+      response
     end
 
     # Requests data from Reddit.
