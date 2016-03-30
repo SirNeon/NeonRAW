@@ -71,7 +71,7 @@ module NeonRAW
         data.each do |key, value|
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
-          next if key == :created || key == :created_utc
+          next if key == :created || key == :created_utc || key == :replies
           self.class.send(:attr_reader, key)
         end
         class << self
@@ -95,13 +95,17 @@ module NeonRAW
 
       # Gets the replies made to the comment.
       # @!method replies
-      # @return [Array, nil] Returns either a list of the comments or nil if
-      #   there were no replies.
+      # @return [Array, nil] Returns either a list of the Comments/MoreComments
+      #   or nil if there were no replies.
       def replies
         return nil if @replies.nil?
         data_arr = []
         @replies[:data][:children].each do |reply|
-          data_arr << Comment.new(@client, reply[:data])
+          if reply[:kind] == 't1'
+            data_arr << Comment.new(@client, reply[:data])
+          elsif reply[:kind] == 'more'
+            data_arr << MoreComments.new(@client, reply[:data])
+          end
         end
         data_arr
       end
