@@ -64,6 +64,14 @@ module NeonRAW
           end
           @edited = true
         end
+
+        # Deletes the thing.
+        # @!method delete!
+        def delete!
+          params = {}
+          params[:id] = name
+          @client.request_data('/api/del', :post, params)
+        end
         private :update_text_body
       end
     end
