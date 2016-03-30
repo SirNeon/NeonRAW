@@ -97,6 +97,13 @@ module NeonRAW
         params[:thing_id] = name
         @client.request_data('/api/comment', :post, params)
       end
+
+      # The submission's shortlink.
+      # @!method shortlink
+      # @return [String] Returns the submission's shortlink.
+      def shortlink
+        "https://redd.it/#{id}"
+      end
     end
   end
 end
