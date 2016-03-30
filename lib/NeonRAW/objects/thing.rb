@@ -2,6 +2,7 @@ require_relative 'thing/votable'
 require_relative 'thing/editable'
 require_relative 'thing/moderateable'
 require_relative 'thing/gildable'
+require_relative 'thing/createable'
 
 module NeonRAW
   module Objects
@@ -10,6 +11,7 @@ module NeonRAW
       class << self
         public :define_method
       end
+      include Createable
       include Editable
       include Gildable
       include Moderateable

@@ -73,6 +73,7 @@ module NeonRAW
         data.each do |key, value|
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
+          next if key == :created || key == :created_utc
           self.class.send(:attr_reader, key)
         end
         class << self

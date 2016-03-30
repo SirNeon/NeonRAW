@@ -19,12 +19,6 @@ module NeonRAW
     #     want web crawlers indexing their profile page.
     # @!attribute [r] name
     #   @return [String] Returns the user's name.
-    # @!attribute [r] created
-    #   @return [Float] Returns when the user's account was created
-    #     (UNIX timestamp)
-    # @!attribute [r] created_utc
-    #   @return [Float] Returns when the user's account was created
-    #     in UTC (UNIX timestamp).
     # @!attribute [r] link_karma
     #   @return [Integer] Returns the link karma of the user.
     # @!attribute [r] comment_karma
@@ -40,6 +34,7 @@ module NeonRAW
         data.each do |key, value|
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
+          next if key == :created || key == :created_utc
           self.class.send(:attr_reader, key)
         end
         class << self

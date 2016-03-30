@@ -1,6 +1,7 @@
 require_relative '../objects/submission'
 require_relative '../objects/listing'
 require_relative '../objects/comment'
+require_relative '../objects/thing'
 # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
 module NeonRAW
@@ -97,12 +98,6 @@ module NeonRAW
     #   @return [String] Returns the subreddit's primary language.
     # @!attribute [r] name
     #   @return [String] Returns the subreddit's name.
-    # @!attribute [r] created
-    #   @return [Float] Returns the time when the subreddit was
-    #     created (UNIX timestamp).
-    # @!attribute [r] created_utc
-    #   @return [Float] Returns the time when the subreddit was
-    #     created in UTC (UNIX timestamp).
     # @!attribute [r] url
     #   @return [String] Returns the subreddit's URL.
     # @!attribute [r] comment_score_hide_mins
@@ -115,6 +110,8 @@ module NeonRAW
     #   @return [String] Returns the type of submissions allowed
     #     to be posted [any, link, self].
     class Subreddit
+      include Thing::Createable
+
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
       # @param data [Hash] The object data.
@@ -123,6 +120,7 @@ module NeonRAW
         data.each do |key, value|
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
+          next if key == :created || key == :created_utc
           self.class.send(:attr_reader, key)
         end
         class << self
