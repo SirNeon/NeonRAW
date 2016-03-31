@@ -15,21 +15,21 @@ module NeonRAW
       case code
       when 200
         case body
-        when /access_denied/i then OAuth2AccessDenied
+        when /access_denied/i             then OAuth2AccessDenied
         when /unsupported_response_type/i then InvalidResponseType
-        when /unsupported_grant_type/i then InvalidGrantType
-        when /invalid_scope/i then InvalidScope
-        when /invalid_request/i then InvalidRequest
-        when /no_text/i then NoTokenGiven
-        when /invalid_grant/i then ExpiredCode
-        when /wrong_password/i then InvalidCredentials
-        when /bad_captcha/i then InvalidCaptcha
-        when /ratelimit/i then RateLimited
-        when /quota_filled/i then QuotaFilled
-        when /bad_css_name/i then InvalidClassName
-        when /too_old/i then Archived
-        when /too_much_flair_css/i then TooManyClassNames
-        when /user_required/i then AuthenticationRequired
+        when /unsupported_grant_type/i    then InvalidGrantType
+        when /invalid_scope/i             then InvalidScope
+        when /invalid_request/i           then InvalidRequest
+        when /no_text/i                   then NoTokenGiven
+        when /invalid_grant/i             then ExpiredCode
+        when /wrong_password/i            then InvalidCredentials
+        when /bad_captcha/i               then InvalidCaptcha
+        when /ratelimit/i                 then RateLimited
+        when /quota_filled/i              then QuotaFilled
+        when /bad_css_name/i              then InvalidClassName
+        when /too_old/i                   then Archived
+        when /too_much_flair_css/i        then TooManyClassNames
+        when /user_required/i             then AuthenticationRequired
         else nil # no exception to be raised
         end
       when 302 then UnexpectedRedirect
@@ -60,85 +60,188 @@ module NeonRAW
     end
 
     # Thing is archived and can't be edited/replied to.
-    Archived = Class.new(StandardError)
+    class Archived < StandardError
+      def initialize(msg = 'This thing is too old to edit/reply to.')
+        super(msg)
+      end
+    end
 
     # Client needs to be authorized.
-    AuthenticationRequired = Class.new(StandardError)
+    class AuthenticationRequired < StandardError
+      def initialize(msg = 'The client must be authorized to do that.')
+        super(msg)
+      end
+    end
 
     # Reddit's server's are shitting themselves.
-    BadGateway = Class.new(StandardError)
+    class BadGateway < StandardError
+      def initialize(msg = "Reddit's server's are experiencing technical difficulties. Try again later.")
+        super(msg)
+      end
+    end
 
     # The request you sent to the API endpoint was bad.
-    BadRequest = Class.new(StandardError)
+    class BadRequest < StandardError
+      def initialize(msg = 'The request you sent was incorrect. Please fix it.')
+        super(msg)
+      end
+    end
 
     # Request couldn't be processed because of conflict in the request, like if
     # there was multiple simultaneous updates.
-    Conflict = Class.new(StandardError)
+    class Conflict < StandardError
+      def initialize(msg = "Your request couldn't be processed because of a conflict in the request.")
+        super(msg)
+      end
+    end
 
     # You already received an access token using this code. They're only good
     # for one use.
-    ExpiredCode = Class.new(StandardError)
+    class ExpiredCode < StandardError
+      def initialize(msg = 'The code used to get the access token has expired.')
+        super(msg)
+      end
+    end
 
     # Reddit's server's are shitting themselves.
-    InternalServerError = Class.new(StandardError)
+    class InternalServerError < StandardError
+      def initialize(msg = "Reddit's server's are experiencing technical difficulties. Try again later.")
+        super(msg)
+      end
+    end
 
     # You got the captcha wrong.
-    InvalidCaptcha = Class.new(StandardError)
+    class InvalidCaptcha < StandardError
+      def initialize(msg = 'Invalid captcha.')
+        super(msg)
+      end
+    end
 
     # You got the requested CSS class name wrong.
-    InvalidClassName = Class.new(StandardError)
+    class InvalidClassName < StandardError
+      def initialize(msg = 'Invalid CSS class name.')
+        super(msg)
+      end
+    end
 
     # Your username/password is wrong.
-    InvalidCredentials = Class.new(StandardError)
+    class InvalidCredentials < StandardError
+      def initialize(msg = 'Invalid username/password')
+        super(msg)
+      end
+    end
 
     # Your grant_type is wrong.
-    InvalidGrantType = Class.new(StandardError)
+    class InvalidGrantType < StandardError
+      def initialize(msg = 'Invalid grant_type.')
+        super(msg)
+      end
+    end
 
     # Your client_id/secret is wrong or your access token expired.
-    InvalidOAuth2Credentials = Class.new(StandardError)
+    class InvalidOAuth2Credentials < StandardError
+      def initialize(msg = 'Invalid client_id/secret.')
+        super(msg)
+      end
+    end
 
     # The response_type parameter you sent was wrong. It should be the
     # string "code".
-    InvalidResponseType = Class.new(StandardError)
+    class InvalidResponseType < StandardError
+      def initialize(msg = 'Invalid response_type. Should be "code".')
+        super(msg)
+      end
+    end
 
     # The parameters sent to /api/v1/authorize were wrong.
-    InvalidRequest = Class.new(StandardError)
+    class InvalidRequest < StandardError
+      def initialize(msg = 'Invalid /api/v1/authorize parameters.')
+        super(msg)
+      end
+    end
 
     # You don't have the right scope to perform the request.
-    InvalidScope = Class.new(StandardError)
+    class InvalidScope < StandardError
+      def initialize(msg = "You don't have the right scope to do that.")
+        super(msg)
+      end
+    end
 
     # The thing you requested wasn't found. Could also mean that a user has
     # been shadowbanned or a subreddit has been banned.
-    NotFound = Class.new(StandardError)
-
+    class NotFound < StandardError
+      def initialize(msg = "The thing you requested couldn't be found.")
+        super(msg)
+      end
+    end
     # No access token was given.
-    NoTokenGiven = Class.new(StandardError)
+    class NoTokenGiven < StandardError
+      def initialize(msg = 'No access token was provided.')
+        super(msg)
+      end
+    end
 
     # The user chose not to grant your app access.
-    OAuth2AccessDenied = Class.new(StandardError)
+    class OAuth2AccessDenied < StandardError
+      def initialize(msg = 'The user chose not to grant your app access.')
+        super(msg)
+      end
+    end
 
     # You don't have adequate privileges to do that.
-    PermissionDenied = Class.new(StandardError)
+    class PermissionDenied < StandardError
+      def initialize(msg = "You don't have adequate privileges to do that.")
+        super(msg)
+      end
+    end
 
     # Gotta wait before making another request.
-    RateLimited = Class.new(StandardError)
+    class RateLimited < StandardError
+      def initialize(msg = "You're rate limited. Try again later.")
+        super(msg)
+      end
+    end
 
     # This is like being RateLimited only more oAuth2-focused I think.
-    QuotaFilled = Class.new(StandardError)
+    class QuotaFilled < StandardError
+      def initialize(msg = 'Your quota is filled. Try again later.')
+        super(msg)
+      end
+    end
 
     # There was an error with your request.
-    RequestError = Class.new(StandardError)
+    class RequestError < StandardError
+      def initialize(msg = 'There was an error with your request.')
+        super(msg)
+      end
+    end
 
     # Reddit's server's are shitting themselves/down for maintenance.
-    ServiceUnavailable = Class.new(StandardError)
+    class ServiceUnavailable < StandardError
+      def initialize(msg = "Reddit's server's are currently unavailable. Try again later.")
+        super(msg)
+      end
+    end
 
     # The connection timed out.
-    TimedOut = Class.new(StandardError)
+    class TimedOut < StandardError
+      def initialize(msg = 'Your connection timed out.')
+        super(msg)
+      end
+    end
 
     # You have too many flair classes already.
-    TooManyClassNames = Class.new(StandardError)
+    class TooManyClassNames < StandardError
+      def initialize(msg = 'Maxiumum number of flair classes reached.')
+        super(msg)
+      end
+    end
 
     # Usually happens when the subreddit you requested doesn't exist.
-    UnexpectedRedirect = Class.new(StandardError)
+    class UnexpectedRedirect < StandardError
+      def initialize(msg = 'The subreddit you requested does not exist.')
+        super(msg)
+      end
+    end
   end
 end
