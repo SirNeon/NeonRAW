@@ -1,5 +1,3 @@
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-
 module NeonRAW
   module Objects
     class Thing
@@ -34,35 +32,8 @@ module NeonRAW
           params[:api_type] = 'json'
           params[:text] = text
           params[:thing_id] = name
-          data = @client.request_data('/api/editusertext', :post, params)
-          if name[0..1] == 't1'
-            # Could this data structure be more convoluted? Like really now.
-            body = data[:json][:data][:things][0][:data][:body]
-            body_html = data[:json][:data][:things][0][:data][:body_html]
-            update_text_body(name[0..1], body, body_html)
-          elsif name[0..1] == 't3'
-            selftext = data[:json][:data][:things][0][:data][:selftext]
-            selftext_html =
-              data[:json][:data][:things][0][:data][:selftext_html]
-            update_text_body(name[0..1], selftext, selftext_html)
-          end
-        end
-
-        # Updates the text body of the thing.
-        # @!method update_text_body(kind, body, body_html)
-        # @param kind [String] The type of object [t1, t3]
-        # @param body [String] The new text to replace the old text.
-        # @param body_html [String] The new text with HTML to replace the old
-        #   text with HTML.
-        def update_text_body(kind, body, body_html)
-          if kind == 't1'
-            @body = body
-            @body_html = body_html
-          elsif kind == 't3'
-            @selftext = body
-            @selftext_html = body_html
-          end
-          @edited = true
+          @client.request_data('/api/editusertext', :post, params)
+          refresh!
         end
 
         # Deletes the thing.
@@ -72,7 +43,6 @@ module NeonRAW
           params[:id] = name
           @client.request_data('/api/del', :post, params)
         end
-        private :update_text_body
       end
     end
   end
