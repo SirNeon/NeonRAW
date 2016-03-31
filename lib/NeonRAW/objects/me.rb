@@ -1,7 +1,9 @@
 require_relative 'user'
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength,
+# rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 module NeonRAW
+  # Objects module.
   module Objects
     # le me object
     # @!attribute [r] employee?
@@ -47,6 +49,57 @@ module NeonRAW
           alias_method :verified_email?, :has_verified_email
         end
       end
+
+      # Goes through and edits then deletes your post history. Defaults to
+      # 2 weeks.
+      # @!method purge(queue, params = {})
+      # @param queue [Symbol] The queue you want to get your posts from
+      #   [overview, submitted, comments, upvoted, downvoted, hidden, saved,
+      #   giled]
+      # @param params [Hash] The additional parameters.
+      # @option params :edit [String] The text to edit your posts with.
+      # @option params :blacklist [Array] Subreddits [String] to avoid purging
+      #   from.
+      # @option params :whitelist [Array] Subreddits [String] to purge.
+      # @option params :hours [Integer] The number of hours to go back from.
+      # @option params :days [Integer] The number of days to go back from.
+      # @option params :weeks [Integer] The number of weeks to go back from.
+      # @option params :months [Integer] The number of months to go back from.
+      # @option params :years [Integer] The number of years to go back from.
+      def purge!(queue, params = {})
+        edit_text = params[:edit] || '.' if params[:edit].nil?
+        blacklist = params[:blacklist] || [] if params[:blacklist].nil?
+        whitelist = params[:whitelist] || ['*'] if params[:whitelist].nil?
+        params[:age] = max_age(params)
+        items = send(:"get_#{queue}", sort: 'new', limit: 1000)
+        items.each do |item|
+          next if blacklist.include?(item.subreddit)
+          break if item.created < params[:age]
+          next unless whitelist.include?(item.subreddit) || whitelist[0] == '*'
+          if item.is_a?(Submission)
+            item.edit edit_text if item.selfpost?
+          else
+            item.edit edit_text
+          end
+          item.delete!
+        end
+      end
+
+      # Fetches the max age of things to be purged.
+      # @!method max_age(params)
+      # @param params [Hash] The hours/days/weeks/months/years to go back from.
+      def max_age(params)
+        start = Time.now
+        age = start
+        age -= 3600 * params[:hours] unless params[:hours].nil?
+        age -= 86_400 * params[:days] unless params[:days].nil?
+        age -= 604_800 * params[:weeks] unless params[:weeks].nil?
+        age -= 2_419_200 * params[:months] unless params[:months].nil?
+        age -= 29_030_400 * params[:years] unless params[:years].nil?
+        age -= (604_800 * 2) if age == start # defaults to 2 weeks
+        age
+      end
+      private :max_age
     end
   end
 end
