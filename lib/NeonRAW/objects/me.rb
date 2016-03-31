@@ -1,4 +1,5 @@
 require_relative 'user'
+require_relative 'trophy'
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength,
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
@@ -70,17 +71,82 @@ module NeonRAW
         end
       end
 
+      # Fetches your karma breakdown.
+      # @!method karma_breakdown
+      # @return [Array<Hash<String, Integer, Integer>>] Returns a list with your
+      #   karma distribution in it.
+      def karma_breakdown
+        @client.request_data('/api/v1/me/karma', :get)[:data]
+      end
+
+      # Fetches your preferences.
+      # @!method prefs
+      # @return [Hash] Returns your account preferences.
+      def prefs
+        @client.request_data('/api/v1/me/prefs', :get)
+      end
+
+      # Fetches your trophies.
+      # @!method trophies
+      # @return [Array<NeonRAW::Objects::Trophy] Returns a list of trophies.
+      def trophies
+        data_arr = []
+        data = @client.request_data('/api/v1/me/trophies', :get)[:data]
+        data[:trophies].each do |trophy|
+          data_arr << Trophy.new(trophy[:data])
+        end
+        data_arr
+      end
+
+      # Fetches your friends.
+      # @!method friends(params = { limit: 25 })
+      # @param params [Hash] The parameters for the request.
+      # @option params :after [String] The fullname of a thing.
+      # @option params :before [String] The fullname of a thing.
+      # @option params :count [Integer] The number of items fetch already.
+      # @option params :limit [1..100] The number of items to fetch.
+      # @option params :show [String] Literally the string 'all'.
+      # @return [Array<Hash<Float, String, String>>] Returns the list of your
+      #   friends.
+      def friends(params = { limit: 25 })
+        data_arr = []
+        data = @client.request_data('/prefs/friends', :get, params)
+        data[0][:data][:children].each do |friend|
+          data_arr << friend
+        end
+        data_arr
+      end
+
+      # Fetches your blocked users.
+      # @!method blocked(params = { limit: 25 })
+      # @param params [Hash] The parameters for the request.
+      # @option params :after [String] The fullname of a thing.
+      # @option params :before [String] The fullname of a thing.
+      # @option params :count [Integer] The number of items fetch already.
+      # @option params :limit [1..100] The number of items to fetch.
+      # @option params :show [String] Literally the string 'all'.
+      # @return [Array<Hash<Float, String, String>>] Returns the list of your
+      #   blocked users.
+      def blocked(params = { limit: 25 })
+        data_arr = []
+        data = @client.request_data('/prefs/blocked', :get, params)
+        data[:data][:children].each do |blocked|
+          data_arr << blocked
+        end
+        data_arr
+      end
+
       # Goes through and edits then deletes your post history. Defaults to
       # 2 weeks.
-      # @!method purge(queue, params = {})
+      # @!method purge!(queue, params = {})
       # @param queue [Symbol] The queue you want to get your posts from
       #   [overview, submitted, comments, upvoted, downvoted, hidden, saved,
       #   giled]
       # @param params [Hash] The additional parameters.
       # @option params :edit [String] The text to edit your posts with.
-      # @option params :blacklist [Array] Subreddits [String] to avoid purging
+      # @option params :blacklist [Array<String>] Subreddits to avoid purging
       #   from.
-      # @option params :whitelist [Array] Subreddits [String] to purge.
+      # @option params :whitelist [Array<String>] Subreddits to purge.
       # @option params :hours [Integer] The number of hours to go back from.
       # @option params :days [Integer] The number of days to go back from.
       # @option params :weeks [Integer] The number of weeks to go back from.
