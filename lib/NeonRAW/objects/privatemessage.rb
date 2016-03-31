@@ -3,6 +3,8 @@ require_relative 'thing'
 module NeonRAW
   module Objects
     # le PrivateMessage object
+    # @!attribute [r] author
+    #   @return [String] Returns the author of the private message.
     # @!attribute [r] body
     #   @return [String, nil] Returns the PM text body or nil if there is none.
     # @!attribute [r] was_comment?
@@ -12,8 +14,6 @@ module NeonRAW
     #     none.
     # @!attribute [r] dest
     #   @return [String] Returns the user whom the PM was sent to.
-    # @!attribute [r] author
-    #   @return [String] Returns the sender of the PM.
     # @!attribute [r] body_html
     #   @return [String, nil] Returns the text body with HTML or nil if there
     #     is none.
@@ -23,8 +23,6 @@ module NeonRAW
     # @!attribute [r] context
     #   @return [String, nil] Returns the comment permalink with context or nil
     #     if it wasn't a comment.
-    # @!attribute [r] id
-    #   @return [String] The ID of the private message.
     # @!attribute [r] new?
     #   @return [Boolean] Returns whether or not the message is unread.
     # @!attribute [r] subject

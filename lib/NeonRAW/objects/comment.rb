@@ -8,7 +8,7 @@ module NeonRAW
     #   @return [String, nil] Returns which mod approved the comment or nil if
     #     none did or you aren't a moderator of that subreddit.
     # @!attribute [r] author
-    #   @return [String] Returns who made the comment.
+    #   @return [String] Returns the author of the comment.
     # @!attribute [r] author_flair_css_class
     #   @return [String, nil] Returns the author's flair CSS class or nil if
     #     there is none.
@@ -104,8 +104,9 @@ module NeonRAW
 
       # Gets the replies made to the comment.
       # @!method replies
-      # @return [Array, nil] Returns either a list of the Comments/MoreComments
-      #   or nil if there were no replies.
+      # @return [Array<NeonRAW::Objects::Comment,
+      #     NeonRAW::Objects::MoreComments>, nil] Returns either a list of the
+      #     Comments/MoreComments or nil if there were no replies.
       def replies
         return nil if @replies.nil?
         comments = []

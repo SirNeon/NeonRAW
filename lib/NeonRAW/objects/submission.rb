@@ -7,7 +7,7 @@ module NeonRAW
   module Objects
     # le submission object
     # @!attribute [r] author
-    #   @return [String] Returns the submitter of the submission.
+    #   @return [String] Returns the author of the submission.
     # @!attribute [r] author_flair_css_class
     #   @return [String, nil] Returns the CSS class of the submitter's flair or
     #     nil if there is none.

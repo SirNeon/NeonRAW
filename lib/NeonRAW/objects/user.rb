@@ -17,14 +17,10 @@ module NeonRAW
     # @!attribute [r] hide_from_robots?
     #   @return [Boolean] Returns whether or not the user doesn't
     #     want web crawlers indexing their profile page.
-    # @!attribute [r] name
-    #   @return [String] Returns the user's name.
     # @!attribute [r] link_karma
     #   @return [Integer] Returns the link karma of the user.
     # @!attribute [r] comment_karma
     #   @return [Integer] Returns the comment karma of the user.
-    # @!attribute [r] id
-    #   @return [String] Returns the id of the user.
     class User < Thing
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.

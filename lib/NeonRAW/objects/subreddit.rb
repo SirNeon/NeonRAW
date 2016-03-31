@@ -49,8 +49,6 @@ module NeonRAW
     # @!attribute [r] submit_text_html
     #   @return [String, nil] Returns the text with HTML included in the
     #     thread submission page or nil if there is none..
-    # @!attribute [r] id
-    #   @return [String] Returns the id of the subreddit.
     # @!attribute [r] submit_text
     #   @return [String, nil] Returns the text included in the thread
     #     submission page or nil if there is none.
@@ -89,15 +87,13 @@ module NeonRAW
     #   @return [Integer] Returns the number of users online browsing
     #     the subreddit.
     # @!attribute [r] header_size
-    #   @return [Array, nil] Returns an array containing the
+    #   @return [Array<Integer, Integer>, nil] Returns an array containing the
     #     header's dimensions or nil if there isn't one.
     # @!attribute [r] subscribers
     #   @return [Integer] Returns the number of subscribers the
     #     subreddit has.
     # @!attribute [r] lang
     #   @return [String] Returns the subreddit's primary language.
-    # @!attribute [r] name
-    #   @return [String] Returns the subreddit's name.
     # @!attribute [r] url
     #   @return [String] Returns the subreddit's URL.
     # @!attribute [r] comment_score_hide_mins
