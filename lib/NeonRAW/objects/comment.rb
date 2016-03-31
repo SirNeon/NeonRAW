@@ -63,6 +63,14 @@ module NeonRAW
     #   @return [String] Returns the ID of the subreddit where the comment was
     #     posted to.
     class Comment < Thing
+      include Thing::Createable
+      include Thing::Editable
+      include Thing::Gildable
+      include Thing::Moderateable
+      include Thing::Refreshable
+      include Thing::Saveable
+      include Thing::Votable
+
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
       # @param data [Hash] The comment data.
@@ -99,15 +107,15 @@ module NeonRAW
       #   or nil if there were no replies.
       def replies
         return nil if @replies.nil?
-        data_arr = []
+        comments = []
         @replies[:data][:children].each do |reply|
           if reply[:kind] == 't1'
-            data_arr << Comment.new(@client, reply[:data])
+            comments << Comment.new(@client, reply[:data])
           elsif reply[:kind] == 'more'
-            data_arr << MoreComments.new(@client, reply[:data])
+            comments << MoreComments.new(@client, reply[:data])
           end
         end
-        data_arr
+        comments
       end
 
       # Replies to a comment.
