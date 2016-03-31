@@ -1,12 +1,14 @@
 require 'typhoeus'
 require 'json'
 require_relative 'base/listing'
+require_relative 'base/captcha'
 require_relative '../errors'
 
 module NeonRAW
   # The underlying base for the client
   class Base
     include Base::Listings
+    include Base::Captchas
     include Errors
 
     # Creates headers for oAuth2 requests.
@@ -68,6 +70,11 @@ module NeonRAW
       refresh_access! if @access.expired?
       data = api_connection(path, meth, params)
       JSON.parse(data.body, symbolize_names: true)
+    end
+
+    def request_nonjson(path, meth, params = {})
+      refresh_access! if @access.expired?
+      api_connection(path, meth, params).body
     end
   end
 end
