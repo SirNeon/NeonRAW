@@ -1,11 +1,13 @@
 require 'typhoeus'
 require 'json'
 require_relative 'base/listing'
+require_relative '../errors'
 
 module NeonRAW
   # The underlying base for the client
   class Base
     include Base::Listings
+    include Errors
 
     # Creates headers for oAuth2 requests.
     # @!method api_headers
