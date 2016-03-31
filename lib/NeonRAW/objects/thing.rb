@@ -10,7 +10,7 @@ require_relative 'thing/inboxable'
 module NeonRAW
   module Objects
     # Exists to hold methods that work in all objects.
-    #  @!attribute [r] id
+    # @!attribute [r] id
     #   @return [String] The id of the thing.
     # @!attribute [r] name
     #   @return [String] The fullname of the thing.
