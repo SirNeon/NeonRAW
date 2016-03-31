@@ -67,19 +67,20 @@ module NeonRAW
       # @option params :months [Integer] The number of months to go back from.
       # @option params :years [Integer] The number of years to go back from.
       def purge!(queue, params = {})
-        edit_text = params[:edit] || '.' if params[:edit].nil?
-        blacklist = params[:blacklist] || [] if params[:blacklist].nil?
-        whitelist = params[:whitelist] || ['*'] if params[:whitelist].nil?
+        params[:edit] = '.' if params[:edit].nil?
+        params[:blacklist] = [] if params[:blacklist].nil?
+        params[:whitelist] = ['*'] if params[:whitelist].nil?
+        whitelist = params[:whitelist]
         params[:age] = max_age(params)
         items = send(:"get_#{queue}", sort: 'new', limit: 1000)
         items.each do |item|
-          next if blacklist.include?(item.subreddit)
+          next if params[:blacklist].include?(item.subreddit)
           break if item.created < params[:age]
           next unless whitelist.include?(item.subreddit) || whitelist[0] == '*'
           if item.is_a?(Submission)
-            item.edit edit_text if item.selfpost?
+            item.edit params[:edit] if item.selfpost?
           else
-            item.edit edit_text
+            item.edit params[:edit]
           end
           item.delete!
         end
