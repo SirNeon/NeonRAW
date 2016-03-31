@@ -4,12 +4,12 @@ require_relative '../objects/subreddit'
 require_relative '../objects/user'
 require_relative '../objects/me'
 require_relative '../objects/access'
-require_relative '../error'
+require_relative '../errors'
 
 module NeonRAW
   # The underlying base for the client
   class Base
-    include Error
+    include Errors
 
     # Creates headers for oAuth2 requests.
     # @!method api_headers
