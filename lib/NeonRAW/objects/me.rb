@@ -50,6 +50,26 @@ module NeonRAW
         end
       end
 
+      # Fetches your private messages.
+      # @!method get_message(params = { limit: 25 })
+      # @!method get_unread(params = { limit: 25 })
+      # @!method get_sent(params = { limit: 25 })
+      # @param params [Hash] Optional parameters.
+      # @option params :mark [Boolean] Whether or not to remove the orangered
+      #   from your inbox.
+      # @option params :after [String] Fullname of the next data block.
+      # @option params :before [String] Fullname of the previous data block
+      # @option params :count [Integer] The number of items already in the
+      #   listing.
+      # @option params :limit [1..1000] The number of listing items to fetch.
+      # @option params :show [String] Literally the string 'all'.
+      # @return [NeonRAW::Objects::Listing] Returns a listing with all your PMs.
+      %w(messages unread sent).each do |type|
+        define_method :"get_#{type}" do |params = { limit: 25 }|
+          @client.send(:build_listing, "/message/#{type}", params)
+        end
+      end
+
       # Goes through and edits then deletes your post history. Defaults to
       # 2 weeks.
       # @!method purge(queue, params = {})
