@@ -32,6 +32,7 @@ module NeonRAW
         when /user_required/i then AuthenticationRequired
         else nil # no exception to be raised
         end
+      when 302 then UnexpectedRedirect
       when 400 then BadRequest
       when 401 then InvalidOAuth2Credentials
       when 403
@@ -44,7 +45,7 @@ module NeonRAW
       when 409 then Conflict
       when 500 then InternalServerError
       when 502 then BadGateway
-      when 503 then ServiceUnAvailable
+      when 503 then ServiceUnavailable
       when 504 then TimedOut
       end
     end
@@ -129,12 +130,15 @@ module NeonRAW
     RequestError = Class.new(StandardError)
 
     # Reddit's server's are shitting themselves/down for maintenance.
-    ServiceUnAvailable = Class.new(StandardError)
+    ServiceUnavailable = Class.new(StandardError)
 
     # The connection timed out.
     TimedOut = Class.new(StandardError)
 
     # You have too many flair classes already.
     TooManyClassNames = Class.new(StandardError)
+
+    # Usually happens when the subreddit you requested doesn't exist.
+    UnexpectedRedirect = Class.new(StandardError)
   end
 end
