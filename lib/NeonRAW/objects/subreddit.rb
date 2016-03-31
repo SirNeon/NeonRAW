@@ -109,8 +109,9 @@ module NeonRAW
     # @!attribute [r] submission_type
     #   @return [String] Returns the type of submissions allowed
     #     to be posted [any, link, self].
-    class Subreddit
+    class Subreddit < Thing
       include Thing::Createable
+      include Thing::Refreshable
 
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
