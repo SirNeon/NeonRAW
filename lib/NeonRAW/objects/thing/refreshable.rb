@@ -9,7 +9,8 @@ module NeonRAW
           params = {}
           params[:id] = name
           data = @client.request_data("/r/#{subreddit}/api/info", :get, params)
-          data[:data].each do |key, value|
+          data[:data][:children][0][:data].each do |key, value|
+            value = nil if ['', [], {}].include?(value)
             instance_variable_set(:"@#{key}", value)
           end
         end
