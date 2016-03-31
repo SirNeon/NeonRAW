@@ -66,6 +66,7 @@ module NeonRAW
       include Thing::Createable
       include Thing::Editable
       include Thing::Gildable
+      include Thing::Inboxable
       include Thing::Moderateable
       include Thing::Refreshable
       include Thing::Saveable
@@ -116,18 +117,6 @@ module NeonRAW
           end
         end
         comments
-      end
-
-      # Replies to a comment.
-      # @!method reply(text)
-      # @param text [String] The text to reply with.
-      # @return [Hash] The parsed JSON response.
-      def reply(text)
-        params = {}
-        params[:api_type] = 'json'
-        params[:text] = text
-        params[:thing_id] = name
-        @client.request_data('/api/comment', :post, params)
       end
     end
   end
