@@ -55,7 +55,6 @@ module NeonRAW
         # @!method upvote
         # @!method clear_vote
         # @!method downvote
-        # @return [Hash] Returns a hash containing the parsed JSON data.
         %i(upvote clear_vote downvote).each do |type|
           define_method type do
             params = {}
