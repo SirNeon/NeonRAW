@@ -5,6 +5,7 @@ require_relative 'thing/gildable'
 require_relative 'thing/createable'
 require_relative 'thing/saveable'
 require_relative 'thing/refreshable'
+require_relative 'thing/inboxable'
 
 module NeonRAW
   module Objects
