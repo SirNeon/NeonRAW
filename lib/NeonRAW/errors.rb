@@ -2,7 +2,7 @@
 
 module NeonRAW
   # Methods and classes for handling errors.
-  module Error
+  module Errors
     # Reads the HTTP status of the Typhoeus response and gives an exception to
     # raise.
     # @!method assign_errors(response)
