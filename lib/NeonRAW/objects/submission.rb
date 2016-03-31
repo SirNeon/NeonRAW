@@ -67,6 +67,14 @@ module NeonRAW
     #   @return [String] Either the URL submitted (link post) or the
     #     submission's permalink (selfpost).
     class Submission < Thing
+      include Thing::Createable
+      include Thing::Editable
+      include Thing::Gildable
+      include Thing::Moderateable
+      include Thing::Refreshable
+      include Thing::Saveable
+      include Thing::Votable
+
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
       # @param data [Hash] The object data.
