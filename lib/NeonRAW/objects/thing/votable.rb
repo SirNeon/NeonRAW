@@ -45,9 +45,9 @@ module NeonRAW
         # @return [Hash] Returns a hash containing the vote values.
         def votes
           {
-            upvote: [1, true],
-            clear_vote: [0, nil],
-            downvote: [-1, false]
+            upvote: 1,
+            clear_vote: 0,
+            downvote: -1
           }
         end
 
@@ -59,21 +59,13 @@ module NeonRAW
         %i(upvote clear_vote downvote).each do |type|
           define_method type do
             params = {}
-            params[:dir] = votes[type][0]
+            params[:dir] = votes[type]
             params[:id] = name
             @client.request_data('/api/vote', :post, params)
-            update_vote_value(votes[type][1])
+            refresh!
           end
         end
-
-        # Updates the vote value of an object after casting a vote on it.
-        # @!method update_vote_value(value)
-        # @param value [Boolean, nil] The value to update with.
-        def update_vote_value(value)
-          @likes = value
-        end
-
-        private :votes, :update_vote_value
+        private :votes
       end
     end
   end
