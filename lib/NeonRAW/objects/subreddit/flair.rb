@@ -7,11 +7,12 @@ module NeonRAW
     # @!group Flair
     # Clears flair templates.
     # @!method clear_flair_templates(flair_type)
-    # @param flair_type [Symbol] The type of flair [USER_FLAIR, LINK_FLAIR].
+    # @param flair_type [Symbol] The type of flair [user, link].
     def clear_flair_templates(flair_type)
+      flairs = { user: 'USER_FLAIR', link: 'LINK_FLAIR' }
       params = {}
       params[:api_type] = 'json'
-      params[:flair_type] = flair_type
+      params[:flair_type] = flairs[flair_type]
       path = "/r/#{display_name}/api/clearflairtemplates"
       @client.request_data(path, :post, params)
     end
@@ -41,7 +42,7 @@ module NeonRAW
     # Sets the flair on either a link or a user.
     # @!method set_flair(type, thing_name, text, css_class)
     # @param type [Symbol] The type of flair to set [user, link]
-    # @param thing_name [String] Either the username or name of the link.
+    # @param thing_name [String] Either a username or a name of the link.
     # @param text [String] The flair text (64 characters max).
     # @param css_class [String] The CSS class of the flair.
     def set_flair(type, thing_name, text, css_class)
@@ -129,21 +130,49 @@ module NeonRAW
 
     # Creates a flair template.
     # @!method flair_template(type, text, css_class, editable, template_id)
-    # @param type [Symbol] The template type [USER_FLAIR, LINK_FLAIR]
-    # @param text [String] The flair text.
+    # @param type [Symbol] The template type [user, link]
+    # @param text [String] The flair text (64 characters maximum).
     # @param css_class [String] The flair's CSS class.
     # @param editable [Boolean] Whether or not the user can edit the flair
     #   text.
-    # @param template_id [String] The template's ID.
-    def flair_template(type, text, css_class, editable, template_id)
+    def flair_template(type, text, css_class, editable)
+      flairs = { user: 'USER_FLAIR', link: 'LINK_FLAIR' }
       params = {}
       params[:api_type] = 'json'
       params[:css_class] = css_class
-      params[:flair_template_id] = template_id
-      params[:flair_type] = type
+      params[:flair_type] = flairs[type]
       params[:text] = text
       params[:text_editable] = editable
       path = "/r/#{display_name}/api/flairtemplate"
+      @client.request_data(path, :post, params)
+    end
+
+    # Select a flair.
+    # @!method select_flair(type, name, text)
+    # @param type [Symbol] The flair type [user, link]
+    # @param name [String] The username or the link name.
+    # @param text [String] The flair text (64 characters maximum).
+    def select_flair(type, name, text)
+      params = {}
+      params[:api_type] = 'json'
+      if type == :user
+        params[:name] = name
+      elsif type == :link
+        params[:link] = name
+      end
+      params[:text] = text
+      path = "/r/#{display_name}/api/selectflair"
+      @client.request_data(path, :post, params)
+    end
+
+    # Let's you enable/disable the setting of flair.
+    # @!method enable_set_flair(can_set_flair)
+    # @param can_set_flair [Boolean] Whether or not you can set flair.
+    def enable_set_flair(can_set_flair)
+      params = {}
+      params[:api_type] = 'json'
+      params[:flair_enabled] = can_set_flair
+      path = "/r/#{display_name}/api/setflairenabled"
       @client.request_data(path, :post, params)
     end
     # @!endgroup
