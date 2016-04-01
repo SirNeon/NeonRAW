@@ -25,6 +25,7 @@ module NeonRAW
         #   only).
         # @option type :special [Symbol] Add a user-specific distinguish
         #   (Depends on the user).
+        # @!group Moderators
         def distinguish(type)
           params = {}
           params[:api_type] = 'json'
