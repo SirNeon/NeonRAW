@@ -42,6 +42,7 @@ module NeonRAW
         end
       end
 
+      # @!group Listings
       # Fetches a listing from a user.
       # @!method get_overview(params = { limit: 25 })
       # @!method get_comments(params = { limit: 25 })
@@ -72,6 +73,7 @@ module NeonRAW
           @client.send(:build_listing, path, params)
         end
       end
+      # @!endgroup
 
       # Give gold to a user.
       # @!method give_gold(months)
