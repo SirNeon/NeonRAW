@@ -20,17 +20,9 @@ module NeonRAW
         def gild(quantity)
           quantity.times do
             @client.request_data("/api/v1/gold/gild/#{name}", :post)
-            update_gild_count(1)
           end
+          refresh!
         end
-
-        # Updates the gold count of a thing.
-        # @!method update_gild_count(count)
-        # @param count [1..36]
-        def update_gild_count(count)
-          @gilded += count
-        end
-        private :update_gild_count
       end
     end
   end
