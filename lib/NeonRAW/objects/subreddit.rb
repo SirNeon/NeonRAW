@@ -295,6 +295,7 @@ module NeonRAW
       # @param css_class [String] The flair's CSS class.
       # @param editable [Boolean] Whether or not the user can edit the flair
       #   text.
+      # @param template_id [String] The template's ID.
       def flair_template(type, text, css_class, editable, template_id)
         params = {}
         params[:api_type] = 'json'
