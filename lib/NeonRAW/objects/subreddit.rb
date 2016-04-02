@@ -140,6 +140,42 @@ module NeonRAW
         end
       end
 
+      # Get info on a link/comment/subreddit.
+      # @!method get_info(type, thing)
+      # @param type [Symbol] The type of thing [id, url].
+      # @param thing [String] Either a name or an URL.
+      # @return [NeonRAW::Objects::Comment/Submission/Subreddit] Returns the
+      #   object.
+      def get_info(type, thing)
+        params = {}
+        params[type] = thing
+        data = @client.request_data("/r/#{display_name}/api/info", :get, params)
+        case data[:data][:children][0][:kind]
+        when 't1' then Comment.new(@client, data[:data][:children][0][:data])
+        when 't3' then Submission.new(@client, data[:data][:children][0][:data])
+        when 't5' then Subreddit.new(@client, data[:data][:children][0][:data])
+        end
+      end
+
+      # Submit a thread to the subreddit.
+      # @!method submit(type, content, title)
+      # @param type [Symbol] The type of submission [link, self]
+      # @param content [String] The content of the submission.
+      # @param title [String] The title of the submission (300 characters
+      #   maximum).
+      def submit(type, content, title)
+        params = {}
+        if type == :self
+          params[:text] = content
+        elsif type == :link
+          params[:url] = content
+        end
+        params[:kind] = type
+        params[:title] = title
+        params[:sr] = display_name
+        @client.request_data('/api/submit', :post, params)
+      end
+
       # @!group Listings
       # Fetches a listing from the subreddit.
       # @!method get_hot(params = { limit: 25 })
