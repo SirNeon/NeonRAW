@@ -1,7 +1,8 @@
 require_relative 'thing'
 require_relative 'comment'
 require_relative 'morecomments'
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize,
+# rubocop:disable Style/AccessorMethodName
 
 module NeonRAW
   module Objects
@@ -105,9 +106,9 @@ module NeonRAW
         data_arr = []
         data[1][:data][:children].each do |comment|
           if comment[:kind] == 't1'
-            data_arr << Objects::Comment.new(@client, comment[:data])
+            data_arr << Comment.new(@client, comment[:data])
           elsif comment[:kind] == 'more'
-            data_arr << Objects::MoreComments.new(@client, comment[:data])
+            data_arr << MoreComments.new(@client, comment[:data])
           end
         end
         data_arr
@@ -131,6 +132,75 @@ module NeonRAW
           flattened << comment
         end
         flattened
+      end
+
+      # @api Set submission visibility.
+      # @!method hide
+      # @!method unhide
+      # @api Set whether users can comment on a submission.
+      # @!method lock
+      # @!method unlock
+      %w(hide unhide lock unlock).each do |type|
+        define_method :"#{type}" do
+          params = {}
+          params[:id] = name
+          @client.request_data("/api/#{type}", :post, params)
+        end
+      end
+
+      # Set the submission's NSFW status.'
+      # @!method mark_nsfw
+      # @!method unmark_nsfw
+      %w(mark unmark).each do |type|
+        define_method :"#{type}_nsfw" do
+          params = {}
+          params[:id] = name
+          @client.request_data("/api/#{type}nsfw", :post, params)
+        end
+      end
+
+      # Toggle getting inbox replies from the submission.
+      # @!method make_inbox_replies(enable)
+      # @param enable [Boolean] Turns it on or off.
+      def make_inbox_replies(enable)
+        params = {}
+        params[:id] = name
+        params[:state] = enable
+        @client.request_data('/api/sendreplies', :post, params)
+      end
+
+      # Set contest mode on or off.
+      # @!method contest_mode(enable)
+      # @param enable [Boolean] Turns it on or off.
+      def contest_mode(enable)
+        params = {}
+        params[:api_type] = 'json'
+        params[:id] = name
+        params[:state] = enable
+        @client.request_data('/api/set_contest_mode', :post, params)
+      end
+
+      # Sets the suggested sort for a submission.
+      # @!method set_suggested_sort(sort)
+      # @param sort [Symbol] The sort to set [confidence, top, new,
+      #   controversial, old, random, qa]
+      def set_suggested_sort(sort)
+        params = {}
+        params[:api_type] = 'json'
+        params[:id] = name
+        params[:sort] = sort
+        @client.request_data('/api/set_suggested_sort', :post, params)
+      end
+
+      # Sticky a submission/comment.
+      # @!method sticky(enable)
+      # @param enable [Boolean] Stickies/unstickies the thing.
+      def sticky(enable)
+        params = {}
+        params[:api_type] = 'json'
+        params[:id] = name
+        params[:state] = enable
+        @client.request_data('/api/set_subreddit_sticky', :post, params)
       end
 
       # Adds a comment to the submission.
