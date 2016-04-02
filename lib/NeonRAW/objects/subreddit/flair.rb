@@ -19,7 +19,8 @@ module NeonRAW
 
     # Deletes a user's flair.
     # @!method delete_flair(username)
-    # @param [String] The username of the user's whose flair will be deleted.
+    # @param username [String] The username of the user's whose flair will be
+    #   deleted.
     def delete_flair(username)
       params = {}
       params[:api_type] = 'json'
@@ -40,20 +41,20 @@ module NeonRAW
     end
 
     # Sets the flair on either a link or a user.
-    # @!method set_flair(type, thing_name, text, css_class)
-    # @param type [Symbol] The type of flair to set [user, link]
-    # @param thing_name [String] Either a username or a name of the link.
+    # @!method set_flair(thing, text, opts = {})
+    # @param thing [NeonRAW::Objects::User/Me/Submission] The thing to flair.
     # @param text [String] The flair text (64 characters max).
-    # @param css_class [String] The CSS class of the flair.
-    def set_flair(type, thing_name, text, css_class)
+    # @param opts [Hash] Optional parameters.
+    # @option opts css_class [String] The CSS class of the flair.
+    def set_flair(thing, text, opts = {})
       params = {}
       params[:api_type] = 'json'
       params[:text] = text
-      params[:css_class] = css_class
-      if type == :user
-        params[:name] = thing_name
-      elsif type == :link
-        params[:link] = thing_name
+      params[:css_class] = opts[:css_class]
+      if thing.is_a?(Objects::User) || thing.is_a?(Objects::Me)
+        params[:name] = thing.name
+      elsif thing.is_a?(Objects::Submission)
+        params[:link] = thing.name
       end
       path = "/r/#{display_name}/api/flair"
       @client.request_data(path, :post, params)
@@ -114,15 +115,16 @@ module NeonRAW
     end
 
     # Gets information about a user's flair options.
-    # @!method get_flair(type, name)
-    # @param type [Symbol] The type of flair [user, link]
-    # @param name [String] The username or link name.
-    def get_flair(type, name)
+    # @!method get_flair(thing)
+    # @param thing [NeonRAW::Objects::Submission/User/Me] The thing to get the
+    #   flairs of.
+    # @return [Hash] Returns the flair data for the thing.
+    def get_flair(thing)
       params = {}
-      if type == :user
-        params[:name] = name
-      elsif type == :link
-        params[:link] = name
+      if thing.is_a?(Objects::User) || thing.is_a?(Objects::Me)
+        params[:name] = thing.name
+      elsif thing.is_a?(Objects::Submission)
+        params[:link] = thing.name
       end
       path = "/r/#{display_name}/api/flairselector"
       @client.request_data(path, :post, params)
@@ -130,7 +132,7 @@ module NeonRAW
 
     # Creates a flair template.
     # @!method flair_template(type, text, css_class, editable, template_id)
-    # @param type [Symbol] The template type [user, link]
+    # @param type [Symbol] The template type [user, link].
     # @param text [String] The flair text (64 characters maximum).
     # @param css_class [String] The flair's CSS class.
     # @param editable [Boolean] Whether or not the user can edit the flair
@@ -148,19 +150,21 @@ module NeonRAW
     end
 
     # Select a flair.
-    # @!method select_flair(type, name, text)
-    # @param type [Symbol] The flair type [user, link]
-    # @param name [String] The username or the link name.
+    # @!method select_flair(thing, text, template_id)
+    # @param thing [NeonRAW::Objects::Submission/User/Me] The thing whose flair
+    #   will be selected.
     # @param text [String] The flair text (64 characters maximum).
-    def select_flair(type, name, text)
+    # @param template_id [String] The flair template ID.
+    def select_flair(thing, text, template_id)
       params = {}
       params[:api_type] = 'json'
-      if type == :user
-        params[:name] = name
-      elsif type == :link
-        params[:link] = name
+      if thing.is_a?(Objects::User) || thing.is_a?(Objects::Me)
+        params[:name] = thing.name
+      elsif thing.is_a?(Objects::Submission)
+        params[:link] = thing.name
       end
       params[:text] = text
+      params[:flair_template_id] = template_id
       path = "/r/#{display_name}/api/selectflair"
       @client.request_data(path, :post, params)
     end
