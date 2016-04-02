@@ -49,6 +49,19 @@ module NeonRAW
         def stickied?
           @stickied
         end
+
+        # Report a thing to the subreddit's moderators or admins if the thing
+        # is a private message.
+        # @!method report(reason)
+        # @param reason [String] The reason for the report (100 characters
+        #   maximum).
+        def report(reason)
+          params = {}
+          params[:api_type] = 'json'
+          params[:reason] = reason
+          params[:thing_id] = name
+          @client.request_data('/api/report', :post, params)
+        end
       end
     end
   end
