@@ -1,12 +1,13 @@
 require_relative 'thing'
 require_relative 'comment'
 require_relative 'morecomments'
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize,
-# rubocop:disable Style/AccessorMethodName
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
 module NeonRAW
   module Objects
     # le submission object
+    # @!attribute [r] archived?
+    #   @return [Boolean] Returns whether or not the submission is archived.
     # @!attribute [r] author
     #   @return [String] Returns the author of the submission.
     # @!attribute [r] author_flair_css_class
@@ -73,6 +74,7 @@ module NeonRAW
       include Thing::Gildable
       include Thing::Moderateable
       include Thing::Refreshable
+      include Thing::Repliable
       include Thing::Saveable
       include Thing::Votable
 
@@ -94,6 +96,8 @@ module NeonRAW
           alias_method :locked?, :locked
           alias_method :nsfw?, :over_18
           alias_method :saved?, :saved
+          alias_method :archived?, :archived
+          alias_method :add_comment, :reply
         end
       end
 
@@ -162,9 +166,9 @@ module NeonRAW
       end
 
       # Toggle getting inbox replies from the submission.
-      # @!method make_inbox_replies(enable)
+      # @!method inbox_replies(enable)
       # @param enable [Boolean] Turns it on or off.
-      def make_inbox_replies(enable)
+      def inbox_replies(enable)
         params = {}
         params[:id] = name
         params[:state] = enable
@@ -183,10 +187,10 @@ module NeonRAW
       end
 
       # Sets the suggested sort for a submission.
-      # @!method set_suggested_sort(sort)
+      # @!method suggested_sort(sort)
       # @param sort [Symbol] The sort to set [confidence, top, new,
       #   controversial, old, random, qa]
-      def set_suggested_sort(sort)
+      def suggested_sort(sort)
         params = {}
         params[:api_type] = 'json'
         params[:id] = name
@@ -203,18 +207,6 @@ module NeonRAW
         params[:id] = name
         params[:state] = enable
         @client.request_data('/api/set_subreddit_sticky', :post, params)
-      end
-
-      # Adds a comment to the submission.
-      # @!method add_comment(text)
-      # @param text [String] The text for the comment body.
-      # @return [Hash] Returns a hash containing the parsed JSON.
-      def add_comment(text)
-        params = {}
-        params[:api_type] = 'json'
-        params[:text] = text
-        params[:thing_id] = name
-        @client.request_data('/api/comment', :post, params)
       end
 
       # The submission's shortlink.

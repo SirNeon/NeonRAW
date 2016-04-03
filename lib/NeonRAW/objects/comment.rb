@@ -7,6 +7,8 @@ module NeonRAW
     # @!attribute [r] approved_by
     #   @return [String, nil] Returns which mod approved the comment or nil if
     #     none did or you aren't a moderator of that subreddit.
+    # @!attribute [r] archived?
+    #   @return [Boolean] Returns whether or not the comment is archived.
     # @!attribute [r] author
     #   @return [String] Returns the author of the comment.
     # @!attribute [r] author_flair_css_class
@@ -69,6 +71,7 @@ module NeonRAW
       include Thing::Inboxable
       include Thing::Moderateable
       include Thing::Refreshable
+      include Thing::Repliable
       include Thing::Saveable
       include Thing::Votable
 
@@ -88,6 +91,7 @@ module NeonRAW
           alias_method :gold_count, :gilded
           alias_method :saved?, :saved
           alias_method :score_hidden?, :score_hidden
+          alias_method :archived?, :archived
         end
       end
 

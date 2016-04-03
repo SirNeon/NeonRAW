@@ -31,6 +31,7 @@ module NeonRAW
       include Thing::Createable
       include Thing::Inboxable
       include Thing::Moderateable
+      include Thing::Repliable
 
       def initialize(client, data)
         @client = client
