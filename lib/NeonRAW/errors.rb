@@ -43,6 +43,7 @@ module NeonRAW
         end
       when 404 then NotFound
       when 409 then Conflict
+      when 429 then RateLimited
       when 500 then InternalServerError
       when 502 then BadGateway
       when 503 then ServiceUnavailable
