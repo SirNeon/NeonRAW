@@ -51,6 +51,29 @@ module NeonRAW
       end
     end
 
+    # Checks data for any errors that wouldn't have otherwise thrown an
+    # exception.
+    # @!method handle_data_errors(data)
+    # @param data [Hash] The data.
+    def handle_data_errors(data)
+      return nil if data.empty? # handles returns from toggleable methods
+      if data.is_a?(Array) # handles returns from some flair methods
+        messages = []
+        errors = data[0][:errors]
+        unless errors.empty?
+          errors.each { |_key, error| messages << error }
+          exception = messages.map { |error| error + ' ' }.join
+          fail StandardError, exception
+        end
+      elsif data.has_key?(:json) # handles pretty much everything else
+        errors = data[:json][:errors]
+        unless errors.empty?
+          exception = errors.map { |error| error + ' ' }.join
+          fail StandardError, exception
+        end
+      end
+    end
+
     # Manages the API ratelimit for requesting stuff from Reddit.
     # @!method handle_ratelimit(headers)
     # @param headers [Hash] The Typhoeus response headers.
