@@ -6,6 +6,7 @@ require_relative 'thing/createable'
 require_relative 'thing/saveable'
 require_relative 'thing/refreshable'
 require_relative 'thing/inboxable'
+require_relative 'thing/repliable'
 
 module NeonRAW
   module Objects
