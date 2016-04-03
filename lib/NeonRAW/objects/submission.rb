@@ -134,10 +134,12 @@ module NeonRAW
         flattened
       end
 
-      # @api Set submission visibility.
+      # Set submission visibility.
       # @!method hide
       # @!method unhide
-      # @api Set whether users can comment on a submission.
+      # @note See lock/unlock for source code.
+
+      # Set whether or not users can comment on the submission.
       # @!method lock
       # @!method unlock
       %w(hide unhide lock unlock).each do |type|
