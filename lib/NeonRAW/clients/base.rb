@@ -62,7 +62,7 @@ module NeonRAW
     # Requests data from Reddit.
     # @!method request_data
     # @param path [String] The API path to connect to.
-    # @param meth [String] The request method to use.
+    # @param meth [Symbol] The request method to use.
     # @param params [Hash] Parameters for the request.
     # @return [Hash] Returns the parsed JSON as a hash containing
     #   the data.
@@ -72,6 +72,11 @@ module NeonRAW
       JSON.parse(data.body, symbolize_names: true)
     end
 
+    # Requests non-JSON data from Reddit.
+    # @!method request_nonjson(path, meth, params = {})
+    # @param path [String] The API path to connect to.
+    # @param meth [Symbol] The request method to use.
+    # @param params [Hash] Parameters for the request.
     def request_nonjson(path, meth, params = {})
       refresh_access! if @access.expired?
       api_connection(path, meth, params).body
