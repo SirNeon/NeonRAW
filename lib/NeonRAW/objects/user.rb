@@ -22,6 +22,9 @@ module NeonRAW
     # @!attribute [r] comment_karma
     #   @return [Integer] Returns the comment karma of the user.
     class User < Thing
+      include Thing::Createable
+      include Thing::Refreshable
+
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
       # @param data [Hash] The object data.
@@ -77,12 +80,31 @@ module NeonRAW
 
       # Give gold to a user.
       # @!method give_gold(months)
-      # @param months [1..36]
+      # @param months [1..36] The number of months worth of gold to give.
       def give_gold(months)
         params = {}
         params[:months] = months
         @client.request_data("/api/v1/gold/give/#{name}", :post, params)
-        update_gild_count(months)
+        refresh!
+      end
+
+      # Send a PM to a user.
+      # @!method message(text, subject, opts = {})
+      # @param text [String] The text body of the message.
+      # @param subject [String] The subject of the message (100 characters
+      #   maximum).
+      # @param opts [Hash] Optional parameters.
+      # @option opts :from_subreddit [String] The subreddit to send the message
+      #   from.
+      # @return [Hash<Array>] Returns a list of errors.
+      def message(text, subject, opts = {})
+        params = {}
+        params[:api_type] = 'json'
+        params[:from_sr] = opts[:from_subreddit]
+        params[:text] = text
+        params[:subject] = subject
+        params[:to] = name
+        @client.request_data('/api/compose', :post, params)[:json]
       end
     end
   end
