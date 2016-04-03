@@ -136,6 +136,12 @@ module NeonRAW
         data_arr
       end
 
+      # Mark all your messages as "read."
+      # @!method read_all_messages!
+      def read_all_messages!
+        @client.request_nonjson('/api/read_all_messages', :post)
+      end
+
       # Goes through and edits then deletes your post history. Defaults to
       # 2 weeks.
       # @!method purge!(queue, params = {})
