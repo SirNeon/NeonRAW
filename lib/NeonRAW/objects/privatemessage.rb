@@ -36,11 +36,42 @@ module NeonRAW
         @client = client
         data.each do |key, value|
           value = nil if ['', [], {}].include?(value)
+          next if key == :created || key == :created_utc
           instance_variable_set(:"@#{key}", value)
           self.class.send(:attr_reader, key)
         end
         class << self
           alias_method :was_comment?, :was_comment
+        end
+      end
+
+      # Block a user.
+      # @!method block
+      def block
+        params = {}
+        params[:id] = name
+        @client.request_data('/api/block', :post, params)
+      end
+
+      # Toggle the collapse of messages in a private message thread.
+      # @!method collapse
+      # @!method uncollapse
+      %w(collapse uncollapse).each do |type|
+        define_method :"#{type}" do
+          params = {}
+          params[:id] = name
+          @client.request_data("/api/#{type}_message", :post, params)
+        end
+      end
+
+      # Toggle the read status of a message.
+      # @!method mark_as_read
+      # @!method mark_as_unread
+      %w(read unread).each do |type|
+        define_method :"mark_as_#{type}" do
+          params = {}
+          params[:id] = name
+          @client.request_data("/api/#{type}_message", :post, params)
         end
       end
     end
