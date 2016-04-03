@@ -96,7 +96,6 @@ module NeonRAW
       # @param opts [Hash] Optional parameters.
       # @option opts :from_subreddit [String] The subreddit to send the message
       #   from.
-      # @return [Hash<Array>] Returns a list of errors.
       def message(text, subject, opts = {})
         params = {}
         params[:api_type] = 'json'
@@ -104,7 +103,7 @@ module NeonRAW
         params[:text] = text
         params[:subject] = subject
         params[:to] = name
-        @client.request_data('/api/compose', :post, params)[:json]
+        @client.request_data('/api/compose', :post, params)
       end
     end
   end
