@@ -109,8 +109,8 @@ module NeonRAW
       # Gets the replies made to the comment.
       # @!method replies
       # @return [Array<NeonRAW::Objects::Comment,
-      #     NeonRAW::Objects::MoreComments>, nil] Returns either a list of the
-      #     Comments/MoreComments or nil if there were no replies.
+      #   NeonRAW::Objects::MoreComments>, nil] Returns either a list of the
+      #   Comments/MoreComments or nil if there were no replies.
       def replies
         return nil if @replies.nil?
         comments = []
