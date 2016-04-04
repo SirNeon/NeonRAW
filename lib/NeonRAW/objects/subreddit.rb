@@ -110,8 +110,8 @@ module NeonRAW
     class Subreddit < Thing
       include Thing::Createable
       include Thing::Refreshable
-      include Flair
-      include Moderation
+      include Subreddit::Flair
+      include Subreddit::Moderation
 
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
