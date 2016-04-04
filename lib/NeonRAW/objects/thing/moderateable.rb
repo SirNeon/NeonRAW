@@ -3,6 +3,15 @@ module NeonRAW
     class Thing
       # Methods for moderators.
       module Moderateable
+        # Approve a comment or submission.
+        # @!method approve!
+        def approve!
+          params = {}
+          params[:id] = name
+          @client.request_data('/api/approve', :post, params)
+          refresh!
+        end
+
         # Checks whether or not the thing was distinguished by a privileged
         # user.
         # @!method distinguished?
@@ -61,6 +70,37 @@ module NeonRAW
           params[:reason] = reason
           params[:thing_id] = name
           @client.request_data('/api/report', :post, params)
+        end
+
+        # Set whether to ignore reports on the thing or not.
+        # @!method ignore_reports!
+        # @!method unignore_reports!
+        %w(ignore unignore).each do |type|
+          define_method :"#{type}_reports!" do
+            params = {}
+            params[:id] = name
+            @client.request_data("/api/#{type}_reports", :post, params)
+          end
+        end
+
+        # Remove a comment/link/modmail message.
+        # @!method remove!
+        def remove!
+          params = {}
+          params[:id] = name
+          params[:spam] = false
+          @client.request_data('/api/remove', :post, params)
+          refresh!
+        end
+
+        # Spamfilter a comment/link/modmail message.
+        # @!method spam!
+        def spam!
+          params = {}
+          params[:id] = name
+          params[:spam] = true
+          @client.request_data('/api/remove', :post, params)
+          refresh!
         end
       end
     end
