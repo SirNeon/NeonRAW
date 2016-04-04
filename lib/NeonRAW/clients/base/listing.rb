@@ -3,6 +3,7 @@ require_relative '../../objects/user'
 require_relative '../../objects/me'
 require_relative '../../objects/access'
 require_relative '../../objects/privatemessage'
+require_relative '../../objects/modlogaction'
 require_relative '../../errors'
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 
@@ -12,6 +13,7 @@ module NeonRAW
     module Listings
       OBJECT_KINDS = {
         'Listing' => Objects::Listing,
+        'modaction' => Objects::ModLogAction,
         't1' => Objects::Comment,
         't3' => Objects::Submission,
         't4' => Objects::PrivateMessage
