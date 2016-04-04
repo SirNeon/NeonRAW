@@ -3,6 +3,7 @@ require_relative '../objects/listing'
 require_relative '../objects/comment'
 require_relative '../objects/thing'
 require_relative 'subreddit/flair'
+require_relative 'subreddit/moderation'
 # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
 module NeonRAW
@@ -110,6 +111,7 @@ module NeonRAW
       include Thing::Createable
       include Thing::Refreshable
       include Flair
+      include Moderation
 
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
