@@ -111,10 +111,9 @@ module NeonRAW
       end
     end
 
-    # Request couldn't be processed because of conflict in the request, like if
-    # there was multiple simultaneous updates.
+    # The multireddit you're trying to copy already exists.
     class Conflict < StandardError
-      def initialize(msg = "Your request couldn't be processed because of a conflict in the request.")
+      def initialize(msg = "The multireddit you're trying to copy already exists.")
         super(msg)
       end
     end
