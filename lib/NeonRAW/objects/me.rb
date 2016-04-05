@@ -1,6 +1,7 @@
 require_relative 'user'
 require_relative 'trophy'
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength,
+require_relative 'multireddit'
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ClassLength
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 module NeonRAW
@@ -35,6 +36,7 @@ module NeonRAW
         data.each do |key, value|
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
+          next if key == :created || key == :created_utc
           self.class.send(:attr_reader, key)
         end
         class << self
@@ -155,6 +157,21 @@ module NeonRAW
       # @!method read_all_messages!
       def read_all_messages!
         @client.request_nonjson('/api/read_all_messages', :post)
+      end
+
+      # Fetches your multireddits.
+      # @!method multireddits
+      # @return [Array<NeonRAW::Objects::MultiReddit>] Returns a list of
+      #   multireddits.
+      def multireddits
+        data_arr = []
+        params = {}
+        params[:expand_srs] = false
+        data = @client.request_data('/api/multi/mine', :get, params)
+        data.each do |multireddit|
+          data_arr << MultiReddit.new(@client, multireddit[:data])
+        end
+        data_arr
       end
 
       # Goes through and edits then deletes your post history. Defaults to
