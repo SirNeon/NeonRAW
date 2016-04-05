@@ -58,6 +58,7 @@ module NeonRAW
     def handle_data_errors(data)
       return nil if data.empty? # handles returns from toggleable methods
       if data.is_a?(Array) # handles returns from some flair methods
+        return nil unless data[0].has_key?(:errors) # handles multireddits
         messages = []
         errors = data[0][:errors]
         unless errors.empty?
