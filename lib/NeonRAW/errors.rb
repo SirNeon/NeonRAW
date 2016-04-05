@@ -112,9 +112,9 @@ module NeonRAW
       end
     end
 
-    # The multireddit you're trying to copy already exists.
+    # The multireddit you're trying to create already exists.
     class Conflict < StandardError
-      def initialize(msg = "The multireddit you're trying to copy already exists.")
+      def initialize(msg = "The multireddit you're trying to create already exists.")
         super(msg)
       end
     end
