@@ -5,6 +5,7 @@ module NeonRAW
     class Subreddit < Thing
       # Methods for moderators.
       module Moderation
+        # @!group Listing
         # Fetches the modlog for the subreddit.
         # @!method get_modlog(params = { limit: 25 })
         # @param params [Hash] The parameters.
@@ -33,6 +34,23 @@ module NeonRAW
           @client.send(:build_listing, path, params)
         end
 
+        # Fetches the subreddit's modmail.
+        # @!method get_modmail(params = { limit: 25 })
+        # @param params [Hash] The parameters.
+        # @option params :after [String] Fullname of the next data block.
+        # @option params :before [String] Fullname of the previous data block.
+        # @option params :count [Integer] The number of things already in the
+        #   listing.
+        # @option params :limit [1..1000] The number of listing items to fetch.
+        # @option params :only [Symbol] Only fetch either [links, comments].
+        # @option params :show [String] Literally the string 'all'.
+        # @return [NeonRAW::Objects::Listing] Returns a listing with all the
+        #   things.
+        def get_modmail(params = { limit: 25 })
+          path = "/r/#{display_name}/about/message/inbox"
+          @client.send(:build_listing, path, params)
+        end
+
         # Fetches things for review by moderators.
         # @!method get_reported(params = { limit: 25 })
         # @!method get_spam(params = { limit: 25 })
@@ -56,6 +74,7 @@ module NeonRAW
             @client.send(:build_listing, path, params)
           end
         end
+        # @!endgroup
 
         # Accept a pending mod invite to the subreddit.
         # @!method accept_mod_invite!
