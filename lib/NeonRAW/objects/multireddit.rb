@@ -1,11 +1,48 @@
 require_relative 'thing'
+# rubocop:disable Metrics/MethodLength
 
 module NeonRAW
   module Objects
     # le multireddit object
+    # @!attribute [r] editable?
+    #   @return [Boolean] Returns whether or not you can edit the multireddit.
+    # @!attribute [r] display_name
+    #   @return [String] Returns the display name of the multireddit.
+    # @!attribute [r] name
+    #   @return [String] Returns the name of the multireddit.
+    # @!attribute [r] description_html
+    #   @return [String, nil] Returns the description of the multireddit with
+    #     HTML or nil if there is none.
+    # @!attribute [r] copied_from
+    #   @return [String, nil] Returns where the multireddit was copied from or
+    #     nil if it wasn't copied.
+    # @!attribute [r] icon_url
+    #   @return [String, nil] Returns the icon URL of the multireddit or nil if
+    #     there is none.
+    # @!attribute [r] key_color
+    #   @return [String, nil] Returns the color of the key or nil if there is
+    #     none.
+    # @!attribute [r] visibility
+    #   @return [String] Returns the visibility status of the multireddit
+    #     [public, private, hidden].
+    # @!attribute [r] icon_name
+    #   @return [String, nil] Returns the name of the icon or nil if there is
+    #     none ['art and design', 'ask', 'books', 'business', 'cars',
+    #     'comics', 'cute animals', 'diy', 'entertainment', 'food and drink',
+    #     'funny', 'games', 'grooming', 'health', 'life advice', 'military',
+    #     'models pinup', 'music', 'news', 'philosophy', 'pictures and gifs',
+    #     'science', 'shopping', 'sports', 'style', 'tech', 'travel',
+    #     'unusual stories', 'video', '', 'None'].
+    # @!attribute [r] weighting_scheme
+    #   @return [String] Returns the weighting scheme for the multireddit
+    #     [classic, fresh].
+    # @!attribute [r] path
+    #   @return [String] Returns the path to the multireddit.
+    # @!attribute [r] description
+    #   @return [String, nil] Returns the description of the multireddit or nil
+    #     if there is none.
     class MultiReddit < Thing
       include Thing::Createable
-      include Thing::Refreshable
 
       def initialize(client, data)
         @client = client
@@ -15,6 +52,10 @@ module NeonRAW
           next if key == :created || key == :created_utc || key == :subreddits
           self.class.send(:attr_reader, key)
         end
+        class << self
+          alias_method :editable?, :can_edit
+          alias_method :description, :description_md
+        end
       end
 
       # Fetches a list of subreddits in the multireddit.
@@ -23,6 +64,41 @@ module NeonRAW
       def subreddits
         subreddits = @subreddits || []
         subreddits.map { |subreddit| subreddit[:name] }
+      end
+
+      # Copy the multireddit.
+      # @!method copy(opts = {})
+      # @param opts [Hash] Optional parameters.
+      # @option opts :name [String] The new name of the multireddit. Defaults to
+      #   the name of the original copy.
+      # @return [NeonRAW::Objects::MultiReddit] Returns the new object.
+      def copy(opts = {})
+        params = {}
+        params[:display_name] = display_name
+        params[:from] = path
+        params[:to] = "/user/#{@client.me.name}/m/"
+        params[:to] += opts[:name] || display_name
+        data = @client.request_data('/api/multi/copy', :post, params)
+        MultiReddit.new(@client, data[:data])
+      end
+
+      # Renames the multireddit.
+      # @!method rename!(new_name)
+      # @param new_name [String] The new name for the multireddit.
+      # @return [NeonRAW::objects::MultiReddit] Returns the multireddit object.
+      def rename!(new_name)
+        params = {}
+        params[:display_name] = new_name
+        params[:from] = path
+        params[:to] = "/user/#{@client.me.name}/m/#{new_name}"
+        data = @client.request_data('/api/multi/rename', :post, params)
+        MultiReddit.new(@client, data[:data])
+      end
+
+      # Deletes the multireddit.
+      # @!method delete!
+      def delete!
+        @client.request_nonjson("/api/multi/#{path}", :delete)
       end
     end
   end
