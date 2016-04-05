@@ -105,6 +105,21 @@ module NeonRAW
         params[:to] = name
         @client.request_data('/api/compose', :post, params)
       end
+
+      # Fetches the user's multireddits.
+      # @!method multireddits
+      # @return [Array<NeonRAW::Objects::MultiReddit>] Returns a list of
+      #   multireddits.
+      def multireddits
+        data_arr = []
+        params = {}
+        params[:expand_srs] = false
+        data = @client.request_data("/api/multi/user/#{name}", :get, params)
+        data.each do |multireddit|
+          data_arr << MultiReddit.new(@client, multireddit[:data])
+        end
+        data_arr
+      end
     end
   end
 end
