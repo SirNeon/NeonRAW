@@ -37,8 +37,8 @@ module NeonRAW
         @client = client
         data.each do |key, value|
           value = nil if ['', [], {}].include?(value)
-          next if key == :created || key == :created_utc
           instance_variable_set(:"@#{key}", value)
+          next if key == :created || key == :created_utc || key == :replies
           self.class.send(:attr_reader, key)
         end
         class << self
@@ -46,33 +46,46 @@ module NeonRAW
         end
       end
 
+      # Creates a list of replies to a private message.
+      # @!method replies
+      # @return [Array<NeonRAW::Objects::PrivateMessage>] Returns a list of
+      #   replies.
+      def replies
+        return nil if @replies.nil?
+        messages = []
+        @replies[:data][:children].each do |reply|
+          messages << PrivateMessage.new(@client, reply[:data])
+        end
+        messages
+      end
+
       # Block a user.
-      # @!method block
-      def block
+      # @!method block!
+      def block!
         params = {}
         params[:id] = name
         @client.request_data('/api/block', :post, params)
       end
 
-      # Toggle the collapse of messages in a private message thread.
-      # @!method collapse
-      # @!method uncollapse
-      %w(collapse uncollapse).each do |type|
-        define_method :"#{type}" do
+      # Toggle the read status of a message.
+      # @!method mark_as_read!
+      # @!method mark_as_unread!
+      %w(read unread).each do |type|
+        define_method :"mark_as_#{type}!" do
           params = {}
           params[:id] = name
           @client.request_data("/api/#{type}_message", :post, params)
         end
       end
 
-      # Toggle the read status of a message.
-      # @!method mark_as_read
-      # @!method mark_as_unread
-      %w(read unread).each do |type|
-        define_method :"mark_as_#{type}" do
+      # Set whether to mute a user in modmail or not.
+      # @!method mute!
+      # @!method unmute!
+      %w(mute unmute).each do |type|
+        define_method :"#{type}!" do
           params = {}
           params[:id] = name
-          @client.request_data("/api/#{type}_message", :post, params)
+          @client.request_data("/api/#{type}_message_author", :post, params)
         end
       end
     end
