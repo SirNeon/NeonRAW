@@ -109,7 +109,6 @@ module NeonRAW
     #     to be posted [any, link, self].
     class Subreddit < Thing
       include Thing::Createable
-      include Thing::Refreshable
       include Subreddit::Flair
       include Subreddit::Moderation
 
