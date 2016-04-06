@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'A Reddit API wrapper for Ruby.'
   spec.description   = 'SirNeon\'s wonderful API wrapper for Reddit.'
   spec.homepage      = 'https://gitlab.com/SirNeon/NeonRAW'
-  spec.license       = 'GPLv2'
+  spec.license       = 'GPL-2.0'
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.
