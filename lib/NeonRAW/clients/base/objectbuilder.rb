@@ -7,7 +7,7 @@ module NeonRAW
   module Clients
     class Base
       # Methods for building objects.
-      module ObjectsBuilder
+      module ObjectBuilder
         # Creates a subreddit object.
         # @!method get_subreddit(name)
         # @param name [String] The name of the subreddit.
