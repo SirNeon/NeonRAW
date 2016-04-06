@@ -100,6 +100,47 @@ module NeonRAW
       def delete!
         @client.request_nonjson("/api/multi/#{path}", :delete)
       end
+
+      # Edit the multireddit.
+      # @!method edit(data)
+      # @param data [JSON] The data for the multireddit.
+      # @see https://www.reddit.com/dev/api#PUT_api_multi_{multipath}
+      def edit(data)
+        params = {}
+        params[:model] = data
+        params[:multipath] = path
+        params[:expand_srs] = false
+        data = @client.request_data("/api/multi/#{path}", :put, params)
+        data[:data].each do |key, value|
+          value = nil if ['', [], {}].include?(value)
+          instance_variable_set(:"@#{key}", value)
+        end
+      end
+
+      # Adds a subreddit to the multireddit.
+      # @!method add_subreddit(subreddit)
+      # @param subreddit [String] The name of the subreddit to add.
+      def add_subreddit(subreddit)
+        params = {}
+        params[:model] = { 'name' => subreddit }.to_json
+        params[:multipath] = path
+        params[:srname] = subreddit
+        api_path = "/api/multi/#{path}/r/#{subreddit}"
+        @client.request_data(api_path, :put, params)
+        @subreddits << { name: subreddit }
+      end
+
+      # Remove a subreddit from the multireddit.
+      # @!method remove_subreddit(subreddit)
+      # @param subreddit [String] The name of the subreddit to remove.
+      def remove_subreddit(subreddit)
+        params = {}
+        params[:multipath] = path
+        params[:srname] = subreddit
+        api_path = "/api/multi/#{path}/r/#{subreddit}"
+        @client.request_nonjson(api_path, :delete, params)
+        @subreddits.delete(name: subreddit)
+      end
     end
   end
 end
