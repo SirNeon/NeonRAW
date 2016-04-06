@@ -200,6 +200,31 @@ module NeonRAW
           @client.send(:build_listing, path, params)
         end
       end
+
+      # Search for links in the subreddit.
+      # @!method search(query, opts = { limit: 25 })
+      # @param query [String] The text to search for (512 characters maximum).
+      # @param opts [Hash] Optional parameters.
+      # @option opts :after [String] Fullname of the next data block.
+      # @option opts :before [String] Fullname of the previous data block.
+      # @option opts :count [Integer] Number of items already in the listing.
+      # @option opts :include_facets [Boolean] Whether or not to include facets.
+      # @option opts :limit [1..1000] The number of listing items to fetch.
+      # @option opts :show [String] Literally the string 'all'.
+      # @option opts :sort [String] The sort of the data [relevance, hot, top,
+      #   new, comments].
+      # @option opts :syntax [String] The type of search you want [cloudsearch,
+      #   lucene, plain]
+      # @option opts :t [String] Time for relevant sorting [hour, day, week,
+      #   month, year, all]
+      def search(query, opts = { limit: 25 })
+        params = opts
+        params[:q] = query
+        params[:restrict_sr] = true
+        params[:sr_detail] = false
+        params[:type] = 'link'
+        @client.send(:build_listing, "/r/#{display_name}/search", params)
+      end
       # @!endgroup
     end
   end
