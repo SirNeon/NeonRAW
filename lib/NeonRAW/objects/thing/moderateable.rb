@@ -2,6 +2,12 @@ module NeonRAW
   module Objects
     class Thing
       # Methods for moderators.
+      # @!attribute [r] mod_reports
+      #   @return [Array<String>, nil] Returns the mod reports or nil if there
+      #     are none.
+      # @!attribute [r] user_reports
+      #   @return [Array<String>, nil] Returns the user reports or nil if there
+      #     are none.
       module Moderateable
         # Approve a comment or submission.
         # @!method approve!
@@ -27,13 +33,8 @@ module NeonRAW
 
         # Distinguish a submission/comment.
         # @!method distinguish(type)
-        # @param type [Symbol] The type of distinguish you want to do.
-        # @option type :yes [Symbol] Distinguish the thing.
-        # @option type :no [Symbol] Undistinguish the thing.
-        # @option type :admin [Symbol] Admin Distinguish the thing (Admins
-        #   only).
-        # @option type :special [Symbol] Add a user-specific distinguish
-        #   (Depends on the user).
+        # @param type [String] The type of distinguish you want to do [yes, no,
+        #   admin, special].
         # @!group Moderators
         def distinguish(type)
           params = {}
