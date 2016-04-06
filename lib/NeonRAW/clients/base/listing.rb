@@ -1,3 +1,6 @@
+require_relative '../../objects/listing'
+require_relative '../../objects/subreddit'
+require_relative '../../objects/comment'
 require_relative '../../objects/access'
 require_relative '../../objects/privatemessage'
 require_relative '../../objects/modlogaction'
