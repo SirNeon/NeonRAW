@@ -2,6 +2,7 @@ require 'typhoeus'
 require 'json'
 require_relative 'base/listing'
 require_relative 'base/captcha'
+require_relative 'base/objectsbuilder'
 require_relative '../errors'
 
 module NeonRAW
@@ -10,6 +11,7 @@ module NeonRAW
     class Base
       include Base::Listings
       include Base::Captchas
+      include Base::ObjectsBuilder
       include Errors
 
       # Creates headers for oAuth2 requests.
