@@ -15,7 +15,7 @@ module NeonRAW
         end
 
         # Give a thing gold.
-        # @!method gild
+        # @!method gild(quantity)
         # @param quantity [Integer] The amount of gold to give.
         def gild(quantity)
           quantity.times do
