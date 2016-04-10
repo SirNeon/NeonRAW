@@ -3,7 +3,7 @@ module NeonRAW
     class Base
       # Utilities for the base client.
       module Utilities
-        # Search for a subreddit.
+        # Search for a subreddit whose name starts with the query.
         # @!method find_subreddit(query, opts = {})
         # @param query [String] The name to search for (50 characters maximum).
         # @param opts [Hash] Optional parameters.
@@ -11,12 +11,13 @@ module NeonRAW
         #   query.
         # @option opts :include_nsfw [Boolean] Whether or not to include NSFW
         #   subreddits.
+        # @return [Array<String>] Returns the list of subreddits.
         def find_subreddit(query, opts = {})
           params = {}
           params[:exact] = opts[:exact]
           params[:include_over_18] = opts[:include_nsfw]
           params[:query] = query
-          request_data('/api/search_reddit_names', :post, params)
+          request_data('/api/search_reddit_names', :post, params)[:names]
         end
       end
     end
