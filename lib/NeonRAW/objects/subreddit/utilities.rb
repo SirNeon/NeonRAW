@@ -48,12 +48,14 @@ module NeonRAW
         # @param opts [Hash] Optional parameters.
         # @option opts :omit [String] A comma-separated list of subreddits to
         #   omit from the results.
+        # @return [Array<String>] Returns a list of the recommended subreddits.
         def recommended_subreddits(opts = {})
           params = {}
           params[:omit] = opts[:omit]
           params[:srnames] = display_name
-          path = "/api/recommended/sr/#{display_name}"
-          @client.request_data(path, :get, params)
+          path = "/api/recommend/sr/#{display_name}"
+          data = @client.request_data(path, :get, params)
+          data.map { |subreddit| subreddit[:sr_name] }
         end
       end
     end
