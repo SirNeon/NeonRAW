@@ -176,7 +176,7 @@ module NeonRAW
 
       # Goes through and edits then deletes your post history. Defaults to
       # 2 weeks.
-      # @!method purge!(queue, params = {})
+      # @!method purge(queue, params = {})
       # @param queue [Symbol] The queue you want to get your posts from
       #   [overview, submitted, comments, upvoted, downvoted, hidden, saved,
       #   giled]
@@ -185,26 +185,28 @@ module NeonRAW
       # @option params :blacklist [Array<String>] Subreddits to avoid purging
       #   from.
       # @option params :whitelist [Array<String>] Subreddits to purge.
+      # @option params :sort [String] The sort of the data (defaults to new)
+      #   [new, hot, top, controversial].
       # @option params :hours [Integer] The number of hours to go back from.
       # @option params :days [Integer] The number of days to go back from.
       # @option params :weeks [Integer] The number of weeks to go back from.
       # @option params :months [Integer] The number of months to go back from.
       # @option params :years [Integer] The number of years to go back from.
-      def purge!(queue, params = {})
+      def purge(queue, params = {})
         params[:edit] = '.' if params[:edit].nil?
         params[:blacklist] = [] if params[:blacklist].nil?
         params[:whitelist] = ['*'] if params[:whitelist].nil?
         whitelist = params[:whitelist]
         params[:age] = max_age(params)
-        items = send(:"get_#{queue}", sort: 'new', limit: 1000)
+        items = send(:"get_#{queue}", sort: params[:sort] || 'new', limit: 1000)
         items.each do |item|
           next if params[:blacklist].include?(item.subreddit)
-          break if item.created < params[:age]
+          next if item.created < params[:age]
           next unless whitelist.include?(item.subreddit) || whitelist[0] == '*'
           if item.is_a?(Submission)
-            item.edit params[:edit] if item.selfpost?
+            item.edit! params[:edit] if item.selfpost? && !item.archived?
           else
-            item.edit params[:edit]
+            item.edit! params[:edit] unless item.archived?
           end
           item.delete!
         end
