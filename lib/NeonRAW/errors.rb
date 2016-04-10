@@ -72,6 +72,12 @@ module NeonRAW
           exception = errors.map { |error| error + ' ' }.join
           fail StandardError, exception
         end
+      elsif data.has_key?(:errors) # handles image uploading
+        errors = data[:errors]
+        unless errors.empty?
+          exception = errors.map { |error| error + ' ' }.join
+          fail StandardError, exception
+        end
       end
     end
 
