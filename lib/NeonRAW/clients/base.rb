@@ -3,6 +3,7 @@ require 'json'
 require_relative 'base/listing'
 require_relative 'base/captcha'
 require_relative 'base/objectbuilder'
+require_relative 'base/utilities'
 require_relative '../errors'
 
 module NeonRAW
@@ -12,6 +13,7 @@ module NeonRAW
       include Base::Listings
       include Base::Captchas
       include Base::ObjectBuilder
+      include Base::Utilities
       include Errors
 
       # Creates headers for oAuth2 requests.
