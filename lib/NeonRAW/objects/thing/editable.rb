@@ -25,9 +25,9 @@ module NeonRAW
         end
 
         # Edit a thing.
-        # @!method edit(text)
+        # @!method edit!(text)
         # @param text [String] The text to replace the current text with.
-        def edit(text)
+        def edit!(text)
           params = {}
           params[:api_type] = 'json'
           params[:text] = text
@@ -42,6 +42,7 @@ module NeonRAW
           params = {}
           params[:id] = name
           @client.request_data('/api/del', :post, params)
+          refresh!
         end
       end
     end

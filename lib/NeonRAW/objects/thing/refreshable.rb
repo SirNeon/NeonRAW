@@ -8,7 +8,9 @@ module NeonRAW
         def refresh!
           params = {}
           params[:id] = name
-          data = @client.request_data("/r/#{subreddit}/api/info", :get, params)
+          path = "/r/#{display_name}/api/info" if /t5_/ =~ name
+          path = "/r/#{subreddit}/api/info" unless /t5_/ =~ name
+          data = @client.request_data(path, :get, params)
           data[:data][:children][0][:data].each do |key, value|
             value = nil if ['', [], {}].include?(value)
             instance_variable_set(:"@#{key}", value)

@@ -81,6 +81,7 @@ module NeonRAW
             params = {}
             params[:id] = name
             @client.request_data("/api/#{type}_reports", :post, params)
+            refresh!
           end
         end
 
