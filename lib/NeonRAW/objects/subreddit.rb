@@ -4,6 +4,7 @@ require_relative '../objects/comment'
 require_relative '../objects/thing'
 require_relative 'subreddit/flair'
 require_relative 'subreddit/moderation'
+require_relative 'subreddit/utilities'
 # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
 module NeonRAW
@@ -112,6 +113,7 @@ module NeonRAW
       include Thing::Refreshable
       include Subreddit::Flair
       include Subreddit::Moderation
+      include Subreddit::Utilities
 
       # @!method initialize(client, data)
       # @param client [NeonRAW::Web/Installed/Script] The client object.
@@ -140,41 +142,6 @@ module NeonRAW
           alias_method :sidebar, :description
           alias_method :sidebar_html, :description_html
         end
-      end
-
-      # Get info on a link/comment/subreddit.
-      # @!method get_info(type, thing)
-      # @param type [Symbol] The type of thing [id, url].
-      # @param thing [String] Either a name or an URL.
-      # @return [NeonRAW::Objects::Comment/Submission/Subreddit] Returns the
-      #   object.
-      def get_info(type, thing)
-        params = {}
-        params[type] = thing
-        data = @client.request_data("/r/#{display_name}/api/info", :get, params)
-        case data[:data][:children][0][:kind]
-        when 't1' then Comment.new(@client, data[:data][:children][0][:data])
-        when 't3' then Submission.new(@client, data[:data][:children][0][:data])
-        when 't5' then Subreddit.new(@client, data[:data][:children][0][:data])
-        end
-      end
-
-      # Submit a thread to the subreddit.
-      # @!method submit(params = {})
-      # @param params [Hash] The parameters.
-      # @option params :text [String] The text of the submission (selfpost).
-      # @option params :url [String] The URL of the submission (link post).
-      # @option params :title [String] The title of the submission (300
-      #   characters maximum).
-      # @return [NeonRAW::Objects::Submission] Returns the submission object.
-      def submit(params = {})
-        params[:kind] = :self if params[:text]
-        params[:kind] = :link if params[:url]
-        params[:sr] = display_name
-        response = @client.request_data('/api/submit', :post, params)
-        # Seriously though, fucking convoluted data structures.
-        submission_id = response[:jquery][10][3][0].split('/')[6]
-        get_info(:id, 't3_' + submission_id)
       end
 
       # @!group Listings
