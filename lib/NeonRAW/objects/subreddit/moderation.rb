@@ -74,6 +74,41 @@ module NeonRAW
             @client.send(:build_listing, path, params)
           end
         end
+
+        # Fetches users with altered privileges.
+        # @!method get_banned(params = { limit: 25 })
+        # @!method get_muted(params = { limit: 25 })
+        # @!method get_wikibanned(params = { limit: 25 })
+        # @!method get_contributors(params = { limit: 25 })
+        # @!method get_wikicontributors(params = { limit: 25 })
+        # @!method get_moderators(params = { limit: 25 })
+        # @param params [Hash] The parameters.
+        # @option params :after [String] Fullname of the next data block.
+        # @option params :before [String] Fullname of the previous data block.
+        # @option params :count [Integer] Number of items already in the
+        #   listing.
+        # @option params :limit [1..1000] The number of listing items to fetch.
+        # @option params :show [String] Literally the string 'all'.
+        # @option params :user [String] The name of the user to fetch.
+        # @return [Array<Hash>] Returns the data of the users.
+        %w(banned muted wikibanned
+           contributors wikicontributors moderators).each do |type|
+             define_method :"get_#{type}" do |params = { limit: 25 }|
+               data_arr = []
+               path = "/r/#{display_name}/about/#{type}"
+               until data_arr.length == params[:limit]
+                 data = @client.request_data(path, :get, params)
+                 params[:after] = data[:data][:after]
+                 params[:before] = data[:data][:before]
+                 data[:data][:children].each do |item|
+                   data_arr << item
+                   break if data_arr.length == params[:limit]
+                 end
+                 break if params[:after].nil?
+               end
+               data_arr
+             end
+           end
         # @!endgroup
 
         # Accept a pending mod invite to the subreddit.
@@ -83,6 +118,7 @@ module NeonRAW
           params[:api_type] = 'json'
           path = "/r/#{display_name}/api/accept_moderator_invite"
           @client.request_data(path, :post, params)
+          refresh!
         end
 
         # Ditch your privileged status in the subreddit.
@@ -93,7 +129,51 @@ module NeonRAW
             params = {}
             params[:id] = name
             @client.request_data("/api/leave#{type}", :post, params)
+            refresh!
           end
+        end
+
+        # Upload a subreddit image.
+        # @!method upload_image!(file_name, file_type, image_name, upload_type)
+        # @param file_path [String] The path to the file (500 KiB maximum).
+        # @param file_type [String] The file extension [png, jpg].
+        # @param image_name [String] The name of the image.
+        # @param upload_type [String] The type of upload [img, header, icon,
+        #   banner].
+        def upload_image!(file_path, file_type, image_name, upload_type)
+          params = {}
+          params[:img_type] = file_type
+          params[:name] = image_name
+          params[:upload_type] = upload_type
+          path = "/r/#{display_name}/api/upload_sr_img"
+          @client.request_upload(path, file_path, params)
+          refresh!
+        end
+
+        # Remove a subreddit image.
+        # @!method remove_banner!
+        # @!method remove_header!
+        # @!method remove_icon!
+        %w(banner header icon).each do |type|
+          define_method :"remove_#{type}!" do
+            params = {}
+            params[:api_type] = 'json'
+            path = "/r/#{display_name}/api/delete_sr_#{type}"
+            @client.request_data(path, :post, params)
+            refresh!
+          end
+        end
+
+        # Remove a subreddit image.
+        # @!method remove_image!(image)
+        # @param image [String] The name of the image.
+        def remove_image!(image)
+          params = {}
+          params[:api_type] = 'json'
+          params[:img_name] = image
+          path = "/r/#{display_name}/api/delete_sr_img"
+          @client.request_data(path, :post, params)
+          refresh!
         end
       end
     end
