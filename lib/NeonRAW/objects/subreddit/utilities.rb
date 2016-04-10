@@ -1,4 +1,4 @@
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize
 
 module NeonRAW
   module Objects
@@ -6,14 +6,13 @@ module NeonRAW
       # Utilities for subreddits.
       module Utilities
         # Get info on a link/comment/subreddit.
-        # @!method get_info(type, thing)
-        # @param type [Symbol] The type of thing [id, url].
-        # @param thing [String] Either a name or an URL.
+        # @!method get_info(params = {})
+        # @param params [Hash] The parameters.
+        # @option params :id [String] The fullname of the thing.
+        # @option params :url [String] The URL of the thing.
         # @return [NeonRAW::Objects::Comment/Submission/Subreddit] Returns the
         #   object.
-        def get_info(type, thing)
-          params = {}
-          params[type] = thing
+        def get_info(params = {})
           path = "/r/#{display_name}/api/info"
           data = @client.request_data(path, :get, params)
           case data[:data][:children][0][:kind]
@@ -41,7 +40,7 @@ module NeonRAW
           response = @client.request_data('/api/submit', :post, params)
           # Seriously though, fucking convoluted data structures.
           submission_id = response[:jquery][10][3][0].split('/')[6]
-          get_info(:id, 't3_' + submission_id)
+          get_info(id: 't3_' + submission_id)
         end
 
         # Gets recommended subreddits for the subreddit.
