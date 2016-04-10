@@ -175,6 +175,22 @@ module NeonRAW
           @client.request_data(path, :post, params)
           refresh!
         end
+
+        # Edit the subreddit's stylesheet.
+        # @!method edit_stylesheet(data, opts = {})
+        # @param data [String] The CSS for the stylesheet.
+        # @param opts [Hash] Optional parameters.
+        # @option opts :reason [String] The reason for the edit (256 characters
+        #   maximum).
+        def edit_stylesheet(data, opts = {})
+          params = {}
+          params[:api_type] = 'json'
+          params[:op] = 'save'
+          params[:reason] = opts[:reason]
+          params[:stylesheet_contents] = data
+          path = "/r/#{display_name}/api/subreddit_stylesheet"
+          @client.request_data(path, :post, params)
+        end
       end
     end
   end
