@@ -43,6 +43,25 @@ module NeonRAW
         response
       end
 
+      # Uploads images to Reddit.
+      # @!method upload_image(path, file_path, params)
+      # @param path [String] The API path.
+      # @param file_path [String] The path to the file you want to upload.
+      # @param params [Hash] The parameters.
+      # @return [Typhoeus::Response] Returns the response.
+      def upload_image(path, file_path, params)
+        response = Typhoeus.post(
+          'https://oauth.reddit.com' + path,
+          headers: api_headers,
+          body: { file: File.open(file_path, 'r') },
+          params: params
+        )
+        error = assign_errors(response)
+        fail error unless error.nil?
+        handle_ratelimit(response.headers)
+        response
+      end
+
       # Makes the connection used to authorize the client.
       # @!method auth_connection(path, meth, params)
       # @param path [String] The API path.
@@ -67,8 +86,7 @@ module NeonRAW
       # @param path [String] The API path to connect to.
       # @param meth [Symbol] The request method to use.
       # @param params [Hash] Parameters for the request.
-      # @return [Hash] Returns the parsed JSON as a hash containing
-      #   the data.
+      # @return [Hash] Returns the parsed JSON containing the response data.
       def request_data(path, meth, params = {})
         refresh_access! if @access.expired?
         response = api_connection(path, meth, params)
@@ -85,6 +103,20 @@ module NeonRAW
       def request_nonjson(path, meth, params = {})
         refresh_access! if @access.expired?
         api_connection(path, meth, params).body
+      end
+
+      # Requests to upload an image to Reddit.
+      # @!method request_upload(path, file_path, params)
+      # @param path [String] The API path to connect to.
+      # @param file_path [String] The path to the file you want to upload.
+      # @param params [Hash] The parameters for the request.
+      # @return [Hash] Returns the parsed JSON containing the response data.
+      def request_upload(path, file_path, params)
+        refresh_access! if @access.expired?
+        response = upload_image(path, file_path, params)
+        data = JSON.parse(response.body, symbolize_names: true)
+        handle_data_errors(data)
+        data
       end
     end
   end
