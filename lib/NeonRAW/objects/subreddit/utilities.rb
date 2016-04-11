@@ -1,5 +1,3 @@
-# rubocop:disable Metrics/AbcSize
-
 module NeonRAW
   module Objects
     class Subreddit
@@ -56,6 +54,20 @@ module NeonRAW
           path = "/api/recommend/sr/#{display_name}"
           data = @client.request_data(path, :get, params)
           data.map { |subreddit| subreddit[:sr_name] }
+        end
+
+        # Toggle your subscription to the subreddit.
+        # @!method subscribe!
+        # @!method unsubscribe!
+        %w(subscribe unsubscribe).each do |type|
+          define_method :"#{type}!" do
+            params = {}
+            params[:action] = 'sub' if type == 'subscribe'
+            params[:action] = 'unsub' if type == 'unsubscribe'
+            params[:sr] = name
+            @client.request_data('/api/subscribe', :post, params)
+            refresh!
+          end
         end
       end
     end
