@@ -33,6 +33,8 @@ module NeonRAW
     #     occured.
     # @!attribute [r] mod
     #   @return [String] Returns the mod who did the action.
+    # @!attribute [r] id
+    #   @return [String] Returns the ID of the modlog action.
     class ModLogAction
       include Thing::Createable
 
