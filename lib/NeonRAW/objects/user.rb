@@ -119,6 +119,23 @@ module NeonRAW
         end
         data_arr
       end
+
+      # Add the user to your friends list.
+      # @!method friend(opts = {})
+      # @param opts [Hash] Optional parameters.
+      # @option opts :note [String] Add a note to your friend (300 characters
+      #   maximum).
+      def friend
+        body = { 'name' => name }.to_json
+        @client.request_data("/api/v1/me/friends/#{name}", :put, {}, body)
+      end
+
+      # Remove the user from your friends list.
+      # @!method unfriend
+      def unfriend
+        params = { id: name }
+        @client.request_nonjson("/api/v1/me/friends/#{name}", :delete, params)
+      end
     end
   end
 end
