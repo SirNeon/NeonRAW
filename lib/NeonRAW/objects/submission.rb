@@ -1,7 +1,6 @@
 require_relative 'thing'
 require_relative 'comment'
 require_relative 'morecomments'
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
 module NeonRAW
   module Objects

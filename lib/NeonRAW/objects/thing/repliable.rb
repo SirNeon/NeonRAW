@@ -1,5 +1,3 @@
-# rubocop:disable Metrics/MethodLength
-
 module NeonRAW
   module Objects
     class Thing

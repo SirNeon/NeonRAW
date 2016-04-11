@@ -5,7 +5,7 @@ require_relative '../objects/thing'
 require_relative 'subreddit/flair'
 require_relative 'subreddit/moderation'
 require_relative 'subreddit/utilities'
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength
 
 module NeonRAW
   module Objects

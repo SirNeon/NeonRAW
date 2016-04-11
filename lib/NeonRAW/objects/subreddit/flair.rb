@@ -1,6 +1,5 @@
 require_relative '../thing'
 # rubocop:disable Style/AccessorMethodName, Metrics/LineLength
-# rubocop:disable Metrics/MethodLength
 
 module NeonRAW
   module Objects

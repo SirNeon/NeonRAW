@@ -5,7 +5,6 @@ require_relative '../../objects/access'
 require_relative '../../objects/privatemessage'
 require_relative '../../objects/modlogaction'
 require_relative '../../errors'
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 
 module NeonRAW
   module Clients

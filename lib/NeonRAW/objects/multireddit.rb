@@ -1,5 +1,4 @@
 require_relative 'thing'
-# rubocop:disable Metrics/MethodLength
 
 module NeonRAW
   module Objects
