@@ -2,4 +2,4 @@ Metrics/AbcSize:
   Max: 30
 
 Metrics/MethodLength:
-  Max: 15
+  Max: 20
