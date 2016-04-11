@@ -152,7 +152,7 @@ module NeonRAW
         data_arr = []
         data = @client.request_data("/r/#{display_name}/about/rules.json", :get)
         data[:rules].each do |rule|
-          data_arr << Objects::Rule.new(@client, rule)
+          data_arr << Rule.new(@client, rule)
         end
         data_arr
       end
