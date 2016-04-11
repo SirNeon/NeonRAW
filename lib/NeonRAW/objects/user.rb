@@ -121,10 +121,7 @@ module NeonRAW
       end
 
       # Add the user to your friends list.
-      # @!method friend(opts = {})
-      # @param opts [Hash] Optional parameters.
-      # @option opts :note [String] Add a note to your friend (300 characters
-      #   maximum).
+      # @!method friend
       def friend
         body = { 'name' => name }.to_json
         @client.request_data("/api/v1/me/friends/#{name}", :put, {}, body)
