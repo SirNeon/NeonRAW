@@ -2,6 +2,7 @@ require_relative '../objects/submission'
 require_relative '../objects/listing'
 require_relative '../objects/comment'
 require_relative '../objects/thing'
+require_relative '../objects/rule'
 require_relative 'subreddit/flair'
 require_relative 'subreddit/moderation'
 require_relative 'subreddit/utilities'
@@ -142,6 +143,18 @@ module NeonRAW
           alias_method :sidebar, :description
           alias_method :sidebar_html, :description_html
         end
+      end
+
+      # Fetches the subreddit's rules.
+      # @!method rules
+      # @return [Array<NeonRAW::Objects::Rule>] Returns a list of the rules.
+      def rules
+        data_arr = []
+        data = @client.request_data("/r/#{display_name}/about/rules.json", :get)
+        data[:rules].each do |rule|
+          data_arr << Objects::Rule.new(@client, rule)
+        end
+        data_arr
       end
 
       # @!group Listings
