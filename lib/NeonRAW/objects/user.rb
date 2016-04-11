@@ -1,4 +1,5 @@
 require_relative 'thing'
+require_relative 'trophy'
 
 module NeonRAW
   module Objects
@@ -132,6 +133,19 @@ module NeonRAW
       def unfriend
         params = { id: name }
         @client.request_nonjson("/api/v1/me/friends/#{name}", :delete, params)
+      end
+
+      # Fetches the user's trophies.
+      # @!method trophies
+      # @return [Array<NeonRAW::Objects::Trophy>] Returns a list of trophies.
+      def trophies
+        data_arr = []
+        path = "/api/v1/user/#{name}/trophies"
+        data = @client.request_data(path, :get)[:data]
+        data[:trophies].each do |trophy|
+          data_arr << Trophy.new(trophy[:data])
+        end
+        data_arr
       end
     end
   end

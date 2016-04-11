@@ -140,7 +140,7 @@ module NeonRAW
 
       # Fetches your trophies.
       # @!method trophies
-      # @return [Array<NeonRAW::Objects::Trophy] Returns a list of trophies.
+      # @return [Array<NeonRAW::Objects::Trophy>] Returns a list of trophies.
       def trophies
         data_arr = []
         data = @client.request_data('/api/v1/me/trophies', :get)[:data]
