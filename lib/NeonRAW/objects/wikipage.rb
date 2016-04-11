@@ -23,7 +23,6 @@ module NeonRAW
           next if key == :revision_date || key == :revision_by
           self.class.send(:attr_reader, key)
         end
-
         class << self
           alias_method :revisable?, :may_revise
           alias_method :content, :content_md
