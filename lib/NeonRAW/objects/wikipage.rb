@@ -34,7 +34,7 @@ module NeonRAW
       # @!method revised_by
       # @return [String] Returns the username of the user.
       def revised_by
-        @revision_by[:name]
+        @revision_by[:data][:name]
       end
 
       # The date of the last revision to the wiki page.
