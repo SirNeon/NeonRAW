@@ -1,5 +1,6 @@
 require_relative '../thing'
 require_relative '../modloguser'
+require_relative '../listing'
 
 module NeonRAW
   module Objects
@@ -91,7 +92,7 @@ module NeonRAW
         # @option params :limit [1..1000] The number of listing items to fetch.
         # @option params :show [String] Literally the string 'all'.
         # @option params :user [String] The name of the user to fetch.
-        # @return [Array<Hash>] Returns the data of the users.
+        # @return [NeonRAW::Objects::Listing] Returns a listing of the users.
         %w(banned muted wikibanned
            contributors wikicontributors moderators).each do |type|
              define_method :"get_#{type}" do |params = { limit: 25 }|
@@ -107,7 +108,9 @@ module NeonRAW
                  end
                  break if params[:after].nil?
                end
-               data_arr
+               listing = Listing.new(params[:after], params[:before])
+               data_arr.each { |user| listing << user }
+               listing
              end
            end
         # @!endgroup
