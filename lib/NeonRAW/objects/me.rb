@@ -108,6 +108,8 @@ module NeonRAW
       # @param data [JSON] Your preferences data. Read Reddit's API docs for
       #   how to format the data.
       # @see https://www.reddit.com/dev/api#PATCH_api_v1_me_prefs
+      # @todo Figure out why this is raising BadRequest exceptions when I try
+      #   to use it.
       def edit_prefs(data)
         @client.request_data('/api/v1/me/prefs', :patch, {}, content: data)
       end
