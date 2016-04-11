@@ -53,6 +53,7 @@ module NeonRAW
         end
       end
 
+      # @!group Listings
       # Fetches your private messages.
       # @!method get_messages(params = { limit: 25 })
       # @!method get_unread(params = { limit: 25 })
@@ -87,6 +88,29 @@ module NeonRAW
       def get_modmail(params = { limit: 25 })
         @client.send(:build_listing, '/message/moderator.json', params)
       end
+
+      # Fetches your subreddits.
+      # @!method get_subscribed(params = { limit: 25 })
+      # @!method get_contributed(params = { limit: 25 })
+      # @!method get_moderated(params = { limit: 25 })
+      # @param params [Hash] The parameters.
+      # @option params :after [String] Fullname of the next data block.
+      # @option params :before [String] Fullname of the previous data block.
+      # @option params :count [Integer] The number of items already in the
+      #   listing.
+      # @option params :limit [1..1000] The number of listing items to fetch.
+      # @option params :show [String] Literally the string 'all'.
+      # @return [NeonRAW::Objects::Listing] Returns a listing with all your
+      #   subreddits.
+      %w(subscribed contributed moderated).each do |type|
+        define_method :"get_#{type}" do |params = { limit: 25 }|
+          type = 'subscriber' if type == 'subscribed'
+          type = 'contributor' if type == 'contributed'
+          type = 'moderator' if type == 'moderated'
+          @client.send(:build_listing, "/subreddits/mine/#{type}", params)
+        end
+      end
+      # @!endgroup
 
       # Fetches your karma breakdown.
       # @!method karma_breakdown
