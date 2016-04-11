@@ -1,4 +1,5 @@
-require_relative 'thing'
+require_relative '../thing'
+require_relative '../wikipage'
 
 module NeonRAW
   module Objects
@@ -11,7 +12,8 @@ module NeonRAW
         def get_wikipage(page)
           params = { page: page }
           path = "/r/#{display_name}/wiki/#{page}"
-          @client.request_data(path, :get, params)
+          data = @client.request_data(path, :get, params)
+          WikiPage.new(@client, data[:data])
         end
       end
     end
