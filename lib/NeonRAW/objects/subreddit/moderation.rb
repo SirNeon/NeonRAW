@@ -146,7 +146,8 @@ module NeonRAW
           params[:name] = image_name
           params[:upload_type] = upload_type
           path = "/r/#{display_name}/api/upload_sr_img"
-          @client.request_upload(path, file_path, params)
+          file = File.open(file_path, 'r')
+          @client.request_data(path, :post, params, file: file)
           refresh!
         end
 
