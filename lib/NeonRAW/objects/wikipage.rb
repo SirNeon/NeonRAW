@@ -1,4 +1,5 @@
 require_relative 'thing'
+require_relative 'wikipagerevision'
 
 module NeonRAW
   module Objects
@@ -11,6 +12,10 @@ module NeonRAW
     # @!attribute [r] content
     #   @return [String, nil] Returns the content of the wiki page or nil if
     #     there is none.
+    # @!attribute [r] name
+    #   @return [String] Returns the name of the wiki page.
+    # @!attribute [r] subreddit
+    #   @return [String] Returns the subreddit of the wiki page.
     class WikiPage
       # @!method initialize(client, data)
       # @param client [NeonRAW::Clients::Web/Installed/Script] The client.
@@ -41,6 +46,58 @@ module NeonRAW
       # @return [Time] Returns the date.
       def revision_date
         Time.at(@revision_date)
+      end
+
+      def revisions
+        data_arr = []
+        path = "/r/#{subreddit}/wiki/revisions/#{name}"
+        until data_arr.length == params[:limit]
+          data = @client.request_data(path, :get, params)
+          params[:after] = data[:data][:after]
+          params[:before] = data[:data][:before]
+          data[:data][:children].each do |item|
+            data_arr << WikiPageRevision.new(@client, item)
+            break if data_arr.length == params[:limit]
+          end
+          break if params[:after].nil?
+        end
+        data_arr
+      end
+
+      # Change the wiki contributors.
+      # @!method add_editor(username)
+      # @!method remove_editor(username)
+      # @param username [String] The username of the user.
+      %w(add remove).each do |type|
+        define_method :"#{type}_editor" do |username|
+          params = {}
+          type = 'del' if type == 'remove'
+          params[:act] = type
+          params[:page] = name
+          params[:username] = username
+          path = "/r/#{subreddit}/api/wiki/alloweditor/#{type}"
+          @client.request_data(path, :post, params)
+        end
+      end
+
+      # Edit the wiki page.
+      # @!method edit!(text, opts = {})
+      # @param text [String] The content for the page.
+      # @param opts [Hash] Optional parameters.
+      # @option opts :reason [String] The reason for the edit (256 characters
+      #   maximum).
+      def edit!(text, opts = {})
+        params = {}
+        params[:reason] = opts[:reason]
+        params[:content] = text
+        params[:page] = name
+        path = "/r/#{subreddit}/api/wiki/edit"
+        @client.request_data(path, :post, params)
+        data = @client.request_data("/r/#{subreddit}/wiki/#{name}", :get)
+        data[:data].each do |key, value|
+          value = nil if ['', [], {}].include(value)
+          instance_variable_set(:"@#{key}", value)
+        end
       end
     end
   end
