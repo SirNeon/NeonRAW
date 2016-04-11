@@ -18,7 +18,7 @@ module NeonRAW
         # @!method get_popular(params = { limit: 25 })
         # @!method get_new(params = { limit: 25 })
         # @!method get_gold(params = { limit: 25 })
-        # @!method get_default(params = { limit: 25 })
+        # @!method get_defaults(params = { limit: 25 })
         # @param params [Hash] The parameters.
         # @option params :after [String] Fullname of the next data block.
         # @option params :before [String] Fullname of the previous data block.
