@@ -31,33 +31,16 @@ module NeonRAW
       # @param path [String] The API path.
       # @param meth [Symbol] The request method.
       # @param params [Hash] The parameters.
+      # @param opts [Hash] Optional parameters for the request body.
       # @return [Typhoeus::Response] Returns the response.
-      def api_connection(path, meth, params)
+      def api_connection(path, meth, params, opts = {})
         response = Typhoeus::Request.new(
           'https://oauth.reddit.com' + path,
           method: meth,
+          body: opts,
           headers: api_headers,
           params: params
         ).run
-        error = assign_errors(response)
-        fail error unless error.nil?
-        handle_ratelimit(response.headers)
-        response
-      end
-
-      # Uploads images to Reddit.
-      # @!method upload_image(path, file_path, params)
-      # @param path [String] The API path.
-      # @param file_path [String] The path to the file you want to upload.
-      # @param params [Hash] The parameters.
-      # @return [Typhoeus::Response] Returns the response.
-      def upload_image(path, file_path, params)
-        response = Typhoeus.post(
-          'https://oauth.reddit.com' + path,
-          headers: api_headers,
-          body: { file: File.open(file_path, 'r') },
-          params: params
-        )
         error = assign_errors(response)
         fail error unless error.nil?
         handle_ratelimit(response.headers)
@@ -88,10 +71,12 @@ module NeonRAW
       # @param path [String] The API path to connect to.
       # @param meth [Symbol] The request method to use.
       # @param params [Hash] Parameters for the request.
+      # @param opts [Hash] Optional parameters for methods that send stuff
+      #   via the request body.
       # @return [Hash] Returns the parsed JSON containing the response data.
-      def request_data(path, meth, params = {})
+      def request_data(path, meth, params = {}, opts = {})
         refresh_access! if @access.expired?
-        response = api_connection(path, meth, params)
+        response = api_connection(path, meth, params, opts)
         data = JSON.parse(response.body, symbolize_names: true)
         handle_data_errors(data)
         data
@@ -102,23 +87,11 @@ module NeonRAW
       # @param path [String] The API path to connect to.
       # @param meth [Symbol] The request method to use.
       # @param params [Hash] Parameters for the request.
-      def request_nonjson(path, meth, params = {})
+      # @param opts [Hash] Optional parameters for methods that send stuff
+      #   via the request body.
+      def request_nonjson(path, meth, params = {}, opts = {})
         refresh_access! if @access.expired?
-        api_connection(path, meth, params).body
-      end
-
-      # Requests to upload an image to Reddit.
-      # @!method request_upload(path, file_path, params)
-      # @param path [String] The API path to connect to.
-      # @param file_path [String] The path to the file you want to upload.
-      # @param params [Hash] The parameters for the request.
-      # @return [Hash] Returns the parsed JSON containing the response data.
-      def request_upload(path, file_path, params)
-        refresh_access! if @access.expired?
-        response = upload_image(path, file_path, params)
-        data = JSON.parse(response.body, symbolize_names: true)
-        handle_data_errors(data)
-        data
+        api_connection(path, meth, params, opts).body
       end
     end
   end
