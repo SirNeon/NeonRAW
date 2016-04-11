@@ -16,7 +16,8 @@ module NeonRAW
           'modaction' => Objects::ModLogAction,
           't1' => Objects::Comment,
           't3' => Objects::Submission,
-          't4' => Objects::PrivateMessage
+          't4' => Objects::PrivateMessage,
+          't5' => Objects::Subreddit
         }.freeze
 
         # Creates the listing object.
