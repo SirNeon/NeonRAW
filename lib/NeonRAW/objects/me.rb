@@ -1,7 +1,7 @@
 require_relative 'user'
 require_relative 'trophy'
 require_relative 'multireddit'
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ClassLength
+# rubocop:disable Metrics/AbcSize, Metrics/ClassLength
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 module NeonRAW
@@ -101,6 +101,15 @@ module NeonRAW
       # @return [Hash] Returns your account preferences.
       def prefs
         @client.request_data('/api/v1/me/prefs', :get)
+      end
+
+      # Edits your preferences.
+      # @!method edit_prefs(data)
+      # @param data [JSON] Your preferences data. Read Reddit's API docs for
+      #   how to format the data.
+      # @see https://www.reddit.com/dev/api#PATCH_api_v1_me_prefs
+      def edit_prefs(data)
+        @client.request_data('/api/v1/me/prefs', :patch, {}, content: data)
       end
 
       # Fetches your trophies.
