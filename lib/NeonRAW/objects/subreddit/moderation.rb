@@ -1,4 +1,5 @@
 require_relative '../thing'
+require_relative '../modloguser'
 
 module NeonRAW
   module Objects
@@ -101,7 +102,7 @@ module NeonRAW
                  params[:after] = data[:data][:after]
                  params[:before] = data[:data][:before]
                  data[:data][:children].each do |item|
-                   data_arr << item
+                   data_arr << ModLogUser.new(@client, item)
                    break if data_arr.length == params[:limit]
                  end
                  break if params[:after].nil?
@@ -191,6 +192,14 @@ module NeonRAW
           params[:stylesheet_contents] = data
           path = "/r/#{display_name}/api/subreddit_stylesheet"
           @client.request_data(path, :post, params)
+        end
+
+        # Fetches the settings for the subreddit.
+        # @!method settings
+        # @return [Hash] Returns the subreddit's settings.
+        def settings
+          path = "/r/#{display_name}/about/edit.json"
+          @client.request_data(path, :get)[:data]
         end
       end
     end
