@@ -6,6 +6,7 @@ require_relative '../objects/rule'
 require_relative 'subreddit/flair'
 require_relative 'subreddit/moderation'
 require_relative 'subreddit/utilities'
+require_relative 'subreddit/wiki'
 # rubocop:disable Metrics/MethodLength
 
 module NeonRAW
@@ -115,9 +116,10 @@ module NeonRAW
       include Subreddit::Flair
       include Subreddit::Moderation
       include Subreddit::Utilities
+      include Subreddit::WikiPages
 
       # @!method initialize(client, data)
-      # @param client [NeonRAW::Web/Installed/Script] The client object.
+      # @param client [NeonRAW::Clients::Web/Installed/Script] The client.
       # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client
