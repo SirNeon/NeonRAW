@@ -136,7 +136,7 @@ module NeonRAW
         end
 
         # Upload a subreddit image.
-        # @!method upload_image!(file_name, file_type, image_name, upload_type)
+        # @!method upload_image!(file_path, file_type, image_name, upload_type)
         # @param file_path [String] The path to the file (500 KiB maximum).
         # @param file_type [String] The file extension [png, jpg].
         # @param image_name [String] The name of the image.

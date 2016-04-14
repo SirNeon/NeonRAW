@@ -81,7 +81,7 @@ module NeonRAW
       end
 
       # Requests non-JSON data from Reddit.
-      # @!method request_nonjson(path, meth, params = {})
+      # @!method request_nonjson(path, meth, params = {}, oyts = {})
       # @param path [String] The API path to connect to.
       # @param meth [Symbol] The request method to use.
       # @param params [Hash] Parameters for the request.
