@@ -4,7 +4,9 @@ require_relative '../../objects/comment'
 require_relative '../../objects/access'
 require_relative '../../objects/privatemessage'
 require_relative '../../objects/modlogaction'
+require_relative '../../objects/inboxcomment'
 require_relative '../../errors'
+# rubocop:disable Metrics/AbcSize
 
 module NeonRAW
   module Clients
@@ -32,7 +34,12 @@ module NeonRAW
             params[:after] = data[:data][:after]
             params[:before] = data[:data][:before]
             data[:data][:children].each do |item|
-              data_arr << OBJECT_KINDS[item[:kind]].new(self, item[:data])
+              data_arr << if item[:kind] == 't1' &&
+                             item[:data].key?(:was_comment)
+                            Objects::InboxComment.new(self, item[:data])
+                          else
+                            OBJECT_KINDS[item[:kind]].new(self, item[:data])
+                          end
               break if data_arr.length == params[:limit]
             end
             break if params[:after].nil?
