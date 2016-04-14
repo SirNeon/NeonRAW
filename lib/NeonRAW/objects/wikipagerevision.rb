@@ -7,6 +7,8 @@ module NeonRAW
     #   @return [String] Returns the name of the wiki page.
     # @!attribute [r] id
     #   @return [String] Returns the ID of the revision.
+    # @!attribute [r] subreddit
+    #   @return [String] Returns the subreddit where the wiki page is located.
     class WikiPageRevision
       # @!method initialize(client, data)
       # @param client [NeonRAW::Clients::Web/Installed/Script] The client.
