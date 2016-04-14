@@ -70,6 +70,7 @@ module NeonRAW
           params[:after] = data[:data][:after]
           params[:before] = data[:data][:before]
           data[:data][:children].each do |item|
+            item[:subreddit] = subreddit
             data_arr << WikiPageRevision.new(@client, item)
             break if data_arr.length == params[:limit]
           end
