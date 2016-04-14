@@ -104,15 +104,27 @@ module NeonRAW
       # @option opts :reason [String] The reason for the edit (256 characters
       #   maximum).
       def edit!(text, opts = {})
-        params = {}
-        params[:reason] = opts[:reason]
-        params[:content] = text
-        params[:page] = name
+        params = { reason: opts[:reason], content: text, page: name }
         path = "/r/#{subreddit}/api/wiki/edit"
         @client.request_data(path, :post, params)
         data = @client.request_data("/r/#{subreddit}/wiki/#{name}", :get)
         data[:data].each do |key, value|
           value = nil if ['', [], {}].include?(value)
+          instance_variable_set(:"@#{key}", value)
+        end
+      end
+
+      # Reverts the wiki page to this revision.
+      # @!method revert!(revision)
+      # @param revision [NeonRAW::Objects::WikiPageRevision] The revision you
+      #   want to revert back to.
+      def revert!(revision)
+        params = { page: name, revision: revision.id }
+        path = "/r/#{subreddit}/api/wiki/revert"
+        @client.request_data(path, :post, params)
+        path = "/r/#{subreddit}/wiki/#{name}"
+        data = @client.request_data(path, :get, page: name)
+        data[:data].each do |key, value|
           instance_variable_set(:"@#{key}", value)
         end
       end

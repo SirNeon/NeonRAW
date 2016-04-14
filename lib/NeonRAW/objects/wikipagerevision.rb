@@ -7,8 +7,6 @@ module NeonRAW
     #   @return [String] Returns the name of the wiki page.
     # @!attribute [r] id
     #   @return [String] Returns the ID of the revision.
-    # @!attribute [r] subreddit
-    #   @return [String] Returns the subreddit where the wiki page is located.
     class WikiPageRevision
       # @!method initialize(client, data)
       # @param client [NeonRAW::Clients::Web/Installed/Script] The client.
@@ -41,13 +39,6 @@ module NeonRAW
       # @return [Time] Returns when the revision was made in UTC.
       def created_utc
         Time.at(@timestamp).utc
-      end
-
-      # Reverts the wiki page to this revision.
-      # @!method revert
-      def revert
-        params = { page: page, revision: id }
-        @client.request_data("/r/#{subreddit}/api/wiki/revert", :post, params)
       end
     end
   end
