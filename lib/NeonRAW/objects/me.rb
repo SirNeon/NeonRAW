@@ -56,6 +56,7 @@ module NeonRAW
       # @!group Listings
       # Fetches your private messages.
       # @!method get_messages(params = { limit: 25 })
+      # @!method get_inbox(params = { limit: 25 })
       # @!method get_unread(params = { limit: 25 })
       # @!method get_sent(params = { limit: 25 })
       # @param params [Hash] Optional parameters.
@@ -68,7 +69,7 @@ module NeonRAW
       # @option params :limit [1..1000] The number of listing items to fetch.
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns a listing with all your PMs.
-      %w(messages unread sent).each do |type|
+      %w(messages inbox unread sent).each do |type|
         define_method :"get_#{type}" do |params = { limit: 25 }|
           @client.send(:build_listing, "/message/#{type}", params)
         end
