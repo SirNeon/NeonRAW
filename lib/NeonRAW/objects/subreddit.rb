@@ -159,6 +159,14 @@ module NeonRAW
         data_arr
       end
 
+      # Fetches the subreddit's stylesheet.
+      # @!method stylesheet
+      # @return [Hash<Array, String, String>] Returns the stylesheet data.
+      def stylesheet
+        path = "/r/#{display_name}/about/stylesheet.json"
+        @client.request_data(path, :get)[:data]
+      end
+
       # @!group Listings
       # Fetches a listing from the subreddit.
       # @!method get_hot(params = { limit: 25 })
