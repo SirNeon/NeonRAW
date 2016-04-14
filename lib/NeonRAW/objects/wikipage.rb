@@ -1,5 +1,5 @@
-require_relative 'thing'
 require_relative 'wikipagerevision'
+require_relative 'listing'
 
 module NeonRAW
   module Objects
@@ -48,7 +48,17 @@ module NeonRAW
         Time.at(@revision_date)
       end
 
-      def revisions
+      # Gets the revisions made to the wiki page.
+      # @!method revisions(params = { limit: 25 })
+      # @param params [Hash] The parameters.
+      # @option params :after [String] Fullname of the next data block.
+      # @option params :before [String] Fullname of the previous data block.
+      # @option params :count [Integer] The number of items already in the
+      #   listing.
+      # @option params :limit [1..1000] The number of listing items to fetch.
+      # @option params :show [String] Literally the string 'all'.
+      # @return [NeonRAW::Objects::Listing] Returns the list of revisions.
+      def revisions(params = { limit: 25 })
         data_arr = []
         path = "/r/#{subreddit}/wiki/revisions/#{name}"
         until data_arr.length == params[:limit]
@@ -61,7 +71,9 @@ module NeonRAW
           end
           break if params[:after].nil?
         end
-        data_arr
+        listing = Objects::Listing.new(params[:after], params[:before])
+        data_arr.each { |revision| listing << revision }
+        listing
       end
 
       # Change the wiki contributors.
@@ -69,7 +81,7 @@ module NeonRAW
       # @!method remove_editor(username)
       # @param username [String] The username of the user.
       %w(add remove).each do |type|
-        define_method :"#{type}_editor" do |username|
+        self.class.send(:define_method, :"#{type}_editor") do |username|
           params = {}
           type = 'del' if type == 'remove'
           params[:act] = type
