@@ -43,9 +43,16 @@ module NeonRAW
         data.each do |key, value|
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
-          next if key == :created || key == :created_utc
+          next if key == :created_utc
           self.class.send(:attr_reader, key)
         end
+      end
+
+      # Gets when the mod log action was done.
+      # @!method created
+      # @return [Time] Returns the date/time when the mod log action was done.
+      def created
+        Time.at(@created_utc).localtime
       end
     end
   end
