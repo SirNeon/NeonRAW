@@ -17,6 +17,10 @@ module NeonRAW
     # @!attribute [r] subreddit
     #   @return [String] Returns the subreddit of the wiki page.
     class WikiPage
+      class << self
+        public :define_method
+      end
+
       # @!method initialize(client, data)
       # @param client [NeonRAW::Clients::Web/Installed/Script] The client.
       # @param data [Hash] The object data.
@@ -81,7 +85,7 @@ module NeonRAW
       # @!method remove_editor(username)
       # @param username [String] The username of the user.
       %w(add remove).each do |type|
-        self.class.send(:define_method, :"#{type}_editor") do |username|
+        define_method :"#{type}_editor" do |username|
           params = {}
           type = 'del' if type == 'remove'
           params[:act] = type
