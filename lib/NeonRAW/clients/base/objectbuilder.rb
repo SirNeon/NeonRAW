@@ -2,6 +2,7 @@ require_relative '../../objects/subreddit'
 require_relative '../../objects/user'
 require_relative '../../objects/me'
 require_relative '../../objects/multireddit'
+require_relative '../../objects/wikipage'
 
 module NeonRAW
   module Clients
@@ -119,6 +120,18 @@ module NeonRAW
           params[:name] = name
           request_data('/api/site_admin', :post, params)
           get_subreddit(name)
+        end
+
+        # Fetches a wiki page.
+        # @!method get_wikipage(page)
+        # @param page [String] The name of the page.
+        # @return [NeonRAW::Objects::WikiPage] Returns the wiki page object.
+        def get_wikipage(page)
+          params = { page: page }
+          path = "/wiki/#{page}.json"
+          data = request_data(path, :get, params)
+          data[:data][:name] = page
+          Objects::WikiPage.new(@client, data[:data])
         end
       end
     end

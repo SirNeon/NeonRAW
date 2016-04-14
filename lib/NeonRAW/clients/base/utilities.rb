@@ -1,5 +1,3 @@
-require_relative '../../objects/wikipage'
-
 module NeonRAW
   module Clients
     class Base
@@ -34,18 +32,6 @@ module NeonRAW
             type.chop! if type == 'defaults'
             build_listing("/subreddits/#{type}", params)
           end
-        end
-
-        # Fetches a wiki page.
-        # @!method get_wikipage(page)
-        # @param page [String] The name of the page.
-        # @return [NeonRAW::Objects::WikiPage] Returns the wiki page object.
-        def get_wikipage(page)
-          params = { page: page }
-          path = "/wiki/#{page}.json"
-          data = request_data(path, :get, params)
-          data[:data][:name] = page
-          Objects::WikiPage.new(@client, data[:data])
         end
 
         # Fetches a list of wiki pages from Reddit.
