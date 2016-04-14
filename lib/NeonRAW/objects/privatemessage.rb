@@ -62,8 +62,7 @@ module NeonRAW
       # Block a user.
       # @!method block!
       def block!
-        params = {}
-        params[:id] = name
+        params = { id: name }
         @client.request_data('/api/block', :post, params)
       end
 
@@ -72,8 +71,7 @@ module NeonRAW
       # @!method mark_as_unread!
       %w(read unread).each do |type|
         define_method :"mark_as_#{type}!" do
-          params = {}
-          params[:id] = name
+          params = { id: name }
           @client.request_data("/api/#{type}_message", :post, params)
         end
       end
@@ -83,8 +81,7 @@ module NeonRAW
       # @!method unmute!
       %w(mute unmute).each do |type|
         define_method :"#{type}!" do
-          params = {}
-          params[:id] = name
+          params = { id: name }
           @client.request_data("/api/#{type}_message_author", :post, params)
         end
       end

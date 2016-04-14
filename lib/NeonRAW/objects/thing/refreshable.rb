@@ -6,8 +6,7 @@ module NeonRAW
         # Refreshes the data of a comment/submission/subreddit object.
         # @!method refresh!
         def refresh!
-          params = {}
-          params[:id] = name
+          params = { id: name }
           path = "/r/#{display_name}/api/info" if /t5_/ =~ name
           path = "/r/#{subreddit}/api/info" unless /t5_/ =~ name
           data = @client.request_data(path, :get, params)

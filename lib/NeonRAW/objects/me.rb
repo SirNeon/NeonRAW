@@ -200,8 +200,7 @@ module NeonRAW
       #   multireddits.
       def multireddits
         data_arr = []
-        params = {}
-        params[:expand_srs] = false
+        params = { expand_srs: false }
         data = @client.request_data('/api/multi/mine', :get, params)
         data.each do |multireddit|
           data_arr << MultiReddit.new(@client, multireddit[:data])

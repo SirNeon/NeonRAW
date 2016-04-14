@@ -41,9 +41,7 @@ module NeonRAW
         # @return [NeonRAW::Objects::MultiReddit] Returns the multireddit
         #   object.
         def get_multireddit(multireddit_path)
-          params = {}
-          params[:multipath] = multireddit_path
-          params[:expand_srs] = false
+          params = { multipath: multireddit_path, expand_srs: false }
           data = request_data("/api/multi/#{multireddit_path}", :get, params)
           Objects::MultiReddit.new(self, data[:data])
         end
@@ -57,10 +55,8 @@ module NeonRAW
         #   object.
         # @see https://www.reddit.com/dev/api#POST_api_multi_{multipath}
         def create_multireddit(data, multireddit_path)
-          params = {}
-          params[:model] = data
-          params[:multipath] = multireddit_path
-          params[:expand_srs] = false
+          params = { model: data, multipath: multireddit_path,
+                     expand_srs: false }
           data = request_data("/api/multi/#{multireddit_path}", :post, params)
           Objects::MultiReddit.new(self, data[:data])
         end

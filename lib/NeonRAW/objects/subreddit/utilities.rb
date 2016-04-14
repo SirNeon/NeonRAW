@@ -48,9 +48,7 @@ module NeonRAW
         #   omit from the results.
         # @return [Array<String>] Returns a list of the recommended subreddits.
         def recommended_subreddits(opts = {})
-          params = {}
-          params[:omit] = opts[:omit]
-          params[:srnames] = display_name
+          params = { omit: opts[:omit], srnames: display_name }
           path = "/api/recommend/sr/#{display_name}"
           data = @client.request_data(path, :get, params)
           data.map { |subreddit| subreddit[:sr_name] }
@@ -61,10 +59,9 @@ module NeonRAW
         # @!method unsubscribe!
         %w(subscribe unsubscribe).each do |type|
           define_method :"#{type}!" do
-            params = {}
+            params = { sr: name }
             params[:action] = 'sub' if type == 'subscribe'
             params[:action] = 'unsub' if type == 'unsubscribe'
-            params[:sr] = name
             @client.request_data('/api/subscribe', :post, params)
             refresh!
           end

@@ -57,9 +57,7 @@ module NeonRAW
         # @!method downvote
         %i(upvote clear_vote downvote).each do |type|
           define_method type do
-            params = {}
-            params[:dir] = votes[type]
-            params[:id] = name
+            params = { dir: votes[type], id: name }
             @client.request_data('/api/vote', :post, params)
             refresh!
           end

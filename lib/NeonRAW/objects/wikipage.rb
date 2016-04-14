@@ -87,11 +87,9 @@ module NeonRAW
       # @param username [String] The username of the user.
       %w(add remove).each do |type|
         define_method :"#{type}_editor" do |username|
-          params = {}
+          params = { page: name, username: username }
           type = 'del' if type == 'remove'
           params[:act] = type
-          params[:page] = name
-          params[:username] = username
           path = "/r/#{subreddit}/api/wiki/alloweditor/#{type}"
           @client.request_data(path, :post, params)
         end

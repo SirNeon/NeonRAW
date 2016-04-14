@@ -8,8 +8,7 @@ module NeonRAW
         # @!method mark_as_unread
         %w(read unread).each do |type|
           define_method :"mark_as_#{type}" do
-            params = {}
-            params[:id] = name
+            params = { id: name }
             @client.request_data("/api/#{type}_message", :post, params)
           end
         end
@@ -18,10 +17,7 @@ module NeonRAW
         # @!method reply(text)
         # @param text [String] The text you want to reply with.
         def reply(text)
-          params = {}
-          params[:api_type] = 'json'
-          params[:text] = text
-          params[:thing_id] = name
+          params = { api_type: 'json', text: text, thing_id: name }
           @client.request_data('/api/comment', :post, params)
         end
       end

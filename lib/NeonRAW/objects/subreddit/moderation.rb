@@ -118,8 +118,7 @@ module NeonRAW
         # Accept a pending mod invite to the subreddit.
         # @!method accept_mod_invite!
         def accept_mod_invite!
-          params = {}
-          params[:api_type] = 'json'
+          params = { api_type: 'json' }
           path = "/r/#{display_name}/api/accept_moderator_invite"
           @client.request_data(path, :post, params)
           refresh!
@@ -130,8 +129,7 @@ module NeonRAW
         # @!method leave_moderator!
         %w(contributor moderator).each do |type|
           define_method :"leave_#{type}!" do
-            params = {}
-            params[:id] = name
+            params = { id: name }
             @client.request_data("/api/leave#{type}", :post, params)
             refresh!
           end
@@ -145,10 +143,8 @@ module NeonRAW
         # @param upload_type [String] The type of upload [img, header, icon,
         #   banner].
         def upload_image!(file_path, file_type, image_name, upload_type)
-          params = {}
-          params[:img_type] = file_type
-          params[:name] = image_name
-          params[:upload_type] = upload_type
+          params = { img_type: file_type, name: image_name,
+                     upload_type: upload_type }
           path = "/r/#{display_name}/api/upload_sr_img"
           file = File.open(file_path, 'r')
           @client.request_data(path, :post, params, file: file)
@@ -161,8 +157,7 @@ module NeonRAW
         # @!method remove_icon!
         %w(banner header icon).each do |type|
           define_method :"remove_#{type}!" do
-            params = {}
-            params[:api_type] = 'json'
+            params = { api_type: 'json' }
             path = "/r/#{display_name}/api/delete_sr_#{type}"
             @client.request_data(path, :post, params)
             refresh!
@@ -173,9 +168,7 @@ module NeonRAW
         # @!method remove_image!(image)
         # @param image [String] The name of the image.
         def remove_image!(image)
-          params = {}
-          params[:api_type] = 'json'
-          params[:img_name] = image
+          params = { api_type: 'json', img_name: image }
           path = "/r/#{display_name}/api/delete_sr_img"
           @client.request_data(path, :post, params)
           refresh!
@@ -188,11 +181,8 @@ module NeonRAW
         # @option opts :reason [String] The reason for the edit (256 characters
         #   maximum).
         def edit_stylesheet(data, opts = {})
-          params = {}
-          params[:api_type] = 'json'
-          params[:op] = 'save'
-          params[:reason] = opts[:reason]
-          params[:stylesheet_contents] = data
+          params = { api_type: 'json', op: 'save',
+                     reason: opts[:reason], stylesheet_contents: data }
           path = "/r/#{display_name}/api/subreddit_stylesheet"
           @client.request_data(path, :post, params)
         end

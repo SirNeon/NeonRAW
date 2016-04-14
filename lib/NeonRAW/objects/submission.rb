@@ -147,8 +147,7 @@ module NeonRAW
       # @!method unlock
       %w(hide unhide lock unlock).each do |type|
         define_method :"#{type}" do
-          params = {}
-          params[:id] = name
+          params = { id: name }
           @client.request_data("/api/#{type}", :post, params)
         end
       end
@@ -158,8 +157,7 @@ module NeonRAW
       # @!method unmark_nsfw
       %w(mark unmark).each do |type|
         define_method :"#{type}_nsfw" do
-          params = {}
-          params[:id] = name
+          params = { id: name }
           @client.request_data("/api/#{type}nsfw", :post, params)
         end
       end
@@ -168,9 +166,7 @@ module NeonRAW
       # @!method inbox_replies(enable)
       # @param enable [Boolean] Turns it on or off.
       def inbox_replies(enable)
-        params = {}
-        params[:id] = name
-        params[:state] = enable
+        params = { id: name, state: enable }
         @client.request_data('/api/sendreplies', :post, params)
       end
 
@@ -178,10 +174,7 @@ module NeonRAW
       # @!method contest_mode(enable)
       # @param enable [Boolean] Turns it on or off.
       def contest_mode(enable)
-        params = {}
-        params[:api_type] = 'json'
-        params[:id] = name
-        params[:state] = enable
+        params = { api_type: 'json', id: name, state: enable }
         @client.request_data('/api/set_contest_mode', :post, params)
       end
 
@@ -190,10 +183,7 @@ module NeonRAW
       # @param sort [Symbol] The sort to set [confidence, top, new,
       #   controversial, old, random, qa]
       def suggested_sort(sort)
-        params = {}
-        params[:api_type] = 'json'
-        params[:id] = name
-        params[:sort] = sort
+        params = { api_type: 'json', id: name, sort: sort }
         @client.request_data('/api/set_suggested_sort', :post, params)
       end
 
@@ -201,10 +191,7 @@ module NeonRAW
       # @!method sticky(enable)
       # @param enable [Boolean] Stickies/unstickies the thing.
       def sticky(enable)
-        params = {}
-        params[:api_type] = 'json'
-        params[:id] = name
-        params[:state] = enable
+        params = { api_type: 'json', id: name, state: enable }
         @client.request_data('/api/set_subreddit_sticky', :post, params)
       end
 

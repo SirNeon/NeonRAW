@@ -12,8 +12,7 @@ module NeonRAW
         # Approve a comment or submission.
         # @!method approve!
         def approve!
-          params = {}
-          params[:id] = name
+          params = { id: name }
           @client.request_data('/api/approve', :post, params)
           refresh!
         end
@@ -37,10 +36,7 @@ module NeonRAW
         #   admin, special].
         # @!group Moderators
         def distinguish(type)
-          params = {}
-          params[:api_type] = 'json'
-          params[:how] = type
-          params[:id] = name
+          params = { api_type: 'json', how: type, id: name }
           @client.request_data('/api/distinguish', :post, params)
           refresh!
         end
@@ -66,10 +62,7 @@ module NeonRAW
         # @param reason [String] The reason for the report (100 characters
         #   maximum).
         def report(reason)
-          params = {}
-          params[:api_type] = 'json'
-          params[:reason] = reason
-          params[:thing_id] = name
+          params = { api_type: 'json', reason: reason, thing_id: name }
           @client.request_data('/api/report', :post, params)
         end
 
@@ -78,8 +71,7 @@ module NeonRAW
         # @!method unignore_reports!
         %w(ignore unignore).each do |type|
           define_method :"#{type}_reports!" do
-            params = {}
-            params[:id] = name
+            params = { id: name }
             @client.request_data("/api/#{type}_reports", :post, params)
             refresh!
           end
@@ -88,9 +80,7 @@ module NeonRAW
         # Remove a comment/link/modmail message.
         # @!method remove!
         def remove!
-          params = {}
-          params[:id] = name
-          params[:spam] = false
+          params = { id: name, spam: false }
           @client.request_data('/api/remove', :post, params)
           refresh!
         end
@@ -98,9 +88,7 @@ module NeonRAW
         # Spamfilter a comment/link/modmail message.
         # @!method spam!
         def spam!
-          params = {}
-          params[:id] = name
-          params[:spam] = true
+          params = { id: name, spam: true }
           @client.request_data('/api/remove', :post, params)
           refresh!
         end

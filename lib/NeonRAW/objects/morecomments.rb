@@ -20,8 +20,7 @@ module NeonRAW
       # @return [Array] Returns a list of the comments that were expanded.
       def expand(subreddit)
         comments = []
-        params = {}
-        params[:id] = children.map { |the_id| 't1_' + the_id }.join(',')
+        params = { id: children.map { |the_id| 't1_' + the_id }.join(',') }
         # /api/morechildren is buggy shit. This is better.
         data = @client.request_data("/r/#{subreddit}/api/info", :get, params)
         data[:data][:children].each do |comment|

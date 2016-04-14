@@ -72,10 +72,8 @@ module NeonRAW
       #   the name of the original copy.
       # @return [NeonRAW::Objects::MultiReddit] Returns the new object.
       def copy(opts = {})
-        params = {}
-        params[:display_name] = display_name
-        params[:from] = path
-        params[:to] = "/user/#{@client.me.name}/m/"
+        params = { display_name: display_name, from: path,
+                   to: "/user/#{@client.me.name}/m/" }
         params[:to] += opts[:name] || display_name
         data = @client.request_data('/api/multi/copy', :post, params)
         MultiReddit.new(@client, data[:data])
@@ -86,10 +84,8 @@ module NeonRAW
       # @param new_name [String] The new name for the multireddit.
       # @return [NeonRAW::objects::MultiReddit] Returns the multireddit object.
       def rename!(new_name)
-        params = {}
-        params[:display_name] = new_name
-        params[:from] = path
-        params[:to] = "/user/#{@client.me.name}/m/#{new_name}"
+        params = { display_name: new_name, from: path,
+                   to: "/user/#{@client.me.name}/m/#{new_name}" }
         data = @client.request_data('/api/multi/rename', :post, params)
         MultiReddit.new(@client, data[:data])
       end
@@ -105,10 +101,7 @@ module NeonRAW
       # @param data [JSON] The data for the multireddit.
       # @see https://www.reddit.com/dev/api#PUT_api_multi_{multipath}
       def edit(data)
-        params = {}
-        params[:model] = data
-        params[:multipath] = path
-        params[:expand_srs] = false
+        params = { model: data, multipath: path, expand_srs: false }
         data = @client.request_data("/api/multi/#{path}", :put, params)
         data[:data].each do |key, value|
           value = nil if ['', [], {}].include?(value)
@@ -120,10 +113,8 @@ module NeonRAW
       # @!method add_subreddit(subreddit)
       # @param subreddit [String] The name of the subreddit to add.
       def add_subreddit(subreddit)
-        params = {}
-        params[:model] = { 'name' => subreddit }.to_json
-        params[:multipath] = path
-        params[:srname] = subreddit
+        params = { model: { 'name' => subreddit }.to_json, multipath: path,
+                   srname: subreddit }
         api_path = "/api/multi/#{path}/r/#{subreddit}"
         @client.request_data(api_path, :put, params)
         @subreddits << { name: subreddit }
@@ -133,9 +124,7 @@ module NeonRAW
       # @!method remove_subreddit(subreddit)
       # @param subreddit [String] The name of the subreddit to remove.
       def remove_subreddit(subreddit)
-        params = {}
-        params[:multipath] = path
-        params[:srname] = subreddit
+        params = { multipath: path, srname: subreddit }
         api_path = "/api/multi/#{path}/r/#{subreddit}"
         @client.request_nonjson(api_path, :delete, params)
         @subreddits.delete(name: subreddit)

@@ -82,8 +82,7 @@ module NeonRAW
       # @!method give_gold(months)
       # @param months [1..36] The number of months worth of gold to give.
       def give_gold(months)
-        params = {}
-        params[:months] = months
+        params = { months: months }
         @client.request_data("/api/v1/gold/give/#{name}", :post, params)
         refresh!
       end
@@ -97,12 +96,8 @@ module NeonRAW
       # @option opts :from_subreddit [String] The subreddit to send the message
       #   from.
       def message(text, subject, opts = {})
-        params = {}
-        params[:api_type] = 'json'
-        params[:from_sr] = opts[:from_subreddit]
-        params[:text] = text
-        params[:subject] = subject
-        params[:to] = name
+        params = { api_type: 'json', from_sr: opts[:from_subreddit], text: text,
+                   subject: subject, to: name }
         @client.request_data('/api/compose', :post, params)
       end
 
@@ -112,8 +107,7 @@ module NeonRAW
       #   multireddits.
       def multireddits
         data_arr = []
-        params = {}
-        params[:expand_srs] = false
+        params = { expand_srs: false }
         data = @client.request_data("/api/multi/user/#{name}", :get, params)
         data.each do |multireddit|
           data_arr << MultiReddit.new(@client, multireddit[:data])

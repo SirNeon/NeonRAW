@@ -9,15 +9,15 @@ module NeonRAW
         # @option opts :category [String] The category you want to save to
         #   (Reddit Gold Feature).
         def save(opts = {})
+          params = { id: name }
           params[:category] = opts[:category] if opts[:category]
-          params[:id] = name
           @client.request_data('/api/save', :post, params)
         end
 
         # Unsaves the thing.
         # @!method unsave
         def unsave
-          params[:id] = name
+          params = { id: name }
           @client.request_data('/api/unsave', :post, params)
         end
       end
