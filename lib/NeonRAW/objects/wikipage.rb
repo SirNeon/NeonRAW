@@ -95,7 +95,7 @@ module NeonRAW
         @client.request_data(path, :post, params)
         data = @client.request_data("/r/#{subreddit}/wiki/#{name}", :get)
         data[:data].each do |key, value|
-          value = nil if ['', [], {}].include(value)
+          value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
         end
       end
