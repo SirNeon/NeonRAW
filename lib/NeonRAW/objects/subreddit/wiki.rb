@@ -18,6 +18,13 @@ module NeonRAW
           data[:data][:subreddit] = display_name
           WikiPage.new(@client, data[:data])
         end
+
+        # Fetches a list of wiki pages for the subreddit.
+        # @!method wikipages
+        # @return [Array<String>] Returns a list of wiki pages.
+        def wikipages
+          @client.request_data("/r/#{display_name}/wiki/pages", :get)[:data]
+        end
       end
     end
   end
