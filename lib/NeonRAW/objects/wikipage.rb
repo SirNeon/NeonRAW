@@ -154,6 +154,23 @@ module NeonRAW
         path = "/r/#{subreddit}/wiki/settings/#{name}"
         @client.request_data(path, :get, page: name)[:data]
       end
+
+      # Edits the settings of the wiki.
+      # @!method edit_settings(data)
+      # @param data [Hash] The parameters.
+      # @option data :listed [Boolean] Whether or not the wiki page will be
+      #   listed on the list of wiki pages.
+      # @option data :permlevel [String] Set the permission level needed to
+      #   edit the wiki [use_subreddit_settings, approved_only, mods_only].
+      def edit_settings(data)
+        permlevel = { 'use_subreddit_settings' => 0, 'approved_only' => 1,
+                      'mods_only' => 2 }
+        params = { page: name, permlevel: permlevel[data[:permlevel]],
+                   listed: data[:listed] }
+        params[:page] = name
+        path = "/r/#{subreddit}/wiki/settings/#{name}"
+        @client.request_data(path, :post, params)[:data]
+      end
     end
   end
 end
