@@ -40,6 +40,13 @@ module NeonRAW
       def created_utc
         Time.at(@timestamp).utc
       end
+
+      # Reverts the wiki page to this revision.
+      # @!method revert
+      def revert
+        params = { page: page, revision: id }
+        @client.request_data("/r/#{subreddit}/api/wiki/revert", :post, params)
+      end
     end
   end
 end
