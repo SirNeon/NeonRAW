@@ -19,7 +19,7 @@ module NeonRAW
       include Thing::Createable
 
       # @!method initialize(client, data)
-      # @param client [NeonRAW::Web/Installed/Script] The client object.
+      # @param client [NeonRAW::Clients::Script] The client object.
       # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client
