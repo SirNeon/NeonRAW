@@ -52,8 +52,9 @@ module NeonRAW
         Time.at(@revision_date)
       end
 
+      # @!group Listings
       # Gets the revisions made to the wiki page.
-      # @!method revisions(params = { limit: 25 })
+      # @!method get_revisions(params = { limit: 25 })
       # @param params [Hash] The parameters.
       # @option params :after [String] Fullname of the next data block.
       # @option params :before [String] Fullname of the previous data block.
@@ -62,7 +63,7 @@ module NeonRAW
       # @option params :limit [1..1000] The number of listing items to fetch.
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns the list of revisions.
-      def revisions(params = { limit: 25 })
+      def get_revisions(params = { limit: 25 })
         data_arr = []
         path = "/r/#{subreddit}/wiki/revisions/#{name}"
         until data_arr.length == params[:limit]
@@ -80,6 +81,24 @@ module NeonRAW
         data_arr.each { |revision| listing << revision }
         listing
       end
+
+      # Fetches submissions about the wiki page.
+      # @!method get_discussions(params = { limit: 25 })
+      # @param params [Hash] The parameters.
+      # @option params :after [String] Fullname of the next data block.
+      # @option params :before [String] Fullname of the previous data block.
+      # @option params :count [Integer] The number of items already in the
+      #   listing.
+      # @option params :limit [1..1000] The number of listing items to fetch.
+      # @option params :show [String] Literally the string 'all'.
+      # @return [NeonRAW::Objects::Listing] Returns a listing with all the
+      #   submissions.
+      def get_discussions(params = { limit: 25 })
+        params[:page] = name
+        path = "/r/#{subreddit}/wiki/discussions/#{name}"
+        @client.send(:build_listing, path, params)
+      end
+      # @!endgroup
 
       # Change the wiki contributors.
       # @!method add_editor(username)
@@ -125,6 +144,15 @@ module NeonRAW
         data[:data].each do |key, value|
           instance_variable_set(:"@#{key}", value)
         end
+      end
+
+      # Fetches the settings for the wiki.
+      # @!method settings
+      # @return [Hash<Integer, Array<String>, Boolean>] Returns the wiki
+      #   page's settings.
+      def settings
+        path = "/r/#{subreddit}/wiki/settings/#{name}"
+        @client.request_data(path, :get, page: name)[:data]
       end
     end
   end
