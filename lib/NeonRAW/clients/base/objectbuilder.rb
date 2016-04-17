@@ -131,7 +131,7 @@ module NeonRAW
           path = "/wiki/#{page}.json"
           data = request_data(path, :get, params)
           data[:data][:name] = page
-          Objects::WikiPage.new(@client, data[:data])
+          Objects::WikiPage.new(self, data[:data])
         end
       end
     end
