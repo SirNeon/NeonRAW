@@ -44,7 +44,7 @@ module NeonRAW
                           else
                             response[:jquery][16][3][0].split('/')[6]
                           end
-          get_info(id: 't3_' + submission_id)
+          info(id: 't3_' + submission_id)
         end
 
         # Gets recommended subreddits for the subreddit.

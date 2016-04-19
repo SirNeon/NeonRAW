@@ -233,7 +233,7 @@ module NeonRAW
         params[:whitelist] = ['*'] if params[:whitelist].nil?
         whitelist = params[:whitelist]
         params[:age] = max_age(params)
-        items = send(:"get_#{queue}", sort: params[:sort] || 'new', limit: 1000)
+        items = send(:"#{queue}", sort: params[:sort] || 'new', limit: 1000)
         items.each do |item|
           next if params[:blacklist].include?(item.subreddit)
           next if item.created < params[:age]

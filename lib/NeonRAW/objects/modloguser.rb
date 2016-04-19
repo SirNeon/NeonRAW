@@ -5,11 +5,11 @@ module NeonRAW
     # le modloguser object
     # @!attribute [r] note
     #   @return [String, nil] Returns the reason for the banning or nil if there
-    #     is none. This attribute is only available for the get_banned and
-    #     get_wikibanned methods.
+    #     is none. This attribute is only available for the banned and
+    #     wikibanned methods.
     # @!attribute [r] mod_permissions
     #   @return [Array<String>] Returns the mod permissions for the user. This
-    #     attribute is only available for the get_moderators method.
+    #     attribute is only available for the moderators method.
     class ModLogUser < Thing
       # @!method initialize(client, data)
       # @param client [NeonRAW::Clients::Web/Installed/Script] The client.

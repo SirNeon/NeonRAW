@@ -105,7 +105,7 @@ module NeonRAW
         end
 
         # Gets information about a user's flair options.
-        # @!method get_flair(thing)
+        # @!method flair(thing)
         # @param thing [NeonRAW::Objects::Submission/User/Me] The thing to get the
         #   flairs of.
         # @return [Hash] Returns the flair data for the thing.

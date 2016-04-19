@@ -123,10 +123,10 @@ module NeonRAW
         end
 
         # Fetches a wiki page.
-        # @!method get_wikipage(page)
+        # @!method wikipage(page)
         # @param page [String] The name of the page.
         # @return [NeonRAW::Objects::WikiPage] Returns the wiki page object.
-        def get_wikipage(page)
+        def wikipage(page)
           params = { page: page }
           path = "/wiki/#{page}.json"
           data = request_data(path, :get, params)
