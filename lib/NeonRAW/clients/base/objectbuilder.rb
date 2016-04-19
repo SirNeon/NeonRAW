@@ -9,7 +9,32 @@ module NeonRAW
     class Base
       # Methods for building objects.
       module ObjectBuilder
-        # Creates a subreddit object.
+        SUBREDDIT_DEFAULTS = {
+          'allow_top' => true,
+          'collapse_deleted_comments' => false,
+          'comment_score_hide_mins' => 0,
+          'exclude_banned_modqueue' => false,
+          'header-title' => '',
+          'hide_ads' => false,
+          'lang' => 'en',
+          'link_type' => 'any',
+          'over_18' => false,
+          'public_traffic' => false,
+          'show_media' => true,
+          'spam_comments' => 'low',
+          'spam_links' => 'high',
+          'spam_selfposts' => 'high',
+          'submit_text_label' => 'Submit a new text post',
+          'submit_text' => '',
+          'submit_link_label' => 'Submit a new link',
+          'suggested_comment_sort' => 'confidence',
+          'type' => 'public',
+          'wiki_edit_age' => 0,
+          'wiki_edit_karma' => 100,
+          'wikimode' => 'disabled'
+        }.freeze
+
+        # Fetches a subreddit.
         # @!method subreddit(name)
         # @param name [String] The name of the subreddit.
         # @return [NeonRAW::Objects::Subreddit] Returns the subreddit object.
@@ -18,7 +43,7 @@ module NeonRAW
           Objects::Subreddit.new(self, data)
         end
 
-        # Creates a user object.
+        # Fetches a user.
         # @!method user(name)
         # @param name [String] The name of the user.
         # @return [NeonRAW::Objects::User] Returns the user object.
@@ -27,7 +52,7 @@ module NeonRAW
           Objects::User.new(self, data)
         end
 
-        # Creates a me object.
+        # Fetches yourself.
         # @!method me
         # @return [NeonRAW::Objects::Me] Returns the me object.
         def me
@@ -63,61 +88,64 @@ module NeonRAW
         end
 
         # Creates a subreddit.
-        # @!method create_subreddit(name, data)
+        # @!method create_subreddit(name, title, description, opts = {})
         # @param name [String] The name of the subreddit.
-        # @param data [Hash] The data of the subreddit.
-        # @option data allow_top [Boolean] Whether or not the subreddit can be
-        #   displayed on /r/all.
-        # @option data collapse_deleted_comments [Boolean] Whether or not to
-        #   collapse deleted comments.
-        # @option data comment_score_hide_mins [0..1440] The number of minutes
-        #   to hide comment scores.
-        # @option data description [String] The sidebar text for the subreddit.
-        # @option data exclude_banned_modqueue [Boolean] Whether or not to
-        #   exclude sitewide banned users from modqueue.
-        # @option data header-title [String] The title for the subreddit (500
+        # @param title [String] The title of the subreddit (100
         #   characters maximum).
-        # @option data hide_ads [Boolean] Whether or not to hide ads in the
+        # @param description [String] The sidebar text for the subreddit.
+        # @param opts [Hash] Optional parameters.
+        # @option opts allow_top [Boolean] Whether or not the subreddit can be
+        #   displayed on /r/all.
+        # @option opts collapse_deleted_comments [Boolean] Whether or not to
+        #   collapse deleted comments.
+        # @option opts comment_score_hide_mins [0..1440] The number of minutes
+        #   to hide comment scores.
+        # @option opts exclude_banned_modqueue [Boolean] Whether or not to
+        #   exclude sitewide banned users from modqueue.
+        # @option opts header-title [String] The title for the subreddit (500
+        #   characters maximum).
+        # @option opts hide_ads [Boolean] Whether or not to hide ads in the
         #   subreddit.
-        # @option data lang [String] The IETF language tags of the subreddit
+        # @option opts lang [String] The IETF language tags of the subreddit
         #   separated by underscores.
-        # @option data link_type [String] The type of submissions allowed [any,
+        # @option opts link_type [String] The type of submissions allowed [any,
         #   link, self].
-        # @option data over_18 [Boolean] Whether or not the subreddit is NSFW.
-        # @option data public_description [String] The message that will get
+        # @option opts over_18 [Boolean] Whether or not the subreddit is NSFW.
+        # @option opts public_description [String] The message that will get
         #   shown to people when the subreddit is private.
-        # @option data public_traffic [Boolean] Whether or not the subreddit's
+        # @option opts public_traffic [Boolean] Whether or not the subreddit's
         #   traffic stats are publicly available.
-        # @option data show_media [Boolean] Whether or not to show media.
-        # @option data spam_comments [String] Set the spamfilter [low, high,
+        # @option opts show_media [Boolean] Whether or not to show media.
+        # @option opts spam_comments [String] Set the spamfilter [low, high,
         #   all].
-        # @option data spam_links [String] Set the spamfilter [low, high, all].
-        # @option data spam_selfposts [String] Set the spamfilter [low, high,
+        # @option opts spam_links [String] Set the spamfilter [low, high, all].
+        # @option opts spam_selfposts [String] Set the spamfilter [low, high,
         #   all].
-        # @option data submit_text_label [String] The label for the selfpost
+        # @option opts submit_text_label [String] The label for the selfpost
         #   button (60 characters maximum).
-        # @option data submit_text [String] The text to display when making a
+        # @option opts submit_text [String] The text to display when making a
         #   selfpost.
-        # @option data submit_link_label [String] The label for the link button
+        # @option opts submit_link_label [String] The label for the link button
         #   (60 characters maximum).
-        # @option data suggested_comment_sort [String] The suggested comment
+        # @option opts suggested_comment_sort [String] The suggested comment
         #   sort for the subreddit [confidence, top, new, controversial, old,
         #   random, qa].
-        # @option data title [String] The title of the subreddit (100
-        #   characters maximum).
-        # @option data type [String] The subreddit type [gold_restricted,
+        # @option opts type [String] The subreddit type [gold_restricted,
         #   archived, restricted, gold_only, employees_only, private, public].
-        # @option data wiki_edit_age [Integer] The minimum account age needed to
+        # @option opts wiki_edit_age [Integer] The minimum account age needed to
         #   edit the wiki.
-        # @option data wiki_edit_karma [Integer] The minimum karma needed to
+        # @option opts wiki_edit_karma [Integer] The minimum karma needed to
         #   edit the wiki.
-        # @option data wikimode [String] The mode of the subreddit's wiki
+        # @option opts wikimode [String] The mode of the subreddit's wiki
         #   [disabled, modonly, anyone].
         # @return [NeonRAW::Objects::Subreddit] Returns the subreddit object.
-        def create_subreddit(name, data)
-          params = data
-          params[:api_type] = 'json'
-          params[:name] = name
+        def create_subreddit(name, title, description, opts = {})
+          params = SUBREDDIT_DEFAULTS.dup
+          params.merge! opts
+          params['api_type'] = 'json'
+          params['name'] = name
+          params['title'] = title
+          params['description'] = description
           request_data('/api/site_admin', :post, params)
           subreddit(name)
         end
