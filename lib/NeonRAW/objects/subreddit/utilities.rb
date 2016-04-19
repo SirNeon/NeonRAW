@@ -24,17 +24,18 @@ module NeonRAW
         end
 
         # Submit a thread to the subreddit.
-        # @!method submit(params = {})
+        # @!method submit(title, params = {})
+        # @param title [String] The title of the submission (300
+        #   characters maximum).
         # @param params [Hash] The parameters.
         # @option params :text [String] The text of the submission (selfpost).
         # @option params :url [String] The URL of the submission (link post).
-        # @option params :title [String] The title of the submission (300
-        #   characters maximum).
         # @return [NeonRAW::Objects::Submission] Returns the submission object.
-        def submit(params = {})
-          params[:kind] = :self if params[:text]
-          params[:kind] = :link if params[:url]
+        def submit(title, params = {})
+          params[:kind] = 'self' if params[:text]
+          params[:kind] = 'link' if params[:url]
           params[:sr] = display_name
+          params[:title] = title
           response = @client.request_data('/api/submit', :post, params)
           # Seriously though, fucking convoluted data structures.
           submission_id = response[:jquery][10][3][0].split('/')[6]

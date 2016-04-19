@@ -88,14 +88,14 @@ module NeonRAW
       end
 
       # Send a PM to a user.
-      # @!method message(text, subject, opts = {})
-      # @param text [String] The text body of the message.
+      # @!method message(subject, text, opts = {})
       # @param subject [String] The subject of the message (100 characters
       #   maximum).
+      # @param text [String] The text body of the message.
       # @param opts [Hash] Optional parameters.
       # @option opts :from_subreddit [String] The subreddit to send the message
       #   from.
-      def message(text, subject, opts = {})
+      def message(subject, text, opts = {})
         params = { api_type: 'json', from_sr: opts[:from_subreddit], text: text,
                    subject: subject, to: name }
         @client.request_data('/api/compose', :post, params)
