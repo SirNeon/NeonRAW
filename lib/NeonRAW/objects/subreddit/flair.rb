@@ -78,11 +78,10 @@ module NeonRAW
         # Sets flairs for multiple users.
         # @!method set_many_flairs(flair_data)
         # @param flair_data [String] The flair data in CSV format. Format as such:
-        #   User,flair text,CSS class.
+        #   "User,flair text,CSS class\nUser 2,flair text, CSS class".
         # @note This API can take up to 100 lines before it starts ignoring
         #   things. If the flair text and CSS class are both empty strings then
         #   it will clear the user's flair.
-        # @todo Figure out how to properly format multiple CSV values.
         def set_many_flairs(flair_data)
           params = { flair_csv: flair_data }
           path = "/r/#{display_name}/api/flaircsv"
