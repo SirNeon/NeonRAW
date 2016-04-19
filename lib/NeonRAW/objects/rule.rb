@@ -9,8 +9,6 @@ module NeonRAW
     #   @return [String] Returns the description of the rule.
     # @!attribute [r] short_name
     #   @return [String] Returns the name of the rule.
-    # @!attribute [r] created_utc
-    #   @return [Time] Returns when the rule was created.
     # @!attribute [r] priority
     #   @return [Integer] Returns the priority of the rule.
     # @!attribute [r] description_html
@@ -29,6 +27,13 @@ module NeonRAW
           next if key == :created_utc
           self.class.send(:attr_reader, key)
         end
+      end
+
+      # Says when the rule was created.
+      # @!method created
+      # @return [Time] Returns when the rule was created.
+      def created
+        Time.at(@created_utc).localtime
       end
     end
   end
