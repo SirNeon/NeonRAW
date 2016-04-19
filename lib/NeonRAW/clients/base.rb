@@ -76,7 +76,8 @@ module NeonRAW
         refresh_access! if @access.expired?
         response = api_connection(path, meth, params, opts)
         data = JSON.parse(response.body, symbolize_names: true)
-        handle_data_errors(data)
+        error = handle_data_errors(data)
+        fail error unless error.nil?
         data
       end
 
