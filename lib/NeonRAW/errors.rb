@@ -29,6 +29,7 @@ module NeonRAW
         when /too_old/i                   then Archived
         when /too_much_flair_css/i        then TooManyClassNames
         when /user_required/i             then AuthenticationRequired
+        when /bad_flair_target/i          then BadFlairTarget
         end
       when 302 then UnexpectedRedirect
       when 400 then BadRequest
@@ -41,6 +42,7 @@ module NeonRAW
         end
       when 404 then NotFound
       when 409 then Conflict
+      when 413 then RequestTooLarge
       when 429 then RateLimited
       when 500 then InternalServerError
       when 502 then BadGateway
@@ -107,6 +109,19 @@ module NeonRAW
       when /no_invite_found/i          then NoInviteFound
       when /deleted_comment/i          then DeletedComment
       when /thread_locked/i            then PermissionDenied
+      when /image_error/i              then ImageError
+      when /subreddit_exists/i         then SubredditExists
+      when /cant_create_sr/i           then CantCreateSubreddit
+      when /invalid_option/i           then InvalidOption
+      when /gold_required/i            then GoldRequired
+      when /gold_only_sr_required/i    then GoldOnlySrRequired
+      when /admin_required/i           then PermissionDenied
+      when /bad_number/i               then BadNumber
+      when /bad_sr_name/i              then BadSubredditName
+      when /rows per call reached/i    then TooManyFlairRows
+      when /unable to resolve user/i   then CouldntResolveUser
+      when /sr_rule_exists/i           then RuleExists
+      when /sr_rule_too_many/i         then TooManyRules
       end
     end
 
@@ -119,72 +134,9 @@ module NeonRAW
       sleep(ratelimit_reset) unless requests_remaining > 0
     end
 
-    # The comment you tried to reply to has been deleted.
-    class DeletedComment < StandardError
-      def initialize(msg = 'The comment you tried to reply to has been deleted.')
-        super(msg)
-      end
-    end
-
-    # No moderator invite was found.
-    class NoInviteFound < StandardError
-      def initialize(msg = 'No moderator invite found.')
-        super(msg)
-      end
-    end
-
     # That URL has already been submitted.
     class AlreadySubmitted < StandardError
       def initialize(msg = 'That URL has already been submitted.')
-        super(msg)
-      end
-    end
-
-    # You didn't include an URL when submitting the submission.
-    class NoUrl < StandardError
-      def initialize(msg = 'No URL. Please add an URL.')
-        super(msg)
-      end
-    end
-
-    # The text you tried to submit was too long.
-    class TooLong < StandardError
-      def initialize(msg = 'The text you tried to send was too long. 10,000 characters maximum.')
-        super(msg)
-      end
-    end
-
-    # You tried to send a message with no text.
-    class NoText < StandardError
-      def initialize(msg = 'No message text. Please add message text.')
-        super(msg)
-      end
-    end
-
-    # Your from_subreddit parameter was wrong.
-    class InvalidSubreddit < StandardError
-      def initialize(msg = "The subreddit you specified is invalid.")
-        super(msg)
-      end
-    end
-
-    # The user you tried to message is blocked.
-    class UserBlocked < StandardError
-      def initialize(msg = "Can't message blocked users.")
-        super(msg)
-      end
-    end
-
-    # The user you tried to message is muted from the subreddit.
-    class UserMuted < StandardError
-      def initialize(msg = 'User is muted.')
-        super(msg)
-      end
-    end
-
-    # You are muted from the subreddit.
-    class MutedFromSubreddit < StandardError
-      def initialize(msg = 'User is muted from the subreddit.')
         super(msg)
       end
     end
@@ -203,9 +155,31 @@ module NeonRAW
       end
     end
 
+    # The flair row you sent was invalid.
+    # Should be: "Username,flairtext,CSSclass\nUsername,flairtext,CSSclass..."
+    class BadFlairRowFormat < StandardError
+      def initialize(msg = 'Improperly formatted row.')
+        super(msg)
+      end
+    end
+
+    # The thing you tried to flair was a bad target.
+    class BadFlairTarget < StandardError
+      def initialize(msg = 'Bad flair target.')
+        super(msg)
+      end
+    end
+
     # Reddit's servers are shitting themselves.
     class BadGateway < StandardError
       def initialize(msg = "Reddit's server's are experiencing technical difficulties. Try again later.")
+        super(msg)
+      end
+    end
+
+    # The number value for a request parameter was incorrect.
+    class BadNumber < StandardError
+      def initialize(msg = 'The number passed to a request parameter was incorrect.')
         super(msg)
       end
     end
@@ -217,10 +191,16 @@ module NeonRAW
       end
     end
 
-    # The flair row you sent was invalid.
-    # Should be: "Username,flairtext,CSSclass\nUsername,flairtext,CSSclass..."
-    class BadFlairRowFormat < StandardError
-      def initialize(msg = 'Improperly formatted row.')
+    # The subreddit name was bad.
+    class BadSubredditName < StandardError
+      def initialize(msg = 'Bad subreddit name. Only [a-zA-Z0-9_] allowed.')
+        super(msg)
+      end
+    end
+
+    # Couldn't create the subreddit.
+    class CantCreateSubreddit < StandardError
+      def initialize(msg = "Couldn't create subreddit.")
         super(msg)
       end
     end
@@ -239,10 +219,45 @@ module NeonRAW
       end
     end
 
+    # Couldn't resolve the user provided.
+    class CouldntResolveUser < StandardError
+      def initialize(msg = "Couldn't resolve the user provided.")
+        super(msg)
+      end
+    end
+
+    # The comment you tried to reply to has been deleted.
+    class DeletedComment < StandardError
+      def initialize(msg = 'The comment you tried to reply to has been deleted.')
+        super(msg)
+      end
+    end
+
     # You already received an access token using this code. They're only good
     # for one use.
     class ExpiredCode < StandardError
       def initialize(msg = 'The code used to get the access token has expired.')
+        super(msg)
+      end
+    end
+
+    # Only gold-only subreddits can do that.
+    class GoldOnlySrRequired < StandardError
+      def initialize(msg = 'Only gold-only subreddits can do that.')
+        super(msg)
+      end
+    end
+
+    # You need gold to do that.
+    class GoldRequired < StandardError
+      def initialize(msg = 'You need gold to do that.')
+        super(msg)
+      end
+    end
+
+    # The image you tried to upload wasn't valid.
+    class ImageError < StandardError
+      def initialize(msg = "The image you tried to upload wasn't valid.")
         super(msg)
       end
     end
@@ -289,6 +304,13 @@ module NeonRAW
       end
     end
 
+    # Invalid option specified.
+    class InvalidOption < StandardError
+      def initialize(msg = 'One of the specified options is invalid.')
+        super(msg)
+      end
+    end
+
     # The response_type parameter you sent was wrong. It should be the
     # string "code".
     class InvalidResponseType < StandardError
@@ -311,6 +333,41 @@ module NeonRAW
       end
     end
 
+    # Your from_subreddit parameter was wrong.
+    class InvalidSubreddit < StandardError
+      def initialize(msg = "The subreddit you specified is invalid.")
+        super(msg)
+      end
+    end
+
+    # You are muted from the subreddit.
+    class MutedFromSubreddit < StandardError
+      def initialize(msg = 'User is muted from the subreddit.')
+        super(msg)
+      end
+    end
+
+    # No moderator invite was found.
+    class NoInviteFound < StandardError
+      def initialize(msg = 'No moderator invite found.')
+        super(msg)
+      end
+    end
+
+    # You tried to send a private message with no subject.
+    class NoSubject < StandardError
+      def initialize(msg = 'No message subject. Please add a message subject.')
+        super(msg)
+      end
+    end
+
+    # You tried to send a message with no text.
+    class NoText < StandardError
+      def initialize(msg = 'No message text. Please add message text.')
+        super(msg)
+      end
+    end
+
     # The thing you requested wasn't found. Could also mean that a user has
     # been shadowbanned or a subreddit has been banned.
     class NotFound < StandardError
@@ -319,9 +376,9 @@ module NeonRAW
       end
     end
 
-    # You tried to send a private message with no subject.
-    class NoSubject < StandardError
-      def initialize(msg = 'No message subject. Please add a message subject.')
+    # You didn't include an URL when submitting the submission.
+    class NoUrl < StandardError
+      def initialize(msg = 'No URL. Please add an URL.')
         super(msg)
       end
     end
@@ -340,16 +397,16 @@ module NeonRAW
       end
     end
 
-    # Gotta wait before making another request.
-    class RateLimited < StandardError
-      def initialize(msg = "You're rate limited. Try again later.")
+    # This is like being RateLimited only more oAuth2-focused I think.
+    class QuotaFilled < StandardError
+      def initialize(msg = 'Your quota is filled. Try again later.')
         super(msg)
       end
     end
 
-    # This is like being RateLimited only more oAuth2-focused I think.
-    class QuotaFilled < StandardError
-      def initialize(msg = 'Your quota is filled. Try again later.')
+    # Gotta wait before making another request.
+    class RateLimited < StandardError
+      def initialize(msg = "You're rate limited. Try again later.")
         super(msg)
       end
     end
@@ -361,9 +418,30 @@ module NeonRAW
       end
     end
 
+    # The request you sent was too large.
+    class RequestTooLarge < StandardError
+      def initialize(msg = 'The request you sent was too large.')
+        super(msg)
+      end
+    end
+
+    # This rule already exists.
+    class RuleExists < StandardError
+      def initialize(msg = 'This rule already exists.')
+        super(msg)
+      end
+    end
+
     # Reddit's servers are shitting themselves/down for maintenance.
     class ServiceUnavailable < StandardError
       def initialize(msg = "Reddit's servers are currently unavailable. Try again later.")
+        super(msg)
+      end
+    end
+
+    # The subreddit you tried to create already exists.
+    class SubredditExists < StandardError
+      def initialize(msg = 'The subreddit you tried to create already exists.')
         super(msg)
       end
     end
@@ -375,6 +453,13 @@ module NeonRAW
       end
     end
 
+    # The text you tried to submit was too long.
+    class TooLong < StandardError
+      def initialize(msg = 'The text you tried to send was too long. 10,000 characters maximum.')
+        super(msg)
+      end
+    end
+
     # You have too many flair classes already.
     class TooManyClassNames < StandardError
       def initialize(msg = 'Maxiumum number of flair classes reached.')
@@ -382,9 +467,37 @@ module NeonRAW
       end
     end
 
+    # You sent too many flair rows.
+    class TooManyFlairRows < StandardError
+      def initialize(msg = 'Too many flair rows. 100 maximum.')
+        super(msg)
+      end
+    end
+
+    # You already have the maximum amount of rules.
+    class TooManyRules < StandardError
+      def initialize(msg = 'You already have the maximum amount of rules.')
+        super(msg)
+      end
+    end
+
     # Usually happens when the subreddit you requested doesn't exist.
     class UnexpectedRedirect < StandardError
       def initialize(msg = 'The subreddit you requested does not exist.')
+        super(msg)
+      end
+    end
+
+    # The user you tried to message is blocked.
+    class UserBlocked < StandardError
+      def initialize(msg = "Can't message blocked users.")
+        super(msg)
+      end
+    end
+
+    # The user you tried to message is muted from the subreddit.
+    class UserMuted < StandardError
+      def initialize(msg = 'User is muted.')
         super(msg)
       end
     end
