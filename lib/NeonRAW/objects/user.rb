@@ -26,7 +26,8 @@ module NeonRAW
       include Thing::Refreshable
 
       # @!method initialize(client, data)
-      # @param client [NeonRAW::Clients::Script] The client object.
+      # @param client [NeonRAW::Clients::Web/Installed/Script] The client
+      #   object.
       # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client

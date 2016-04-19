@@ -29,7 +29,8 @@ module NeonRAW
     #     in your inbox.
     class Me < User
       # @!method initialize(client, data)
-      # @param client [NeonRAW::Clients::Script] The client object.
+      # @param client [NeonRAW::Clients::Web/Installed/Script] The client
+      #   object.
       # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client
