@@ -47,14 +47,14 @@ module NeonRAW
 
       # @!group Listings
       # Fetches a listing from a user.
-      # @!method get_overview(params = { limit: 25 })
-      # @!method get_comments(params = { limit: 25 })
-      # @!method get_submitted(params = { limit: 25 })
-      # @!method get_gilded(params = { limit: 25 })
-      # @!method get_upvoted(params = { limit: 25 })
-      # @!method get_downvoted(params = { limit: 25 })
-      # @!method get_hidden(params = { limit: 25 })
-      # @!method get_saved(params = { limit: 25 })
+      # @!method overview(params = { limit: 25 })
+      # @!method comments(params = { limit: 25 })
+      # @!method submitted(params = { limit: 25 })
+      # @!method gilded(params = { limit: 25 })
+      # @!method upvoted(params = { limit: 25 })
+      # @!method downvoted(params = { limit: 25 })
+      # @!method hidden(params = { limit: 25 })
+      # @!method saved(params = { limit: 25 })
       # @param params [Hash] The parameters for the request.
       # @option params :show [String] Show a listing type [overview, comments,
       #   submitted, gilded, upvoted, downvoted, hidden, saved]
@@ -71,7 +71,7 @@ module NeonRAW
       # @return [NeonRAW::Objects::Listing] Returns the listing object.
       %w(overview comments submitted gilded upvoted downvoted
          hidden saved).each do |type|
-        define_method :"get_#{type}" do |params = { limit: 25 }|
+        define_method :"#{type}" do |params = { limit: 25 }|
           path = "/user/#{name}/#{type}/.json"
           @client.send(:build_listing, path, params)
         end

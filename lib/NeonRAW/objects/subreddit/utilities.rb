@@ -4,13 +4,13 @@ module NeonRAW
       # Utilities for subreddits.
       module Utilities
         # Get info on a link/comment/subreddit.
-        # @!method get_info(params = {})
+        # @!method info(params = {})
         # @param params [Hash] The parameters.
         # @option params :id [String] The fullname of the thing.
         # @option params :url [String] The URL of the thing.
         # @return [NeonRAW::Objects::Comment/Submission/Subreddit] Returns the
         #   object.
-        def get_info(params = {})
+        def info(params = {})
           path = "/r/#{display_name}/api/info"
           data = @client.request_data(path, :get, params)
           case data[:data][:children][0][:kind]

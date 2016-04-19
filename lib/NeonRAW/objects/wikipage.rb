@@ -54,7 +54,7 @@ module NeonRAW
 
       # @!group Listings
       # Gets the revisions made to the wiki page.
-      # @!method get_revisions(params = { limit: 25 })
+      # @!method revisions(params = { limit: 25 })
       # @param params [Hash] The parameters.
       # @option params :after [String] Fullname of the next data block.
       # @option params :before [String] Fullname of the previous data block.
@@ -63,7 +63,7 @@ module NeonRAW
       # @option params :limit [1..1000] The number of listing items to fetch.
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns the list of revisions.
-      def get_revisions(params = { limit: 25 })
+      def revisions(params = { limit: 25 })
         data_arr = []
         path = "/r/#{subreddit}/wiki/revisions/#{name}"
         until data_arr.length == params[:limit]
@@ -83,7 +83,7 @@ module NeonRAW
       end
 
       # Fetches submissions about the wiki page.
-      # @!method get_discussions(params = { limit: 25 })
+      # @!method discussions(params = { limit: 25 })
       # @param params [Hash] The parameters.
       # @option params :after [String] Fullname of the next data block.
       # @option params :before [String] Fullname of the previous data block.
@@ -93,7 +93,7 @@ module NeonRAW
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns a listing with all the
       #   submissions.
-      def get_discussions(params = { limit: 25 })
+      def discussions(params = { limit: 25 })
         params[:page] = name
         path = "/r/#{subreddit}/wiki/discussions/#{name}"
         @client.send(:build_listing, path, params)

@@ -14,10 +14,10 @@ module NeonRAW
         end
 
         # Fetches subreddits.
-        # @!method get_popular(params = { limit: 25 })
-        # @!method get_new(params = { limit: 25 })
-        # @!method get_gold(params = { limit: 25 })
-        # @!method get_defaults(params = { limit: 25 })
+        # @!method popular(params = { limit: 25 })
+        # @!method new(params = { limit: 25 })
+        # @!method gold(params = { limit: 25 })
+        # @!method defaults(params = { limit: 25 })
         # @param params [Hash] The parameters.
         # @option params :after [String] Fullname of the next data block.
         # @option params :before [String] Fullname of the previous data block.
@@ -28,7 +28,7 @@ module NeonRAW
         # @return [NeonRAW::Objects::Listing] Returns a listing of all the
         #   subreddits.
         %w(popular new gold defaults).each do |type|
-          define_method :"get_#{type}" do |params = { limit: 25 }|
+          define_method :"#{type}" do |params = { limit: 25 }|
             type.chop! if type == 'defaults'
             build_listing("/subreddits/#{type}", params)
           end

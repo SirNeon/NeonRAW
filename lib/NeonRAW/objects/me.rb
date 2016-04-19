@@ -55,10 +55,10 @@ module NeonRAW
 
       # @!group Listings
       # Fetches your private messages.
-      # @!method get_messages(params = { limit: 25 })
-      # @!method get_inbox(params = { limit: 25 })
-      # @!method get_unread(params = { limit: 25 })
-      # @!method get_sent(params = { limit: 25 })
+      # @!method messages(params = { limit: 25 })
+      # @!method inbox(params = { limit: 25 })
+      # @!method unread(params = { limit: 25 })
+      # @!method sent(params = { limit: 25 })
       # @param params [Hash] Optional parameters.
       # @option params :mark [Boolean] Whether or not to remove the orangered
       #   from your inbox.
@@ -70,13 +70,13 @@ module NeonRAW
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns a listing with all your PMs.
       %w(messages inbox unread sent).each do |type|
-        define_method :"get_#{type}" do |params = { limit: 25 }|
+        define_method :"#{type}" do |params = { limit: 25 }|
           @client.send(:build_listing, "/message/#{type}", params)
         end
       end
 
       # Fetches your modmail.
-      # @!method get_modmail(params = { limit: 25 })
+      # @!method modmail(params = { limit: 25 })
       # @param params [Hash] The parameters.
       # @option params :after [String] Fullname of the next data block.
       # @option params :before [String] Fullname of the previous data block.
@@ -86,14 +86,14 @@ module NeonRAW
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns a listing with all your
       #   modmails.
-      def get_modmail(params = { limit: 25 })
+      def modmail(params = { limit: 25 })
         @client.send(:build_listing, '/message/moderator.json', params)
       end
 
       # Fetches your subreddits.
-      # @!method get_subscribed(params = { limit: 25 })
-      # @!method get_contributed(params = { limit: 25 })
-      # @!method get_moderated(params = { limit: 25 })
+      # @!method subscribed(params = { limit: 25 })
+      # @!method contributed(params = { limit: 25 })
+      # @!method moderated(params = { limit: 25 })
       # @param params [Hash] The parameters.
       # @option params :after [String] Fullname of the next data block.
       # @option params :before [String] Fullname of the previous data block.
@@ -104,7 +104,7 @@ module NeonRAW
       # @return [NeonRAW::Objects::Listing] Returns a listing with all your
       #   subreddits.
       %w(subscribed contributed moderated).each do |type|
-        define_method :"get_#{type}" do |params = { limit: 25 }|
+        define_method :"#{type}" do |params = { limit: 25 }|
           type = 'subscriber' if type == 'subscribed'
           type = 'contributor' if type == 'contributed'
           type = 'moderator' if type == 'moderated'

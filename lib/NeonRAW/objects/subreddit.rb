@@ -169,12 +169,12 @@ module NeonRAW
 
       # @!group Listings
       # Fetches a listing from the subreddit.
-      # @!method get_hot(params = { limit: 25 })
-      # @!method get_top(params = { limit: 25 })
-      # @!method get_old(params = { limit: 25 })
-      # @!method get_new(params = { limit: 25 })
-      # @!method get_controversial(params = { limit: 25 })
-      # @!method get_comments(param = { limit: 25 })
+      # @!method hot(params = { limit: 25 })
+      # @!method top(params = { limit: 25 })
+      # @!method old(params = { limit: 25 })
+      # @!method new(params = { limit: 25 })
+      # @!method controversial(params = { limit: 25 })
+      # @!method comments(param = { limit: 25 })
       # @param params [Hash] The parameters for the request.
       # @option params :t [String] Time for relevant sorting [hour, day, week,
       #   month, year, all]
@@ -186,7 +186,7 @@ module NeonRAW
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns the listing object.
       %w(hot top old new controversial comments).each do |type|
-        define_method :"get_#{type}" do |params = { limit: 25 }|
+        define_method :"#{type}" do |params = { limit: 25 }|
           path = "/r/#{display_name}/#{type}/.json"
           @client.send(:build_listing, path, params)
         end

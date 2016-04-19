@@ -9,7 +9,7 @@ module NeonRAW
       module Moderation
         # @!group Listing
         # Fetches the modlog for the subreddit.
-        # @!method get_modlog(params = { limit: 25 })
+        # @!method modlog(params = { limit: 25 })
         # @param params [Hash] The parameters.
         # @option params :after [String] Fullname of the next data block.
         # @option params :before [String] Fullname of the previous data block.
@@ -31,13 +31,13 @@ module NeonRAW
         #   unmuteuser, createrule, editrule, deleterule]
         # @return [NeonRAW::Objects::Listing] Returns a listing of the modlog
         #   actions.
-        def get_modlog(params = { limit: 25 })
+        def modlog(params = { limit: 25 })
           path = "/r/#{display_name}/about/log.json"
           @client.send(:build_listing, path, params)
         end
 
         # Fetches the subreddit's modmail.
-        # @!method get_modmail(params = { limit: 25 })
+        # @!method modmail(params = { limit: 25 })
         # @param params [Hash] The parameters.
         # @option params :after [String] Fullname of the next data block.
         # @option params :before [String] Fullname of the previous data block.
@@ -48,17 +48,17 @@ module NeonRAW
         # @option params :show [String] Literally the string 'all'.
         # @return [NeonRAW::Objects::Listing] Returns a listing with all the
         #   things.
-        def get_modmail(params = { limit: 25 })
+        def modmail(params = { limit: 25 })
           path = "/r/#{display_name}/about/message/inbox"
           @client.send(:build_listing, path, params)
         end
 
         # Fetches things for review by moderators.
-        # @!method get_reported(params = { limit: 25 })
-        # @!method get_spam(params = { limit: 25 })
-        # @!method get_modqueue(params = { limit: 25 })
-        # @!method get_unmoderated(params = { limit: 25 })
-        # @!method get_edited(params = { limit: 25 })
+        # @!method reported(params = { limit: 25 })
+        # @!method spam(params = { limit: 25 })
+        # @!method modqueue(params = { limit: 25 })
+        # @!method unmoderated(params = { limit: 25 })
+        # @!method edited(params = { limit: 25 })
         # @param params [Hash] The parameters.
         # @option params :after [String] Fullname of the next data block.
         # @option params :before [String] Fullname of the previous data block.
@@ -70,7 +70,7 @@ module NeonRAW
         # @return [NeonRAW::Objects::Listing] Returns a listing with all the
         #   things.
         %w(reported spam modqueue unmoderated edited).each do |type|
-          define_method :"get_#{type}" do |params = { limit: 25 }|
+          define_method :"#{type}" do |params = { limit: 25 }|
             type = 'reports' if type == 'reported'
             path = "/r/#{display_name}/about/#{type}.json"
             @client.send(:build_listing, path, params)
@@ -78,12 +78,12 @@ module NeonRAW
         end
 
         # Fetches users with altered privileges.
-        # @!method get_banned(params = { limit: 25 })
-        # @!method get_muted(params = { limit: 25 })
-        # @!method get_wikibanned(params = { limit: 25 })
-        # @!method get_contributors(params = { limit: 25 })
-        # @!method get_wikicontributors(params = { limit: 25 })
-        # @!method get_moderators(params = { limit: 25 })
+        # @!method banned(params = { limit: 25 })
+        # @!method muted(params = { limit: 25 })
+        # @!method wikibanned(params = { limit: 25 })
+        # @!method contributors(params = { limit: 25 })
+        # @!method wikicontributors(params = { limit: 25 })
+        # @!method moderators(params = { limit: 25 })
         # @param params [Hash] The parameters.
         # @option params :after [String] Fullname of the next data block.
         # @option params :before [String] Fullname of the previous data block.
@@ -95,7 +95,7 @@ module NeonRAW
         # @return [NeonRAW::Objects::Listing] Returns a listing of the users.
         %w(banned muted wikibanned
            contributors wikicontributors moderators).each do |type|
-             define_method :"get_#{type}" do |params = { limit: 25 }|
+             define_method :"#{type}" do |params = { limit: 25 }|
                data_arr = []
                path = "/r/#{display_name}/about/#{type}"
                until data_arr.length == params[:limit]

@@ -10,19 +10,19 @@ module NeonRAW
       # Methods for building objects.
       module ObjectBuilder
         # Creates a subreddit object.
-        # @!method get_subreddit(name)
+        # @!method subreddit(name)
         # @param name [String] The name of the subreddit.
         # @return [NeonRAW::Objects::Subreddit] Returns the subreddit object.
-        def get_subreddit(name)
+        def subreddit(name)
           data = request_data("/r/#{name}/about.json", :get)[:data]
           Objects::Subreddit.new(self, data)
         end
 
         # Creates a user object.
-        # @!method get_user(name)
+        # @!method user(name)
         # @param name [String] The name of the user.
         # @return [NeonRAW::Objects::User] Returns the user object.
-        def get_user(name)
+        def user(name)
           data = request_data("/user/#{name}/about.json", :get)[:data]
           Objects::User.new(self, data)
         end
@@ -36,12 +36,12 @@ module NeonRAW
         end
 
         # Fetches a multireddit.
-        # @!method get_multireddit(multireddit_path)
+        # @!method multireddit(multireddit_path)
         # @param multireddit_path [String] The path to the multireddit (e.g.
         #   /user/username/m/multireddit_name).
         # @return [NeonRAW::Objects::MultiReddit] Returns the multireddit
         #   object.
-        def get_multireddit(multireddit_path)
+        def multireddit(multireddit_path)
           params = { multipath: multireddit_path, expand_srs: false }
           data = request_data("/api/multi/#{multireddit_path}", :get, params)
           Objects::MultiReddit.new(self, data[:data])
@@ -119,7 +119,7 @@ module NeonRAW
           params[:api_type] = 'json'
           params[:name] = name
           request_data('/api/site_admin', :post, params)
-          get_subreddit(name)
+          subreddit(name)
         end
 
         # Fetches a wiki page.

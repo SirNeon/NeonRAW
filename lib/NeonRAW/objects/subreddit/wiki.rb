@@ -7,10 +7,10 @@ module NeonRAW
       # Methods for wiki pages.
       module WikiPages
         # Fetches the wiki page.
-        # @!method get_wikipage(page)
+        # @!method wikipage(page)
         # @param page [String] The name of the page.
         # @return [NeonRAW::Objects::WikiPage] Returns the wiki page object.
-        def get_wikipage(page)
+        def wikipage(page)
           params = { page: page }
           path = "/r/#{display_name}/wiki/#{page}"
           data = @client.request_data(path, :get, params)
