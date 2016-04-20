@@ -1,8 +1,6 @@
 # NeonRAW
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/NeonRAW`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+NeonRAW is an API wrapper for Reddit written in Ruby.
 
 ## Installation
 
@@ -22,15 +20,43 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Just require the gem at the top of your file.
 
-## Development
+```ruby
+require 'NeonRAW'
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+## Samples
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+# Make a web app.
+client = NeonRAW.web('client_id', 'secret', 'redirect_uri', user_agent: 'test')
+url = client.auth_url('state', ['identity', 'read'], 'permanent')
+puts "Go to #{url} and enter the code below: "
+code = gets.chomp
+client.authorize! code
+
+# Make a script app. Script apps automatically authorize themselves for you.
+client = NeonRAW.script('username', 'password', 'client_id',
+                        'secret', user_agent: 'test')
+
+# Fetch some submissions from /r/programming's hot queue.
+subreddit = client.subreddit 'programming'
+submissions = subreddit.hot limit: 10
+
+submissions.each_with_index do |submission, i|
+  puts "#{i + 1}: #{submission.title}"
+end
+
+# Fetch a user and message them if they're a friend.
+user = client.user 'SirNeon'
+user.message 'Hi.', "How's it going?" if user.friend?
+
+# Fetch yourself and check your orangereds.
+myself = client.me
+myself.inbox limit: myself.inbox_count if myself.mail?
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/NeonRAW.
-
+[See here](https://gitlab.com/SirNeon/NeonRAW/blob/master/CONTRIBUTING.md).
