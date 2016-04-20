@@ -3,6 +3,7 @@ require_relative '../../objects/user'
 require_relative '../../objects/me'
 require_relative '../../objects/multireddit'
 require_relative '../../objects/wikipage'
+require_relative '../../objects/all'
 
 module NeonRAW
   module Clients
@@ -37,10 +38,15 @@ module NeonRAW
         # Fetches a subreddit.
         # @!method subreddit(name)
         # @param name [String] The name of the subreddit.
-        # @return [NeonRAW::Objects::Subreddit] Returns the subreddit object.
+        # @return [NeonRAW::Objects::Subreddit/All] Returns the subreddit/all
+        #   object.
         def subreddit(name)
-          data = request_data("/r/#{name}/about.json", :get)[:data]
-          Objects::Subreddit.new(self, data)
+          if name == 'all'
+            Objects::All.new(self)
+          else
+            data = request_data("/r/#{name}/about.json", :get)[:data]
+            Objects::Subreddit.new(self, data)
+          end
         end
 
         # Fetches a user.
