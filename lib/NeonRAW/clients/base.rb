@@ -64,6 +64,18 @@ module NeonRAW
         response
       end
 
+      # Refreshes the access token.
+      # @!method refresh_access!
+      def refresh_access!
+        response = auth_connection(
+          '/api/v1/access_token', :post,
+          grant_type: 'refresh_token',
+          refresh_token: @access.refresh_token
+        )
+        data = JSON.parse(response.body, symbolize_names: true)
+        @access.refresh! data
+      end
+
       # Requests data from Reddit.
       # @!method request_data(path, meth, params = {})
       # @param path [String] The API path to connect to.
