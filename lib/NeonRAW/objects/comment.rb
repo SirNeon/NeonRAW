@@ -2,7 +2,7 @@ require_relative 'thing'
 
 module NeonRAW
   module Objects
-    # le comment object
+    # The comment object.
     # @!attribute [r] approved_by
     #   @return [String, nil] Returns which mod approved the comment or nil if
     #     none did or you aren't a moderator of that subreddit.

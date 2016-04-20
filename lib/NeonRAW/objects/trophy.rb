@@ -2,7 +2,7 @@ require_relative 'thing'
 
 module NeonRAW
   module Objects
-    # le Trophy object
+    # The trophy object.
     # @!attribute [r] icon_70
     #   @return [String] Returns a link to the icon file.
     # @!attribute [r] description

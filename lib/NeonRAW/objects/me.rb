@@ -7,7 +7,7 @@ require_relative 'multireddit'
 module NeonRAW
   # Objects module.
   module Objects
-    # le me object
+    # The me object.
     # @!attribute [r] employee?
     #   @return [Boolean] Returns whether or not you're a Reddit
     #     employee.

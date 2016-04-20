@@ -2,7 +2,7 @@ require_relative 'thing'
 
 module NeonRAW
   module Objects
-    # le PrivateMessage object
+    # The private message object.
     # @!attribute [r] author
     #   @return [String] Returns the author of the private message.
     # @!attribute [r] body

@@ -2,7 +2,7 @@ require_relative 'thing'
 
 module NeonRAW
   module Objects
-    # le multireddit object
+    # The multireddit object.
     # @!attribute [r] editable?
     #   @return [Boolean] Returns whether or not you can edit the multireddit.
     # @!attribute [r] display_name

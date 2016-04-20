@@ -4,7 +4,7 @@ require_relative 'morecomments'
 
 module NeonRAW
   module Objects
-    # le submission object
+    # The submission object.
     # @!attribute [r] archived?
     #   @return [Boolean] Returns whether or not the submission is archived.
     # @!attribute [r] author

@@ -4,7 +4,7 @@ require 'NeonRAW/clients/installed'
 require 'NeonRAW/clients/script'
 require 'NeonRAW/clients/web'
 
-# le module
+# The main module.
 module NeonRAW
   # Creates the Installed client.
   # @param client_id [String] The client_id of the app.

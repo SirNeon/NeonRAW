@@ -1,6 +1,6 @@
 module NeonRAW
   module Objects
-    # le revision object
+    # The wiki page revision object.
     # @!attribute [r] reason
     #   @return [String, nil] Returns the reason for the revision.
     # @!attribute [r] page

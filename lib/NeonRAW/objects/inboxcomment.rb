@@ -2,7 +2,7 @@ require_relative 'thing'
 
 module NeonRAW
   module Objects
-    # le inbox comment object
+    # The inboxed comment object.
     # @!attribute [r] body
     #   @return [String, nil] Returns the text body of the comment or nil if
     #     there is none.

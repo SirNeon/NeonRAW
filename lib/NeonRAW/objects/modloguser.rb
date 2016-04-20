@@ -2,7 +2,7 @@ require_relative 'thing'
 
 module NeonRAW
   module Objects
-    # le modloguser object
+    # The modloguser object.
     # @!attribute [r] note
     #   @return [String, nil] Returns the reason for the banning or nil if there
     #     is none. This attribute is only available for the banned and

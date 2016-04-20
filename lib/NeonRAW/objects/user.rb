@@ -3,7 +3,7 @@ require_relative 'trophy'
 
 module NeonRAW
   module Objects
-    # le user object
+    # The user object.
     # @!attribute [r] friend?
     #   @return [Boolean] Returns whether or not the user is a friend.
     # @!attribute [r] gold?

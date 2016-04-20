@@ -1,6 +1,6 @@
 module NeonRAW
   module Objects
-    # le listing object
+    # The listing object.
     class Listing < Array
       attr_reader :after, :before
       def initialize(after, before)

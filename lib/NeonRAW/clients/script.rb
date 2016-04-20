@@ -2,7 +2,7 @@ require_relative 'base'
 
 module NeonRAW
   module Clients
-    # le script
+    # The script app client.
     class Script < Base
       def initialize(username, password, client_id, secret, opts = {})
         @username = username

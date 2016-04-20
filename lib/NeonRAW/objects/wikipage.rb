@@ -3,7 +3,7 @@ require_relative 'listing'
 
 module NeonRAW
   module Objects
-    # le wikipage object
+    # The wikipage object.
     # @!attribute [r] revisable?
     #   @return [Boolean] Returns whether or not you can revise the wiki page.
     # @!attribute [r] content_html

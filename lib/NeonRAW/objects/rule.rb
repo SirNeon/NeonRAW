@@ -2,7 +2,7 @@ require_relative 'thing'
 
 module NeonRAW
   module Objects
-    # le rule object
+    # The subreddit rule object.
     # @!attribute [r] kind
     #   @return [String] Returns the kind of rule.
     # @!attribute [r] description

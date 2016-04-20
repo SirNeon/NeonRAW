@@ -2,7 +2,7 @@ require_relative 'comment'
 
 module NeonRAW
   module Objects
-    # le MoreComments object
+    # The MoreComments object.
     class MoreComments
       def initialize(client, data)
         @client = client

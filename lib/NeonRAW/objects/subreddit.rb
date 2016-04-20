@@ -11,7 +11,7 @@ require_relative 'subreddit/wiki'
 
 module NeonRAW
   module Objects
-    # le subreddit object
+    # The subreddit object.
     # @!attribute [r] subscribed?
     #   @return [Boolean] Returns whether or not you're subscribed
     #     to the subreddit.

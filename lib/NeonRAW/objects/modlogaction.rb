@@ -2,7 +2,7 @@ require_relative 'thing'
 
 module NeonRAW
   module Objects
-    # le modlogaction object
+    # The modlogaction object.
     # @!attribute [r] description
     #   @return [String, nil] Returns the description or nil if there is none.
     # @!attribute [r] target_body
