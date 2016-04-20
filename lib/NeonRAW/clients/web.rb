@@ -14,22 +14,21 @@ module NeonRAW
       end
 
       # Generates the authorization URL.
-      # @!method auth_url(state, scope = ['*'], duration = 'permanent')
+      # @!method auth_url(state, scope = ['identity'], duration = 'temporary')
       # @param state [String] A random string to check later.
       # @param scope [Array<String>] The scopes your app uses.
       # @param duration [String] The duration of the access token [temporary,
       #   permanent].
       # @return [String] Returns the URL.
-      def auth_url(state, scope = ['*'], duration = 'permanent')
+      def auth_url(state, scope = ['identity'], duration = 'temporary')
         query = {
           response_type: 'code',
           client_id: @client_id,
           redirect_uri: @redirect_uri,
           state: state,
-          scope: scope.join(',').chop,
+          scope: scope.join(','),
           duration: duration
         }
-
         url = URI.join('https://www.reddit.com', '/api/v1/authorize')
         url.query = URI.encode_www_form(query)
         url.to_s

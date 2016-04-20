@@ -13,19 +13,17 @@ module NeonRAW
       end
 
       # Generates the authorization URL.
-      # @!method auth_url(state, scope = ['*'], duration = 'temporary')
+      # @!method auth_url(state, scope = ['identity'], duration = 'temporary')
       # @param state [String] A random string to check later.
       # @param scope [Array<String>] The scope the app uses.
-      # @param duration [String] The duration of the access token [temporary,
-      #   permanent].
       # @return [String] Returns the URL.
-      def auth_url(state, scope = ['*'], duration = 'temporary')
+      def auth_url(state, scope = ['identity'], duration = 'temporary')
         query = {
           response_type: 'token',
           client_id: @client_id,
           redirect_uri: @redirect_uri,
           state: state,
-          scope: scope.join(',').chop,
+          scope: scope.join(','),
           duration: duration
         }
         url = URI.join('https://www.reddit.com', '/api/v1/authorize')
@@ -33,9 +31,18 @@ module NeonRAW
         url.to_s
       end
 
+      # Authorizes the client.
+      # @!method authorize!(fragment)
+      # @param fragment [String] The part of the URL after the #.
       def authorize!(fragment)
         data = CGI.parse(fragment)
-        p data
+        access_data = {
+          access_token: data[:access_token].first,
+          token_type: data[:token_type].first,
+          expires_in: data[:expires_in].first,
+          scope: data[:scope].first
+        }
+        @access = Objects::Access.new(access_data)
       end
     end
   end
