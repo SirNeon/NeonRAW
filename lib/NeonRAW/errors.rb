@@ -80,7 +80,8 @@ module NeonRAW
       elsif data.key?(:jquery) # handles submitting submissions
         data = data[:jquery]
         errors = data[14][3]
-        errors = data[22][3] if errors.empty? && data.length > 20
+        errors = data[20][3] if errors.empty? && data.length > 20 # banned
+        errors = data[22][3] if errors.empty? && data.length > 20 # no selfposts
         assign_data_errors(errors)
       end
     end
@@ -102,8 +103,9 @@ module NeonRAW
       when /no_sr_to_sr_message/i      then InvalidSubreddit
       when /user_blocked/i             then UserBlocked
       when /muted_from_subreddit/i     then MutedFromSubreddit
-      when /you aren't allowed/i       then PermissionDenied
-      when /doesn't allow/i            then PermissionDenied
+      when /aren't allowed to post/i   then PermissionDenied
+      when /doesn't allow text posts/i then NoSelfPosts
+      when /only allows text posts/i   then NoLinkPosts
       when /url is required/i          then NoUrl
       when /already been submitted/i   then AlreadySubmitted
       when /no_invite_found/i          then NoInviteFound
@@ -350,6 +352,20 @@ module NeonRAW
     # No moderator invite was found.
     class NoInviteFound < StandardError
       def initialize(msg = 'No moderator invite found.')
+        super(msg)
+      end
+    end
+
+    # The subreddit doesn't allow link posts.
+    class NoLinkPosts < StandardError
+      def initialize(msg = "The subreddit doesn't allow link posts.")
+        super(msg)
+      end
+    end
+
+    # The subreddit doesn't allow selfposts.
+    class NoSelfPosts < StandardError
+      def initialize(msg = "The subreddit doesn't allow selfposts.")
         super(msg)
       end
     end
