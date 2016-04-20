@@ -1,6 +1,6 @@
 # NeonRAW
 
-NeonRAW is an API wrapper for [Reddit](https://www.reddt.com) written in Ruby.
+NeonRAW is an API wrapper for [Reddit](https://www.reddit.com) written in Ruby.
 
 ## Installation
 
