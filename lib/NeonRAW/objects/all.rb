@@ -2,6 +2,10 @@ module NeonRAW
   module Objects
     # The object for /r/all.
     class All
+      def initialize(client)
+        @client = client
+      end
+
       # @!group Listings
       # Fetches a listing from /r/all.
       # @!method hot(params = { limit: 25 })
