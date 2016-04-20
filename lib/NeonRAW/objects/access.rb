@@ -1,6 +1,6 @@
 module NeonRAW
   module Objects
-    # le access object
+    # The access object
     # @!attribute [r] access_token
     #   @return [String] Returns the access token used for oAuth2.
     # @!attribute [r] token_type
@@ -13,7 +13,8 @@ module NeonRAW
     #   @return [Time] Returns how long until the token expires.
     # @!attribute [r] expires_at
     #   @return [Time] Returns when the token expires.
-    # @note refresh_token is only present in the Web/Installed clients.
+    # @note refresh_token is only present in the Web/Installed client if the
+    #   duration is permanent.
     class Access
       def initialize(data)
         data.each do |key, value|
