@@ -1,6 +1,6 @@
 # NeonRAW
 
-NeonRAW is an API wrapper for Reddit written in Ruby.
+NeonRAW is an API wrapper for [Reddit](https://www.reddt.com) written in Ruby.
 
 ## Installation
 
@@ -52,7 +52,7 @@ end
 user = client.user 'SirNeon'
 user.message 'Hi.', "How's it going?" if user.friend?
 
-# Fetch yourself and check your orangereds.
+# Fetch yourself and check your orangereds if you have mail.
 myself = client.me
 myself.inbox limit: myself.inbox_count if myself.mail?
 ```
