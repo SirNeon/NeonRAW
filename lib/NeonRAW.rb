@@ -7,7 +7,6 @@ require 'NeonRAW/clients/web'
 # le module
 module NeonRAW
   # Creates the Installed client.
-  # @!method installed(client_id, redirect_uri, opts = {})
   # @param client_id [String] The client_id of the app.
   # @param redirect_uri [String] The redirect_uri of the app.
   # @param opts [Hash] Optional parameters.
@@ -18,7 +17,6 @@ module NeonRAW
   end
 
   # Creates the Script client.
-  # @!method script(username, password, client_id, secret, opts = {})
   # @param username [String] The username of the user.
   # @param password [String] The password of the user.
   # @param client_id [String] The client_id of the app.
@@ -33,7 +31,6 @@ module NeonRAW
   end
 
   # Creates the Web client.
-  # @!method web(client_id, secret, redirect_uri, opts = {})
   # @param client_id [String] The client_id of the app.
   # @param secret [String] The secret of the app.
   # @param redirect_uri [String] The redirect_uri of the app.
