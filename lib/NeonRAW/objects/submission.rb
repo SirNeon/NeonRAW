@@ -101,6 +101,13 @@ module NeonRAW
         end
       end
 
+      # Checks whether or not the submission is a link post.
+      # @!method linkpost?
+      # @return [Boolean] Returns whether or not the submission is a link post.
+      def linkpost?
+        !@is_self
+      end
+
       # Fetches the comments for a submission.
       # @!method comments
       # @return [Array] Returns an array full of Comments and MoreComments
