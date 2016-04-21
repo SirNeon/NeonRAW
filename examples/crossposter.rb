@@ -35,12 +35,13 @@ end
 # Fetches the submissions.
 # @!method get_submissions(client, quantity)
 # @param client [NeonRAW::Clients::Script] The client object.
+# @param subreddit [String] The name of the subreddit to scrape.
 # @param quantity [1..1000] The number of submissions to fetch.
 # @return [NeonRAW::Objects::Listing] Returns a listing with the submissions.
-def get_submissions(client, quantity)
+def get_submissions(client, subreddit, quantity)
   print "Getting submissions...\r"
   reddit_exception_handling do
-    submissions = client.subreddit('programming').hot limit: quantity
+    submissions = client.subreddit(subreddit).hot limit: quantity
     return submissions
   end
 end
@@ -70,7 +71,7 @@ end
 def main
   config = YAML.load_file('settings.yaml')
   client = login(config)
-  submissions = get_submissions(client, 5)
+  submissions = get_submissions(client, 'programming', 5)
   crosspost(client, submissions, 'programming_mirror')
 end
 
