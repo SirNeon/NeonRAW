@@ -40,7 +40,7 @@ end
 def get_submissions(client, quantity)
   print "Getting submissions...\r"
   reddit_exception_handling do
-    submissions = client.subreddit('Drama').hot limit: quantity
+    submissions = client.subreddit('programming').hot limit: quantity
     return submissions
   end
 end
@@ -71,7 +71,7 @@ def main
   config = YAML.load_file('settings.yaml')
   client = login(config)
   submissions = get_submissions(client, 5)
-  crosspost(client, submissions, 'testxoxoxo')
+  crosspost(client, submissions, 'programming_mirror')
 end
 
 main
