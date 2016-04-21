@@ -54,7 +54,7 @@ user.message 'Hi.', "How's it going?" if user.friend?
 
 # Fetch yourself and check your orangereds if you have mail.
 myself = client.me
-myself.inbox limit: myself.inbox_count if myself.mail?
+new_messages = myself.inbox limit: myself.inbox_count if myself.mail?
 ```
 
 ## Contributing
