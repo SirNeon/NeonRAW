@@ -78,10 +78,7 @@ module NeonRAW
         errors = data[:errors] || []
         assign_data_errors(errors)
       elsif data.key?(:jquery) # handles submitting submissions
-        data = data[:jquery]
-        errors = data[14][3]
-        errors = data[20][3] if errors.empty? && data.length > 20 # banned
-        errors = data[22][3] if errors.empty? && data.length > 20 # no selfposts
+        errors = data[:jquery][-7][3]
         assign_data_errors(errors)
       end
     end
@@ -103,9 +100,9 @@ module NeonRAW
       when /no_sr_to_sr_message/i      then InvalidSubreddit
       when /user_blocked/i             then UserBlocked
       when /muted_from_subreddit/i     then MutedFromSubreddit
-      when /aren't allowed to post/i   then PermissionDenied
-      when /doesn't allow text posts/i then NoSelfPosts
-      when /only allows text posts/i   then NoLinkPosts
+      when /subreddit_notallowed/i     then PermissionDenied
+      when /no_selfs/i                 then NoSelfPosts
+      when /no_links/i                 then NoLinkPosts
       when /url is required/i          then NoUrl
       when /already been submitted/i   then AlreadySubmitted
       when /no_invite_found/i          then NoInviteFound

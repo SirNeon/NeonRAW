@@ -37,13 +37,7 @@ module NeonRAW
           params[:sr] = display_name
           params[:title] = title
           response = @client.request_data('/api/submit', :post, params)
-          submission_id = if params[:kind] == 'self'
-                            # Seriously though, fucking convoluted data
-                            # structures.
-                            response[:jquery][10][3][0].split('/')[6]
-                          else
-                            response[:jquery][16][3][0].split('/')[6]
-                          end
+          submission_id = response[:jquery].last[3].first.split('/')[6]
           info(id: 't3_' + submission_id)
         end
 
