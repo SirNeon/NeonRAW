@@ -1,23 +1,6 @@
 require 'yaml'
 require 'NeonRAW'
 
-# Handles exceptions for Reddit shit.
-# @!method reddit_exception_handling
-# @param block [&block] The block to be executed.
-def reddit_exception_handling
-  include NeonRAW::Errors
-  loop do
-    begin
-      yield
-    rescue InvalidCredentials, InvalidOAuth2Credentials => error
-      abort(error.message)
-    rescue CouldntReachServer, ServiceUnavailable
-      sleep(5) # Gotta wait a bit for Reddit's servers to situate themselves.
-      redo
-    end
-  end
-end
-
 # Creates and authenticate the client.
 # @!method login(config)
 # @param config [Hash] The config data loaded from the settings.yaml file.
@@ -64,6 +47,23 @@ def crosspost(client, submissions, post_here)
       post_to.submit title, text: submission.selftext if submission.selfpost?
       post_to.submit title, url: submission.url if submission.linkpost?
       break
+    end
+  end
+end
+
+# Handles exceptions for Reddit shit.
+# @!method reddit_exception_handling
+# @param block [&block] The block to be executed.
+def reddit_exception_handling
+  include NeonRAW::Errors
+  loop do
+    begin
+      yield
+    rescue InvalidCredentials, InvalidOAuth2Credentials => error
+      abort(error.message)
+    rescue CouldntReachServer, ServiceUnavailable
+      sleep(5) # Gotta wait a bit for Reddit's servers to situate themselves.
+      redo
     end
   end
 end
