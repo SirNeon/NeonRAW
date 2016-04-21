@@ -53,7 +53,7 @@ end
 #   crossposted to.
 def crosspost(client, submissions, post_here)
   post_to = client.subreddit post_here
-  # We want the oldest submissions to be buried behind the newer submissions.
+  # We want to mirror the queue of the subreddit we're crossposting from.
   submissions.reverse!
   submissions.each_with_index do |submission, i|
     print "Working on submission #{i + 1} / #{submissions.length}...\r"
