@@ -1,3 +1,9 @@
+## 0.1.4
+
+### Fixed
+
+* submission.comments no longer raises ServiceUnavailable if the permalink has an accented character in it. 
+
 ## 0.1.3
 
 * handle_ratelimit now checks if X-Ratelimit-Remaining is zero when deciding whether or not to sleep.
