@@ -62,7 +62,7 @@ def reddit_exception_handling
       yield
     rescue InvalidCredentials, InvalidOAuth2Credentials => error
       abort(error.message)
-    rescue CouldntReachServers, ServiceUnavailable
+    rescue CouldntReachServer, ServiceUnavailable
       sleep(5)
       redo
     end
