@@ -112,7 +112,7 @@ module NeonRAW
       # @!method flair?
       # @return [Boolean] Returns whether or not the submission has flair.
       def flair?
-        !@link_flair_text.nil? && !@link_flair_css_class.nil?
+        !@link_flair_text.nil? || !@link_flair_css_class.nil?
       end
 
       # Fetches the comments for a submission.
