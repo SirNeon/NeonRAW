@@ -130,7 +130,7 @@ module NeonRAW
     def handle_ratelimit(headers)
       requests_remaining = headers['X-Ratelimit-Remaining'].to_i
       ratelimit_reset = headers['X-Ratelimit-Reset'].to_i
-      sleep(ratelimit_reset) unless requests_remaining > 0
+      sleep(ratelimit_reset) if requests_remaining.zero?
     end
 
     # That URL has already been submitted.

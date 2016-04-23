@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['SirNeon']
   spec.email         = ['sirneon618@gmail.com']
   spec.summary       = 'A Reddit API wrapper for Ruby.'
-  spec.description   = 'SirNeon\'s wonderful API wrapper for Reddit.'
+  spec.description   = 'SirNeon\'s wonderful API wrapper for Reddit. BETA'
   spec.homepage      = 'https://gitlab.com/SirNeon/NeonRAW'
   spec.license       = 'MPL-2.0'
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
