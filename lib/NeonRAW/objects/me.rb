@@ -213,7 +213,7 @@ module NeonRAW
       # Goes through and edits then deletes your post history. Defaults to
       # 2 weeks.
       # @!method purge(queue, params = {})
-      # @param queue [Symbol] The queue you want to get your posts from
+      # @param queue [String] The queue you want to get your posts from
       #   [overview, submitted, comments, upvoted, downvoted, hidden, saved,
       #   giled]
       # @param params [Hash] The additional parameters.
