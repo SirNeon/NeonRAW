@@ -1,8 +1,10 @@
 ## 0.1.4
 
+* Renamed flatten_comments to flatten_tree and moved it to the client utilities rather than being a submission method.
+
 ### Fixed
 
-* submission.comments no longer raises ServiceUnavailable if the permalink has an accented character in it. 
+* submission.comments no longer raises ServiceUnavailable if the permalink has an accented character in it.
 
 ## 0.1.3
 
