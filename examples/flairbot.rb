@@ -25,7 +25,8 @@ def flair_shit(client, subreddit)
     submissions.each do |submission|
       next if submission.flair?
       case submission.title
-      when /\[meta\]/i then subreddit.set_flair submission, 'Meta'
+      when /\[meta\]/i then subreddit.set_flair submission, 'Meta',
+                                                css_class: 'meta'
       when /test/i then subreddit.set_flair submission, 'Test'
       end
     end
