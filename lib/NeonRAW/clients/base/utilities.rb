@@ -34,6 +34,26 @@ module NeonRAW
           end
         end
 
+        # Flattens comment trees into a single array.
+        # @!method flatten_tree(comments)
+        # @param comments [Array] A list of comments to be checked for replies
+        #   to
+        #   flatten.
+        # @return [Array] Returns a list of the flattened comments.
+        def flatten_tree(comments)
+          flattened = []
+          stack = comments.dup
+          until stack.empty?
+            comment = stack.shift
+            if comment.is_a?(Objects::Comment)
+              replies = comment.replies
+              stack = replies + stack unless replies.nil?
+            end
+            flattened << comment
+          end
+          flattened
+        end
+
         # Fetches a list of wiki pages from Reddit.
         # @!method wikipages
         # @return [Array<String>] Returns a list of wiki pages.

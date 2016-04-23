@@ -132,26 +132,6 @@ module NeonRAW
         data_arr
       end
 
-      # Flattens comment trees into a single array.
-      # @!method flatten_comments(comments)
-      # @param comments [Array] A list of comments to be checked for replies to
-      #   flatten.
-      # @return [Array] Returns a list of the flattened comments.
-      def flatten_comments(comments)
-        flattened = []
-        stack = comments.dup
-
-        until stack.empty?
-          comment = stack.shift
-          if comment.is_a?(Comment)
-            replies = comment.replies
-            stack = replies + stack unless replies.nil?
-          end
-          flattened << comment
-        end
-        flattened
-      end
-
       # Set submission visibility.
       # @!method hide
       # @!method unhide
