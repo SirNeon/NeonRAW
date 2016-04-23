@@ -60,7 +60,7 @@ module NeonRAW
       assign_data_errors([]) if data.empty?
       if data.is_a?(Array) # handles returns from some flair methods
         # handles multireddits
-        assign_data_errors([]) unless data[0].key?(:errors)
+        return assign_data_errors([]) unless data[0].key?(:errors)
         messages = []
         errors = data[0][:errors]
         errors.each { |_key, error| messages << error } unless errors.empty?
