@@ -1,3 +1,11 @@
+## 0.1.3
+
+* handle_ratelimit now checks if X-Ratelimit-Remaining is zero when deciding whether or not to sleep.
+
+### Fixed
+
+* MoreComments.expand now returns [] if there are no children.
+
 ## 0.1.2
 
 ### Added
