@@ -95,6 +95,13 @@ module NeonRAW
         end
       end
 
+      # Returns whether or not the comment is a MoreComments object.
+      # @!method morecomments?
+      # @return [Boolean] Returns false.
+      def morecomments?
+        false
+      end
+
       # Checks whether or not the comment has replies to it.
       # @!method replies?
       # @return [Boolean] Returns whether or not the comment has replies to it.
