@@ -120,7 +120,7 @@ module NeonRAW
       # @return [Array] Returns an array full of Comments and MoreComments
       #   objects.
       def comments
-        data = @client.request_data(permalink + '.json', :get)
+        data = @client.request_data("/comments/#{id}/.json", :get)
         data_arr = []
         data[1][:data][:children].each do |comment|
           if comment[:kind] == 't1'
