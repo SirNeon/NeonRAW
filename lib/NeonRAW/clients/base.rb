@@ -40,7 +40,7 @@ module NeonRAW
           params: params
         ).run
         error = assign_errors(response)
-        fail error unless error.nil?
+        raise error unless error.nil?
         handle_ratelimit(response.headers)
         response
       end
@@ -60,7 +60,7 @@ module NeonRAW
           params: params
         ).run
         error = assign_errors(response)
-        fail error unless error.nil?
+        raise error unless error.nil?
         response
       end
 
@@ -89,7 +89,7 @@ module NeonRAW
         response = api_connection(path, meth, params, opts)
         data = JSON.parse(response.body, symbolize_names: true)
         error = parse_errors(data)
-        fail error unless error.nil?
+        raise error unless error.nil?
         data
       end
 
