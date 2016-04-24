@@ -1,3 +1,7 @@
+## 0.1.5
+
+* Changed conditional statement in the ratelimiting so that the client will sleep if requests_remaining is <= 0.
+
 ## 0.1.4
 
 * Renamed flatten_comments to flatten_tree and moved it to the client utilities rather than being a submission method.
