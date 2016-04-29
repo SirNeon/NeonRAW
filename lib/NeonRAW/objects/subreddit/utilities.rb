@@ -10,6 +10,7 @@ module NeonRAW
         # @option params :url [String] The URL of the thing.
         # @return [NeonRAW::Objects::Comment/Submission/Subreddit] Returns the
         #   object.
+        # @see https://www.reddit.com/dev/api#fullnames
         def info(params = {})
           params[:id] = params[:name]
           params.delete(:name)
