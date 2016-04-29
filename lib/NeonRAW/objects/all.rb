@@ -2,6 +2,9 @@ module NeonRAW
   module Objects
     # The object for /r/all.
     class All
+      # @!method initialize(client)
+      # @param client [NeonRAW::Clients::Web/Installed/Script] The client
+      #   object.
       def initialize(client)
         @client = client
       end
