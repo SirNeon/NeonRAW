@@ -1,6 +1,7 @@
 ## 0.1.5
 
 * Changed conditional statement in the ratelimiting so that the client will sleep if requests_remaining is <= 0.
+* Changed Subreddit#info parameter from :id to :name since it takes a fullname instead of the ID.
 
 ## 0.1.4
 
