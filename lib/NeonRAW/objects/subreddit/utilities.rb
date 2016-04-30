@@ -42,7 +42,7 @@ module NeonRAW
           response = @client.request_data('/api/submit', :post, params)
           # Seriously though, fucking convoluted data structures.
           submission_id = response[:jquery].last[3].first.split('/')[6]
-          info(id: 't3_' + submission_id)
+          info(name: 't3_' + submission_id)
         end
 
         # Gets recommended subreddits for the subreddit.
