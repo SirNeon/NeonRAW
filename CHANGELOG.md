@@ -1,3 +1,9 @@
+## 0.1.6
+
+### Added
+
+* Comment and Submission objects now have methods to help determine which is which when iterating through a listing. The two are often intermixed when fetching a user's overview.
+
 ## 0.1.5
 
 * Changed conditional statement in the ratelimiting so that the client will sleep if requests_remaining is <= 0.
