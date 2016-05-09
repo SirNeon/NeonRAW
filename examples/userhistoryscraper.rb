@@ -66,7 +66,7 @@ end
 
 # Submits the results to Reddit.
 # @!method submit_results(client, subreddit, title, text)
-# @param client [NeonRAW::Objects::Script] The client.
+# @param client [NeonRAW::Clients::Script] The client.
 # @param subreddit [String] The name of the subreddit to submit to.
 # @param title [String] The title of the thread.
 # @param text [String] The table to be submitted.
