@@ -102,6 +102,20 @@ module NeonRAW
         false
       end
 
+      # Checks whether or not this is a submission.
+      # @!method submission?
+      # @return [Boolean] Returns false.
+      def submission?
+        false
+      end
+
+      # Checks whether or not this is a comment.
+      # @!method comment?
+      # @return [Boolean] Returns true.
+      def comment?
+        true
+      end
+
       # Checks whether or not the comment has replies to it.
       # @!method replies?
       # @return [Boolean] Returns whether or not the comment has replies to it.
