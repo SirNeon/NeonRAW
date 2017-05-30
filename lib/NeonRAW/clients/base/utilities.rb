@@ -27,7 +27,7 @@ module NeonRAW
         # @option params :show [String] Literally the string 'all'.
         # @return [NeonRAW::Objects::Listing] Returns a listing of all the
         #   subreddits.
-        %w(popular new gold defaults).each do |type|
+        %w[popular new gold defaults].each do |type|
           define_method :"#{type}" do |params = { limit: 25 }|
             type.chop! if type == 'defaults'
             build_listing("/subreddits/#{type}", params)
