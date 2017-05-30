@@ -27,9 +27,12 @@ module NeonRAW
       def initialize(client, data)
         @client = client
         data.each do |key, value|
+          # for consistency, empty strings/arrays/hashes are set to nil
+          # because most of the keys returned by Reddit are nil when they
+          # don't have a value, besides a few
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
-          next if key == :revision_date || key == :revision_by
+          next if %i[revision_date revision_by].include?(key)
           self.class.send(:attr_reader, key)
         end
         class << self
@@ -104,7 +107,7 @@ module NeonRAW
       # @!method add_editor(username)
       # @!method remove_editor(username)
       # @param username [String] The username of the user.
-      %w(add remove).each do |type|
+      %w[add remove].each do |type|
         define_method :"#{type}_editor" do |username|
           params = { page: name, username: username }
           type = 'del' if type == 'remove'

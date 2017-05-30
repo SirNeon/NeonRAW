@@ -35,9 +35,12 @@ module NeonRAW
       def initialize(client, data)
         @client = client
         data.each do |key, value|
+          # for consistency, empty strings/arrays/hashes are set to nil
+          # because most of the keys returned by Reddit are nil when they
+          # don't have a value, besides a few
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
-          next if key == :created || key == :created_utc
+          next if %i[created created_utc].include?(key)
           self.class.send(:attr_reader, key)
         end
         class << self
@@ -70,7 +73,7 @@ module NeonRAW
       # @option params :limit [1..1000] The number of listing items to fetch.
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns a listing with all your PMs.
-      %w(messages inbox unread sent).each do |type|
+      %w[messages inbox unread sent].each do |type|
         define_method :"#{type}" do |params = { limit: 25 }|
           @client.send(:build_listing, "/message/#{type}", params)
         end
@@ -104,7 +107,7 @@ module NeonRAW
       # @option params :show [String] Literally the string 'all'.
       # @return [NeonRAW::Objects::Listing] Returns a listing with all your
       #   subreddits.
-      %w(subscribed contributed moderated).each do |type|
+      %w[subscribed contributed moderated].each do |type|
         define_method :"#{type}" do |params = { limit: 25 }|
           type = 'subscriber' if type == 'subscribed'
           type = 'contributor' if type == 'contributed'

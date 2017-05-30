@@ -81,10 +81,12 @@ module NeonRAW
       def initialize(client, data)
         @client = client
         data.each do |key, value|
+          # for consistency, empty strings/arrays/hashes are set to nil
+          # because most of the keys returned by Reddit are nil when they
+          # don't have a value, besides a few
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
-          next if key == :created || key == :created_utc || key == :replies
-          self.class.send(:attr_reader, key)
+          next if %i[created created_utc replies].include?(key)
         end
         class << self
           alias_method :removed_by, :banned_by

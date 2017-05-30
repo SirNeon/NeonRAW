@@ -32,9 +32,12 @@ module NeonRAW
       def initialize(client, data)
         @client = client
         data.each do |key, value|
+          # for consistency, empty strings/arrays/hashes are set to nil
+          # because most of the keys returned by Reddit are nil when they
+          # don't have a value, besides a few
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
-          next if key == :created || key == :created_utc
+          next if %i[created created_utc].include?(key)
           self.class.send(:attr_reader, key)
         end
         class << self
@@ -70,8 +73,8 @@ module NeonRAW
       #   listing.
       # @option params :limit [1..1000] The number of listing items to fetch.
       # @return [NeonRAW::Objects::Listing] Returns the listing object.
-      %w(overview comments submitted gilded upvoted downvoted
-         hidden saved).each do |type|
+      %w[overview comments submitted gilded upvoted downvoted
+         hidden saved].each do |type|
         define_method :"#{type}" do |params = { limit: 25 }|
           path = "/user/#{name}/#{type}/.json"
           @client.send(:build_listing, path, params)

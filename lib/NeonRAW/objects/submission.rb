@@ -84,9 +84,12 @@ module NeonRAW
       def initialize(client, data)
         @client = client
         data.each do |key, value|
+          # for consistency, empty strings/arrays/hashes are set to nil
+          # because most of the keys returned by Reddit are nil when they
+          # don't have a value, besides a few
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
-          next if key == :created || key == :created_utc
+          next if %i[created created_utc].include?(key)
           self.class.send(:attr_reader, key)
         end
         class << self
@@ -154,7 +157,7 @@ module NeonRAW
       # Set whether or not users can comment on the submission.
       # @!method lock
       # @!method unlock
-      %w(hide unhide lock unlock).each do |type|
+      %w[hide unhide lock unlock].each do |type|
         define_method :"#{type}" do
           params = { id: name }
           @client.request_data("/api/#{type}", :post, params)
@@ -164,7 +167,7 @@ module NeonRAW
       # Set the submission's NSFW status.'
       # @!method mark_nsfw
       # @!method unmark_nsfw
-      %w(mark unmark).each do |type|
+      %w[mark unmark].each do |type|
         define_method :"#{type}_nsfw" do
           params = { id: name }
           @client.request_data("/api/#{type}nsfw", :post, params)

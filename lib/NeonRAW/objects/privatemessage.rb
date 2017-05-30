@@ -36,9 +36,12 @@ module NeonRAW
       def initialize(client, data)
         @client = client
         data.each do |key, value|
+          # for consistency, empty strings/arrays/hashes are set to nil
+          # because most of the keys returned by Reddit are nil when they
+          # don't have a value, besides a few
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
-          next if key == :created || key == :created_utc || key == :replies
+          next if %i[created created_utc replies].include?(key)
           self.class.send(:attr_reader, key)
         end
         class << self
@@ -69,7 +72,7 @@ module NeonRAW
       # Toggle the read status of a message.
       # @!method mark_as_read!
       # @!method mark_as_unread!
-      %w(read unread).each do |type|
+      %w[read unread].each do |type|
         define_method :"mark_as_#{type}!" do
           params = { id: name }
           @client.request_data("/api/#{type}_message", :post, params)
@@ -79,7 +82,7 @@ module NeonRAW
       # Set whether to mute a user in modmail or not.
       # @!method mute!
       # @!method unmute!
-      %w(mute unmute).each do |type|
+      %w[mute unmute].each do |type|
         define_method :"#{type}!" do
           params = { id: name }
           @client.request_data("/api/#{type}_message_author", :post, params)
