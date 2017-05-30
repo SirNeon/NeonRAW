@@ -61,7 +61,7 @@ module NeonRAW
         # Toggle your subscription to the subreddit.
         # @!method subscribe!
         # @!method unsubscribe!
-        %w(subscribe unsubscribe).each do |type|
+        %w[subscribe unsubscribe].each do |type|
           define_method :"#{type}!" do
             params = { sr: name }
             params[:action] = 'sub' if type == 'subscribe'

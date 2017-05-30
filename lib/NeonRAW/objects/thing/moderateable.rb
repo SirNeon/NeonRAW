@@ -69,7 +69,7 @@ module NeonRAW
         # Set whether to ignore reports on the thing or not.
         # @!method ignore_reports!
         # @!method unignore_reports!
-        %w(ignore unignore).each do |type|
+        %w[ignore unignore].each do |type|
           define_method :"#{type}_reports!" do
             params = { id: name }
             @client.request_data("/api/#{type}_reports", :post, params)

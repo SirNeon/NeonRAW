@@ -6,7 +6,7 @@ module NeonRAW
         # Changes the read status of a PM.
         # @!method mark_as_read
         # @!method mark_as_unread
-        %w(read unread).each do |type|
+        %w[read unread].each do |type|
           define_method :"mark_as_#{type}" do
             params = { id: name }
             @client.request_data("/api/#{type}_message", :post, params)

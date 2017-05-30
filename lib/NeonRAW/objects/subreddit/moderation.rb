@@ -69,7 +69,7 @@ module NeonRAW
         # @option params :show [String] Literally the string 'all'.
         # @return [NeonRAW::Objects::Listing] Returns a listing with all the
         #   things.
-        %w(reported spam modqueue unmoderated edited).each do |type|
+        %w[reported spam modqueue unmoderated edited].each do |type|
           define_method :"#{type}" do |params = { limit: 25 }|
             type = 'reports' if type == 'reported'
             path = "/r/#{display_name}/about/#{type}.json"
@@ -93,8 +93,8 @@ module NeonRAW
         # @option params :show [String] Literally the string 'all'.
         # @option params :user [String] The name of the user to fetch.
         # @return [NeonRAW::Objects::Listing] Returns a listing of the users.
-        %w(banned muted wikibanned
-           contributors wikicontributors moderators).each do |type|
+        %w[banned muted wikibanned
+           contributors wikicontributors moderators].each do |type|
              define_method :"#{type}" do |params = { limit: 25 }|
                data_arr = []
                path = "/r/#{display_name}/about/#{type}"
@@ -127,7 +127,7 @@ module NeonRAW
         # Ditch your privileged status in the subreddit.
         # @!method leave_contributor!
         # @!method leave_moderator!
-        %w(contributor moderator).each do |type|
+        %w[contributor moderator].each do |type|
           define_method :"leave_#{type}!" do
             params = { id: name }
             @client.request_data("/api/leave#{type}", :post, params)
@@ -155,7 +155,7 @@ module NeonRAW
         # @!method remove_banner!
         # @!method remove_header!
         # @!method remove_icon!
-        %w(banner header icon).each do |type|
+        %w[banner header icon].each do |type|
           define_method :"remove_#{type}!" do
             params = { api_type: 'json' }
             path = "/r/#{display_name}/api/delete_sr_#{type}"
