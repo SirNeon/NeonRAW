@@ -34,6 +34,8 @@ module NeonRAW
         # @option params :text [String] The text of the submission (selfpost).
         # @option params :url [String] The URL of the submission (link post).
         # @return [NeonRAW::Objects::Submission] Returns the submission object.
+        # @note This method uses 2 API requests, as it calls #info since the
+        #   JSON returned doesn't give you the submission data.
         def submit(title, params = {})
           params[:kind] = 'self' if params[:text]
           params[:kind] = 'link' if params[:url]
