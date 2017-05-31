@@ -71,8 +71,7 @@ module NeonRAW
             loop do
               params[:before] = nil
               params[:after] = nil
-              listing = build_listing(path, params)
-              listing.each { |thing| data_stream << thing }
+              build_listing(path, params).each { |thing| data_stream << thing }
               sleep(5)
             end
           end
