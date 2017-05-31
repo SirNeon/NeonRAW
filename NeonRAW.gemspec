@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['sirneon618@gmail.com']
   spec.summary       = 'A Reddit API wrapper for Ruby.'
   spec.description   = 'SirNeon\'s wonderful API wrapper for Reddit. BETA'
-  spec.homepage      = 'https://gitlab.com/SirNeon/NeonRAW'
+  spec.homepage      = 'https://github.com/SirNeon618/NeonRAW'
   spec.license       = 'MPL-2.0'
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = 'exe'
@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 2.1.0'
 
-  spec.add_development_dependency 'bundler', '~> 1.11'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'bundler', '~> 1.13'
+  spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_dependency             'typhoeus', '~> 0.7'
+  spec.add_dependency             'typhoeus', '~> 1.0'
 end
