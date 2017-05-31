@@ -87,6 +87,7 @@ module NeonRAW
           value = nil if ['', [], {}].include?(value)
           instance_variable_set(:"@#{key}", value)
           next if %i[created created_utc replies].include?(key)
+          self.class.send(:attr_reader, key)
         end
         class << self
           alias_method :removed_by, :banned_by
