@@ -60,6 +60,24 @@ module NeonRAW
         def wikipages
           request_data('/wiki/pages.json', :get)[:data]
         end
+
+        # Streams listing items continuously.
+        # @!method stream(path, params)
+        # @param path [String] The API path for the listing you want streamed.
+        # @param params [Hash] The optional parameters for the request.
+        # @return [Enumerator] Returns an enumerator for the streamed data.
+        def stream(path, params)
+          Enumerator.new do |data_stream|
+            loop do
+              params[:before] = nil
+              params[:after] = nil
+              listing = build_listing(path, params)
+              listing.each { |thing| data_stream << thing }
+              sleep(5)
+            end
+          end
+        end
+        private :stream
       end
     end
   end

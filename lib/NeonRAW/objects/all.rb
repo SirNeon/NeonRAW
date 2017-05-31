@@ -34,6 +34,24 @@ module NeonRAW
           @client.send(:build_listing, path, params)
         end
       end
+
+      # Streams content from /r/all.
+      # @!method stream(queue, params = { limit: 25 })
+      # @param queue [String] The queue to get data from [hot, top, new,
+      #   controversial, gilded, comments]
+      # @param params [Hash] The parameters for the request.
+      # @option params :t [String] Time for relevant sorting [hour, day, week,
+      #   month, year, all]
+      # @option params :after [String] The name of the next data block.
+      # @option params :before [String] The name of the previous data block.
+      # @option params :count [Integer] The number of items already in the
+      #   listing.
+      # @option params :limit [1..1000] The number of items to fetch.
+      # @option params :show [String] Literally the string 'all'.
+      # @return [Enumerator] Returns an enumerator for the streamed data.
+      def stream(queue, params = { limit: 25 })
+        @client.send(:stream, "/r/all/#{queue}", params)
+      end
     end
   end
 end
