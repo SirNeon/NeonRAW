@@ -87,7 +87,7 @@ module NeonRAW
         # @option params :limit [1..1000] The number of items to fetch.
         # @option params :show [String] Literally the string 'all'.
         # @return [Enumerator] Returns an enumerator for the streamed data.
-        def stream(queue, params)
+        def stream(queue, params = { limit: 25 })
           @client.send(:stream, "/r/#{display_name}/#{queue}", params)
         end
       end
