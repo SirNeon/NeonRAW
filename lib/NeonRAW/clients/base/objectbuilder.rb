@@ -4,6 +4,7 @@ require_relative '../../objects/me'
 require_relative '../../objects/multireddit'
 require_relative '../../objects/wikipage'
 require_relative '../../objects/all'
+require_relative '../../objects/popular'
 
 module NeonRAW
   module Clients
