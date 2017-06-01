@@ -38,11 +38,13 @@ module NeonRAW
         # Fetches a subreddit.
         # @!method subreddit(name)
         # @param name [String] The name of the subreddit.
-        # @return [NeonRAW::Objects::Subreddit/All] Returns the subreddit/all
-        #   object.
+        # @return [NeonRAW::Objects::Subreddit/All/Popular] Returns the
+        #   subreddit/all/popular object.
         def subreddit(name)
           if name == 'all'
             Objects::All.new(self)
+          elsif name == 'popular'
+            Objects::Popular.new(self)
           else
             data = request_data("/r/#{name}/about.json", :get)[:data]
             Objects::Subreddit.new(self, data)
