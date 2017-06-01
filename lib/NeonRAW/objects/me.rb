@@ -1,7 +1,7 @@
 require_relative 'user'
 require_relative 'trophy'
 require_relative 'multireddit'
-# rubocop:disable Metrics/AbcSize, Metrics/ClassLength
+# rubocop:disable Metrics/AbcSize
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 module NeonRAW
@@ -147,12 +147,8 @@ module NeonRAW
       # @!method trophies
       # @return [Array<NeonRAW::Objects::Trophy>] Returns a list of trophies.
       def trophies
-        data_arr = []
         data = @client.request_data('/api/v1/me/trophies', :get)[:data]
-        data[:trophies].each do |trophy|
-          data_arr << Trophy.new(trophy[:data])
-        end
-        data_arr
+        data[:trophies].map { |trophy| Trophy.new(trophy[:data]) }
       end
 
       # Fetches your friends.
@@ -166,12 +162,8 @@ module NeonRAW
       # @return [Array<Hash<Float, String, String>>] Returns the list of your
       #   friends.
       def friends(params = { limit: 25 })
-        data_arr = []
         data = @client.request_data('/prefs/friends', :get, params)
-        data[0][:data][:children].each do |friend|
-          data_arr << friend
-        end
-        data_arr
+        data[0][:data][:children].map { |friend| friend }
       end
 
       # Fetches your blocked users.
@@ -185,12 +177,8 @@ module NeonRAW
       # @return [Array<Hash<Float, String, String>>] Returns the list of your
       #   blocked users.
       def blocked(params = { limit: 25 })
-        data_arr = []
         data = @client.request_data('/prefs/blocked', :get, params)
-        data[:data][:children].each do |blocked|
-          data_arr << blocked
-        end
-        data_arr
+        data[:data][:children].map { |blocked| blocked }
       end
 
       # Mark all your messages as "read."
@@ -204,13 +192,9 @@ module NeonRAW
       # @return [Array<NeonRAW::Objects::MultiReddit>] Returns a list of
       #   multireddits.
       def multireddits
-        data_arr = []
         params = { expand_srs: false }
         data = @client.request_data('/api/multi/mine', :get, params)
-        data.each do |multireddit|
-          data_arr << MultiReddit.new(@client, multireddit[:data])
-        end
-        data_arr
+        data.map { |multireddit| MultiReddit.new(@client, multireddit[:data]) }
       end
 
       # Goes through and edits then deletes your post history. Defaults to
@@ -243,9 +227,9 @@ module NeonRAW
           next if item.created < params[:age]
           next unless whitelist.include?(item.subreddit) || whitelist[0] == '*'
           if item.is_a?(Submission)
-            item.edit! params[:edit] if item.selfpost? && !item.archived?
+            item.edit! params[:edit] if item.selfpost?
           else
-            item.edit! params[:edit] unless item.archived?
+            item.edit! params[:edit]
           end
           item.delete!
         end
