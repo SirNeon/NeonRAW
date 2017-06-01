@@ -50,7 +50,7 @@ module NeonRAW
       # @option params :show [String] Literally the string 'all'.
       # @return [Enumerator] Returns an enumerator for the streamed data.
       def stream(queue, params = { limit: 25 })
-        @client.send(:stream, "/r/all/#{queue}", params)
+        @client.send(:stream, "/r/all/#{queue}/.json", params)
       end
     end
   end
