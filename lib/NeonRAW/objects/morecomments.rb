@@ -23,6 +23,13 @@ module NeonRAW
         true
       end
 
+      # Returns whether or not the object is a Comment object.
+      # @!method comment?
+      # @return [Boolean] Returns false.
+      def comment?
+        false
+      end
+
       # Expands the MoreComments object.
       # @!method expand(subreddit)
       # @param subreddit [String] The name of the subreddit where the
