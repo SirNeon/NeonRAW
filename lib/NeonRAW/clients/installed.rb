@@ -8,6 +8,8 @@ module NeonRAW
       def initialize(client_id, redirect_uri, opts = {})
         @client_id = client_id
         @redirect_uri = redirect_uri
+        @requests_remaining = 1
+        @ratelimit_reset = 0
         @user_agent = opts[:user_agent] ||
                       "Powered by NeonRAW v#{NeonRAW::VERSION}"
       end
