@@ -84,17 +84,12 @@ module NeonRAW
       data.extend(Hashie::Extensions::DeepFind)
 
       errors = data.deep_find(:errors)
-      if errors.nil? && data.is_a?(Hash)
+      if errors.nil? && data.is_a?(Hash) # handles submitting submissions
         return assign_data_errors(find_submission_errors(data)) if data.key?(:jquery)
       end
       return assign_data_errors([]) if errors.nil? || errors.empty?
       return assign_data_errors(errors.first) if errors.first.is_a?(Array)
       if errors.is_a?(Hash)
-        if data.key?(:jquery) # handles submitting submissions
-          p data[:jquery]
-          errors = data[:jquery][-7][3]
-          return assign_data_errors(errors)
-        end
         messages = errors.map { |_key, error| error } # handles multireddits
         return assign_data_errors(messages)
       end
