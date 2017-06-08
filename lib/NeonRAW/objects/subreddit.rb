@@ -154,12 +154,8 @@ module NeonRAW
       # @!method rules
       # @return [Array<NeonRAW::Objects::Rule>] Returns a list of the rules.
       def rules
-        data_arr = []
         data = @client.request_data("/r/#{display_name}/about/rules", :get)
-        data[:rules].each do |rule|
-          data_arr << Rule.new(@client, rule)
-        end
-        data_arr
+        data[:rules].map { |rule| Rule.new(@client, rule) }
       end
 
       # Fetches the subreddit's stylesheet.
