@@ -155,7 +155,7 @@ module NeonRAW
       # @return [Array<NeonRAW::Objects::Rule>] Returns a list of the rules.
       def rules
         data_arr = []
-        data = @client.request_data("/r/#{display_name}/about/rules.json", :get)
+        data = @client.request_data("/r/#{display_name}/about/rules", :get)
         data[:rules].each do |rule|
           data_arr << Rule.new(@client, rule)
         end
@@ -166,7 +166,7 @@ module NeonRAW
       # @!method stylesheet
       # @return [Hash<Array, String, String>] Returns the stylesheet data.
       def stylesheet
-        path = "/r/#{display_name}/about/stylesheet.json"
+        path = "/r/#{display_name}/about/stylesheet"
         @client.request_data(path, :get)[:data]
       end
 
@@ -191,7 +191,7 @@ module NeonRAW
       # @return [NeonRAW::Objects::Listing] Returns the listing object.
       %w[hot rising top old new controversial comments].each do |type|
         define_method :"#{type}" do |params = { limit: 25 }|
-          path = "/r/#{display_name}/#{type}/.json"
+          path = "/r/#{display_name}/#{type}"
           @client.send(:build_listing, path, params)
         end
       end

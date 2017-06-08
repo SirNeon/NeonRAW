@@ -30,7 +30,7 @@ module NeonRAW
       # @return [NeonRAW::Objects::Listing] Returns the listing object.
       %w[hot rising top old new controversial comments].each do |type|
         define_method :"#{type}" do |params = { limit: 25 }|
-          path = "/r/all/#{type}/.json"
+          path = "/r/all/#{type}"
           @client.send(:build_listing, path, params)
         end
       end
@@ -50,7 +50,7 @@ module NeonRAW
       # @option params :show [String] Literally the string 'all'.
       # @return [Enumerator] Returns an enumerator for the streamed data.
       def stream(queue, params = { limit: 25 })
-        @client.send(:stream, "/r/all/#{queue}/.json", params)
+        @client.send(:stream, "/r/all/#{queue}", params)
       end
     end
   end

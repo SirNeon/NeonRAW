@@ -91,7 +91,7 @@ module NeonRAW
       # @return [NeonRAW::Objects::Listing] Returns a listing with all your
       #   modmails.
       def modmail(params = { limit: 25 })
-        @client.send(:build_listing, '/message/moderator.json', params)
+        @client.send(:build_listing, '/message/moderator', params)
       end
 
       # Fetches your subreddits.

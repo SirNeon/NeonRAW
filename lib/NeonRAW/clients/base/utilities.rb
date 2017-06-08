@@ -58,7 +58,7 @@ module NeonRAW
         # @!method wikipages
         # @return [Array<String>] Returns a list of wiki pages.
         def wikipages
-          request_data('/wiki/pages.json', :get)[:data]
+          request_data('/wiki/pages', :get)[:data]
         end
 
         # Streams listing items continuously.

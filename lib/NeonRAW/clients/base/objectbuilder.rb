@@ -47,7 +47,7 @@ module NeonRAW
           elsif name == 'popular'
             Objects::Popular.new(self)
           else
-            data = request_data("/r/#{name}/about.json", :get)[:data]
+            data = request_data("/r/#{name}/about", :get)[:data]
             Objects::Subreddit.new(self, data)
           end
         end
@@ -57,7 +57,7 @@ module NeonRAW
         # @param name [String] The name of the user.
         # @return [NeonRAW::Objects::User] Returns the user object.
         def user(name)
-          data = request_data("/user/#{name}/about.json", :get)[:data]
+          data = request_data("/user/#{name}/about", :get)[:data]
           Objects::User.new(self, data)
         end
 
@@ -165,7 +165,7 @@ module NeonRAW
         # @return [NeonRAW::Objects::WikiPage] Returns the wiki page object.
         def wikipage(page)
           params = { page: page }
-          path = "/wiki/#{page}.json"
+          path = "/wiki/#{page}"
           data = request_data(path, :get, params)
           data[:data][:name] = page
           Objects::WikiPage.new(self, data[:data])

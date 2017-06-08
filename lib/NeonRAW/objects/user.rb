@@ -76,7 +76,7 @@ module NeonRAW
       %w[overview comments submitted gilded upvoted downvoted
          hidden saved].each do |type|
         define_method :"#{type}" do |params = { limit: 25 }|
-          path = "/user/#{name}/#{type}/.json"
+          path = "/user/#{name}/#{type}"
           @client.send(:build_listing, path, params)
         end
       end

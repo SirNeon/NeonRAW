@@ -32,7 +32,7 @@ module NeonRAW
         # @return [NeonRAW::Objects::Listing] Returns a listing of the modlog
         #   actions.
         def modlog(params = { limit: 25 })
-          path = "/r/#{display_name}/about/log.json"
+          path = "/r/#{display_name}/about/log"
           @client.send(:build_listing, path, params)
         end
 
@@ -72,7 +72,7 @@ module NeonRAW
         %w[reported spam modqueue unmoderated edited].each do |type|
           define_method :"#{type}" do |params = { limit: 25 }|
             type = 'reports' if type == 'reported'
-            path = "/r/#{display_name}/about/#{type}.json"
+            path = "/r/#{display_name}/about/#{type}"
             @client.send(:build_listing, path, params)
           end
         end
@@ -191,7 +191,7 @@ module NeonRAW
         # @!method settings
         # @return [Hash] Returns the subreddit's settings.
         def settings
-          path = "/r/#{display_name}/about/edit.json"
+          path = "/r/#{display_name}/about/edit"
           @client.request_data(path, :get)[:data]
         end
       end

@@ -2,6 +2,8 @@ require_relative 'thing'
 require_relative 'comment'
 require_relative 'morecomments'
 
+# rubocop:disable Metrics/MethodLength
+
 module NeonRAW
   module Objects
     # The submission object.
@@ -88,7 +90,11 @@ module NeonRAW
           # because most of the keys returned by Reddit are nil when they
           # don't have a value, besides a few
           value = nil if ['', [], {}].include?(value)
-          instance_variable_set(:"@#{key}", value)
+          if key == :permalink
+            instance_variable_set(:"@#{key}", 'https://www.reddit.com' + value)
+          else
+            instance_variable_set(:"@#{key}", value)
+          end
           next if %i[created created_utc].include?(key)
           self.class.send(:attr_reader, key)
         end
@@ -137,7 +143,7 @@ module NeonRAW
       # @return [Array] Returns an array full of Comments and MoreComments
       #   objects.
       def comments
-        data = @client.request_data("/comments/#{id}/.json", :get)
+        data = @client.request_data("/comments/#{id}", :get)
         data_arr = []
         data[1][:data][:children].each do |comment|
           if comment[:kind] == 't1'
