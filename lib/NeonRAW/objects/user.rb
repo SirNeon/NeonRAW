@@ -83,7 +83,7 @@ module NeonRAW
 
       # Streams content from users.
       # @!method stream(queue, params)
-      # @param queue [String] The queue to get data from [overview, comments,
+      # @param queue [Symbol] The queue to get data from [overview, comments,
       #   submitted, gilded, upvoted, downvoted, hidden, saved]
       # @param params [Hash] The parameters for the request.
       # @option params :t [String] Time for relevant sorting [hour, day, week,

@@ -37,7 +37,7 @@ module NeonRAW
 
       # Streams content from /r/all.
       # @!method stream(queue, params = { limit: 25 })
-      # @param queue [String] The queue to get data from [hot, top, new,
+      # @param queue [Symbol] The queue to get data from [hot, top, new,
       #   controversial, gilded, comments]
       # @param params [Hash] The parameters for the request.
       # @option params :t [String] Time for relevant sorting [hour, day, week,
