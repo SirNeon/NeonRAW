@@ -1,8 +1,10 @@
 require_relative 'thing'
 require_relative 'comment'
 require_relative 'morecomments'
+require_relative 'listing'
+require_relative 'submission'
 
-# rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/MethodLength, Metrics/ClassLength
 
 module NeonRAW
   module Objects
@@ -153,6 +155,34 @@ module NeonRAW
           end
         end
         data_arr
+      end
+
+      # Fetches duplicates for the submission.
+      # @!method duplicates(params = { limit: 25 })
+      # @param params [Hash] Optional parameters.
+      # @option :after [String] The fullname of the next data block.
+      # @option :before [String] The fullname of the previous data block.
+      # @option :count [Integer] The number of posts already in the listing.
+      # @option :limit [1..1000] The number of listing items to fetch.
+      # @option :show [String] Literally the string 'all'.
+      # @return [NeonRAW::Objects::Listing] Returns the listing with all the
+      #   duplicate submissions.
+      def duplicates(params = { limit: 25 })
+        params[:sr_detail] = false
+        data_arr = []
+        until data_arr.length == params[:limit]
+          data = @client.request_data("/duplicates/#{id}", :get, params)
+          params[:after] = data[1][:data][:after]
+          params[:before] = data[1][:data][:before]
+          data[1][:data][:children].each do |submission|
+            data_arr << Submission.new(@client, submission[:data])
+            break if data_arr.length == params[:limit]
+          end
+          break if params[:after].nil?
+        end
+        listing = Listing.new(params[:after], params[:before])
+        data_arr.each { |submission| listing << submission }
+        listing
       end
 
       # Set submission visibility.
