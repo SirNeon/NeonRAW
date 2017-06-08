@@ -524,5 +524,6 @@ module NeonRAW
         super(msg)
       end
     end
+    private :find_submission_errors
   end
 end
