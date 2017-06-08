@@ -26,6 +26,19 @@ module NeonRAW
           end
         end
 
+        # Finds the submission URL in that awful jquery response.
+        # @!method find_submission_url(response)
+        # @param response [Hash] The parsed JSON response from Reddit.
+        # @return [String] Returns the submission URL.
+        def find_submission_url(response)
+          response[:jquery].each do |block_arr|
+            next unless block_arr[3].respond_to?(:first)
+            if block_arr[3].first =~ %r{https://www.reddit.com}
+              return block_arr[3].first
+            end
+          end
+        end
+
         # Submit a thread to the subreddit.
         # @!method submit(title, params = {})
         # @param title [String] The title of the submission (300
@@ -43,7 +56,7 @@ module NeonRAW
           params[:title] = title
           response = @client.request_data('/api/submit', :post, params)
           # Seriously though, fucking convoluted data structures.
-          submission_id = response[:jquery].last[3].first.split('/')[6]
+          submission_id = find_submission_url(response).split('/')[6]
           info(name: 't3_' + submission_id)
         end
 
@@ -75,7 +88,7 @@ module NeonRAW
 
         # Streams content from subreddits.
         # @!method stream(queue, params)
-        # @param queue [String] The queue to get data from [hot, top, new,
+        # @param queue [Symbol] The queue to get data from [hot, top, new,
         #   controversial, gilded, comments]
         # @param params [Hash] The parameters for the request.
         # @option params :t [String] Time for relevant sorting [hour, day, week,
@@ -90,6 +103,7 @@ module NeonRAW
         def stream(queue, params = { limit: 25 })
           @client.send(:stream, "/r/#{display_name}/#{queue}", params)
         end
+        private :find_submission_url
       end
     end
   end
