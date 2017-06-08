@@ -1,5 +1,7 @@
 # rubocop:disable all
 
+require 'hashie'
+
 module NeonRAW
   # Methods and classes for handling errors.
   module Errors
@@ -7,29 +9,35 @@ module NeonRAW
     # raise.
     # @!method assign_errors(response)
     # @param response [Typhoeus::Response] The response object.
+    # @param json [Boolean] Whether or not the response is JSON.
     # @return [StandardError, nil] Returns either the exception or nil if there
     #   is none.
-    def assign_errors(response)
+    def assign_errors(response, json)
       code = response.code
       body = response.body
       case code
       when 200
-        case body
-        when /access_denied/i             then OAuth2AccessDenied
-        when /unsupported_response_type/i then InvalidResponseType
-        when /unsupported_grant_type/i    then InvalidGrantType
-        when /invalid_scope/i             then InvalidScope
-        when /invalid_request/i           then InvalidRequest
-        when /invalid_grant/i             then ExpiredCode
-        when /wrong_password/i            then InvalidCredentials
-        when /bad_captcha/i               then InvalidCaptcha
-        when /ratelimit/i                 then RateLimited
-        when /quota_filled/i              then QuotaFilled
-        when /bad_css_name/i              then InvalidClassName
-        when /too_old/i                   then Archived
-        when /too_much_flair_css/i        then TooManyClassNames
-        when /user_required/i             then AuthenticationRequired
-        when /bad_flair_target/i          then BadFlairTarget
+        if json
+          errors = JSON.parse(body, symbolize_names: true)
+          errors.extend(Hashie::Extensions::DeepFind)
+          errors = errors.deep_find(:error) || errors.deep_find(:errors)
+          errors = errors.first if errors.is_a?(Array)
+          case errors
+          when /access_denied/i             then OAuth2AccessDenied
+          when /unsupported_response_type/i then InvalidResponseType
+          when /unsupported_grant_type/i    then InvalidGrantType
+          when /invalid_scope/i             then InvalidScope
+          when /invalid_request/i           then InvalidRequest
+          when /invalid_grant/i             then InvalidCredentials
+          when /wrong_password/i            then InvalidCredentials
+          when /bad_captcha/i               then InvalidCaptcha
+          when /ratelimit/i                 then RateLimited
+          when /quota_filled/i              then QuotaFilled
+          when /bad_css_name/i              then InvalidClassName
+          when /too_much_flair_css/i        then TooManyClassNames
+          when /user_required/i             then AuthenticationRequired
+          when /bad_flair_target/i          then BadFlairTarget
+          end
         end
       when 302 then UnexpectedRedirect
       when 400 then BadRequest
@@ -52,35 +60,45 @@ module NeonRAW
       end
     end
 
+    # Parses the awful JSON response from the submit thread API for errors.
+    # @!method find_submission_errors(data)
+    # @param data [Hash] The parsed JSON response from Reddit.
+    # @return [Array<String>] Returns an array with the errors or an empty array
+    #  if there were no errors.
+    def find_submission_errors(data)
+      data[:jquery].each do |block_arr|
+        next unless block_arr[3].respond_to?(:first)
+        if block_arr[3].first =~ /no_selfs/i || block_arr[3].first =~ /no_links/i
+          return [block_arr[3].first]
+        end
+      end
+      []
+    end
+
     # Parses Reddit data for errors.
     # @!method parse_errors(data)
     # @param data [Array, Hash] The data.
     def parse_errors(data)
       # handles returns from toggleable methods
       assign_data_errors([]) if data.empty?
-      if data.is_a?(Array) # handles returns from some flair methods
-        # handles multireddits
-        return assign_data_errors([]) unless data[0].key?(:errors)
-        messages = []
-        errors = data[0][:errors]
-        errors.each { |_key, error| messages << error } unless errors.empty?
-        assign_data_errors(messages)
-      elsif data.key?(:json) # handles pretty much everything else
-        assign_data_errors([]) unless data[:json].key?(:errors)
-        if data[:json][:errors].is_a?(Array)
-          errors = data[:json][:errors][0] || []
-          assign_data_errors(errors)
-        else
-          errors = data[:json][:errors] || []
-          assign_data_errors(errors)
-        end
-      elsif data.key?(:errors) # handles image uploading
-        errors = data[:errors] || []
-        assign_data_errors(errors)
-      elsif data.key?(:jquery) # handles submitting submissions
-        errors = data[:jquery][-7][3]
-        assign_data_errors(errors)
+      data.extend(Hashie::Extensions::DeepFind)
+
+      errors = data.deep_find(:errors)
+      if errors.nil? && data.is_a?(Hash)
+        return assign_data_errors(find_submission_errors(data)) if data.key?(:jquery)
       end
+      return assign_data_errors([]) if errors.nil? || errors.empty?
+      return assign_data_errors(errors.first) if errors.first.is_a?(Array)
+      if errors.is_a?(Hash)
+        if data.key?(:jquery) # handles submitting submissions
+          p data[:jquery]
+          errors = data[:jquery][-7][3]
+          return assign_data_errors(errors)
+        end
+        messages = errors.map { |_key, error| error } # handles multireddits
+        return assign_data_errors(messages)
+      end
+      return assign_data_errors(errors)
     end
 
     # Checks data for any errors that wouldn't have otherwise thrown an
@@ -121,16 +139,16 @@ module NeonRAW
       when /unable to resolve user/i   then CouldntResolveUser
       when /sr_rule_exists/i           then RuleExists
       when /sr_rule_too_many/i         then TooManyRules
+      when /too_old/i                  then Archived
       end
     end
 
     # Manages the API ratelimit for requesting stuff from Reddit.
-    # @!method handle_ratelimit(headers)
+    # @!method update_ratelimit_info(headers)
     # @param headers [Hash] The Typhoeus response headers.
-    def handle_ratelimit(headers)
-      requests_remaining = headers['X-Ratelimit-Remaining'].to_i
-      ratelimit_reset = headers['X-Ratelimit-Reset'].to_i
-      sleep(ratelimit_reset) if requests_remaining <= 0
+    def update_ratelimit_info(headers)
+      @requests_remaining = headers['X-Ratelimit-Remaining'].to_i
+      @ratelimit_reset = headers['X-Ratelimit-Reset'].to_i
     end
 
     # That URL has already been submitted.
@@ -142,7 +160,7 @@ module NeonRAW
 
     # Thing is archived and can't be edited/replied to.
     class Archived < StandardError
-      def initialize(msg = 'This thing is too old to edit/reply to.')
+      def initialize(msg = 'This thing is too old to reply to.')
         super(msg)
       end
     end
@@ -232,14 +250,6 @@ module NeonRAW
       end
     end
 
-    # You already received an access token using this code. They're only good
-    # for one use.
-    class ExpiredCode < StandardError
-      def initialize(msg = 'The code used to get the access token has expired.')
-        super(msg)
-      end
-    end
-
     # Only gold-only subreddits can do that.
     class GoldOnlySrRequired < StandardError
       def initialize(msg = 'Only gold-only subreddits can do that.')
@@ -284,7 +294,7 @@ module NeonRAW
 
     # Your username/password is wrong.
     class InvalidCredentials < StandardError
-      def initialize(msg = 'Invalid username/password')
+      def initialize(msg = 'Invalid username/password/client id/secret')
         super(msg)
       end
     end

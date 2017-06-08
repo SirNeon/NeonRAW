@@ -25,13 +25,15 @@ module NeonRAW
       end
 
       # Connects to Reddit for oAuth2 requests.
-      # @!method api_connection(path, meth, params)
+      # @!method api_connection(path, meth, params, opts = {}, json = true)
       # @param path [String] The API path.
       # @param meth [Symbol] The request method.
       # @param params [Hash] The parameters.
       # @param opts [Hash] Optional parameters for the request body.
+      # @param json [Boolean] Whether or not the expected response will be JSON.
       # @return [Typhoeus::Response] Returns the response.
-      def api_connection(path, meth, params, opts = {})
+      def api_connection(path, meth, params, opts = {}, json = true)
+        sleep(@ratelimit_reset) if @requests_remaining <= 0
         response = Typhoeus::Request.new(
           'https://oauth.reddit.com' + path,
           method: meth,
@@ -39,9 +41,9 @@ module NeonRAW
           headers: api_headers,
           params: params
         ).run
-        error = assign_errors(response)
+        error = assign_errors(response, json)
         raise error unless error.nil?
-        handle_ratelimit(response.headers)
+        update_ratelimit_info(response.headers)
         response
       end
 
@@ -59,7 +61,7 @@ module NeonRAW
           headers: { 'User-Agent' => @user_agent },
           params: params
         ).run
-        error = assign_errors(response)
+        error = assign_errors(response, true)
         raise error unless error.nil?
         response
       end
@@ -102,7 +104,7 @@ module NeonRAW
       #   via the request body.
       def request_nonjson(path, meth, params = {}, opts = {})
         refresh_access! if @access.expired?
-        api_connection(path, meth, params, opts).body
+        api_connection(path, meth, params, opts, false).body
       end
     end
   end
