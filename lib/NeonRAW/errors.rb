@@ -80,7 +80,7 @@ module NeonRAW
     # @param data [Array, Hash] The data.
     def parse_errors(data)
       # handles returns from toggleable methods
-      assign_data_errors([]) if data.empty?
+      return assign_data_errors([]) if data.empty?
       data.extend(Hashie::Extensions::DeepFind)
 
       errors = data.deep_find(:errors)
