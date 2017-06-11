@@ -33,8 +33,8 @@ module NeonRAW
     #   @note This attribute only exists if the comment is fetched from outside
     #     the thread it was posted in (so like user pages,
     #     /r/subreddit/comments, that type of stuff).
-    # @!attribute [r] link_id
-    #   @return [String] Returns the id of the link that this comment is in.
+    # @!attribute [r] link_name
+    #   @return [String] Returns the name of the link that this comment is in.
     # @!attribute [r] link_title
     #   @return [String] Returns the title of the parent link.
     #   @note This attribute only exists if the comment is fetched from outside
@@ -48,8 +48,8 @@ module NeonRAW
     # @!attribute [r] num_reports
     #   @return [Integer, nil] Returns the number of times the comment has been
     #     reported or nil if it hasn't or you aren't a moderator.
-    # @!attribute [r] parent_id
-    #   @return [String] Returns the ID of either the link or the comment that
+    # @!attribute [r] parent_name
+    #   @return [String] Returns the name of either the link or the comment that
     #     this comment is a reply to.
     # @!attribute [r] saved?
     #   @return [Boolean] Returns whether or not you saved the comment.
@@ -95,6 +95,8 @@ module NeonRAW
           alias_method :saved?, :saved
           alias_method :score_hidden?, :score_hidden
           alias_method :archived?, :archived
+          alias_method :link_name, :link_id
+          alias_method :parent_name, :parent_id
         end
       end
 
@@ -146,6 +148,15 @@ module NeonRAW
           end
         end
         comments
+      end
+
+      # Creates the comment's permalink.
+      # @!method permalink
+      # @return [String] Returns the comment's permalink.
+      def permalink
+        submission_id = link_id[3..-1] # trims the t3_ from the fullname
+        # the // is intentional
+        "https://www.reddit.com/r/#{subreddit}/comments/#{submission_id}//#{id}"
       end
     end
   end
