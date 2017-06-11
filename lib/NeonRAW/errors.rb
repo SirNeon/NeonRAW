@@ -60,21 +60,6 @@ module NeonRAW
       end
     end
 
-    # Parses the awful JSON response from the submit thread API for errors.
-    # @!method find_submission_errors(data)
-    # @param data [Hash] The parsed JSON response from Reddit.
-    # @return [Array<String>] Returns an array with the errors or an empty array
-    #  if there were no errors.
-    def find_submission_errors(data)
-      data[:jquery].each do |block_arr|
-        next unless block_arr[3].respond_to?(:first)
-        if block_arr[3].first =~ /no_selfs/i || block_arr[3].first =~ /no_links/i
-          return [block_arr[3].first]
-        end
-      end
-      []
-    end
-
     # Parses Reddit data for errors.
     # @!method parse_errors(data)
     # @param data [Array, Hash] The data.
@@ -84,9 +69,6 @@ module NeonRAW
       data.extend(Hashie::Extensions::DeepFind)
 
       errors = data.deep_find(:errors)
-      if errors.nil? && data.is_a?(Hash) # handles submitting submissions
-        return assign_data_errors(find_submission_errors(data)) if data.key?(:jquery)
-      end
       return assign_data_errors([]) if errors.nil? || errors.empty?
       return assign_data_errors(errors.first) if errors.first.is_a?(Array)
       if errors.is_a?(Hash)
@@ -519,6 +501,5 @@ module NeonRAW
         super(msg)
       end
     end
-    private :find_submission_errors
   end
 end
