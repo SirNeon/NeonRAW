@@ -79,7 +79,7 @@ module NeonRAW
       end
 
       # Requests data from Reddit.
-      # @!method request_data(path, meth, params = {})
+      # @!method request_data(path, meth, params = {}, opts = {})
       # @param path [String] The API path to connect to.
       # @param meth [Symbol] The request method to use.
       # @param params [Hash] Parameters for the request.

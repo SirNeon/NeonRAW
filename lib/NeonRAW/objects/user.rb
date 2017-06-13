@@ -82,7 +82,7 @@ module NeonRAW
       end
 
       # Streams content from users.
-      # @!method stream(queue, params)
+      # @!method stream(queue, params = { limit: 25 })
       # @param queue [Symbol] The queue to get data from [overview, comments,
       #   submitted, gilded, upvoted, downvoted, hidden, saved]
       # @param params [Hash] The parameters for the request.
@@ -94,6 +94,7 @@ module NeonRAW
       #   listing.
       # @option params :limit [1..1000] The number of items to fetch.
       # @option params :show [String] Literally the string 'all'.
+      # @yield [NeonRAW::Objects::Comment/Submission] Yields the listing items.
       # @return [Enumerator] Returns an enumerator for the streamed data.
       def stream(queue, params = { limit: 25 })
         @client.send(:stream, "/user/#{name}/#{queue}", params)

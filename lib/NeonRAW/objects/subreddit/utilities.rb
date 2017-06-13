@@ -73,7 +73,7 @@ module NeonRAW
         end
 
         # Streams content from subreddits.
-        # @!method stream(queue, params)
+        # @!method stream(queue, params = { limit: 25 })
         # @param queue [Symbol] The queue to get data from [hot, top, new,
         #   controversial, gilded, comments]
         # @param params [Hash] The parameters for the request.
@@ -85,7 +85,14 @@ module NeonRAW
         #   listing.
         # @option params :limit [1..1000] The number of items to fetch.
         # @option params :show [String] Literally the string 'all'.
+        # @yield [NeonRAW::Objects::Comment/Submission] Yields listing items.
         # @return [Enumerator] Returns an enumerator for the streamed data.
+        # @example Simple comment stream.
+        #   client = NeonRAW.script(...)
+        #   comments = client.subreddit(...).stream :comments
+        #   comments.each do |comment|
+        #     comment.reply 'world' if comment.body =~ /hello/i
+        #   end
         def stream(queue, params = { limit: 25 })
           @client.send(:stream, "/r/#{display_name}/#{queue}", params)
         end

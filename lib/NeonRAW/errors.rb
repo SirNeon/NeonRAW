@@ -7,7 +7,7 @@ module NeonRAW
   module Errors
     # Reads the HTTP status of the Typhoeus response and gives an exception to
     # raise.
-    # @!method assign_errors(response)
+    # @!method assign_errors(response, json)
     # @param response [Typhoeus::Response] The response object.
     # @param json [Boolean] Whether or not the response is JSON.
     # @return [StandardError, nil] Returns either the exception or nil if there

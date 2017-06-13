@@ -8,9 +8,9 @@ module NeonRAW
       module Flair
         # Clears flair templates.
         # @!method clear_flair_templates(flair_type)
-        # @param flair_type [String] The type of flair [user, link].
+        # @param flair_type [Symbol] The type of flair [user, link].
         def clear_flair_templates(flair_type)
-          flairs = { 'user' => 'USER_FLAIR', 'link' => 'LINK_FLAIR' }
+          flairs = { user: 'USER_FLAIR', link: 'LINK_FLAIR' }
           params = { api_type: 'json', flair_type: flairs[flair_type] }
           path = "/r/#{display_name}/api/clearflairtemplates"
           @client.request_data(path, :post, params)
@@ -77,11 +77,14 @@ module NeonRAW
 
         # Sets flairs for multiple users.
         # @!method set_many_flairs(flair_data)
-        # @param flair_data [String] The flair data in CSV format. Format as such:
-        #   "User,flair text,CSS class\\nUser 2,flair text, CSS class".
+        # @param flair_data [String] The flair data in CSV format.
         # @note This API can take up to 100 lines before it starts ignoring
         #   things. If the flair text and CSS class are both empty strings then
         #   it will clear the user's flair.
+        # @example How to set mulitple user flairs.
+        #   client = NeonRAW.script(...)
+        #   flairs = "User,flair text,CSS class\nUser 2,flair text,CSS class"
+        #   client.subreddit(...).set_many_flairs flairs
         def set_many_flairs(flair_data)
           params = { flair_csv: flair_data }
           path = "/r/#{display_name}/api/flaircsv"
