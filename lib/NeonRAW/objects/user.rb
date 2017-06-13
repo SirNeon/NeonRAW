@@ -96,6 +96,12 @@ module NeonRAW
       # @option params :show [String] Literally the string 'all'.
       # @yield [NeonRAW::Objects::Comment/Submission] Yields the listing items.
       # @return [Enumerator] Returns an enumerator for the streamed data.
+      # @example Simple comment stream.
+      #   client = NeonRAW.script(...)
+      #   comments = client.subreddit(...).stream :comments
+      #   comments.each do |comment|
+      #     comment.reply 'world' if comment.body =~ /hello/i
+      #   end
       def stream(queue, params = { limit: 25 })
         @client.send(:stream, "/user/#{name}/#{queue}", params)
       end
