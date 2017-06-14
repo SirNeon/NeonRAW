@@ -135,13 +135,9 @@ module NeonRAW
       # @return [Array<NeonRAW::Objects::MultiReddit>] Returns a list of
       #   multireddits.
       def multireddits
-        data_arr = []
         params = { expand_srs: false }
         data = @client.request_data("/api/multi/user/#{name}", :get, params)
-        data.each do |multireddit|
-          data_arr << MultiReddit.new(@client, multireddit[:data])
-        end
-        data_arr
+        data.map { |multireddit| MultiReddit.new(@client, multireddit[:data]) }
       end
 
       # Add the user to your friends list.
@@ -162,13 +158,9 @@ module NeonRAW
       # @!method trophies
       # @return [Array<NeonRAW::Objects::Trophy>] Returns a list of trophies.
       def trophies
-        data_arr = []
         path = "/api/v1/user/#{name}/trophies"
         data = @client.request_data(path, :get)[:data]
-        data[:trophies].each do |trophy|
-          data_arr << Trophy.new(trophy[:data])
-        end
-        data_arr
+        data[:trophies].map { |trophy| Trophy.new(trophy[:data]) }
       end
     end
   end
