@@ -45,7 +45,7 @@ module NeonRAW
           stack = comments.dup
           until stack.empty?
             comment = stack.shift
-            if comment.is_a?(Objects::Comment)
+            if comment.is_a?(Objects::Comment) # MoreComments can be mixed in.
               replies = comment.replies
               stack = replies + stack unless replies.nil?
             end
@@ -68,11 +68,13 @@ module NeonRAW
         # @return [Enumerator] Returns an enumerator for the streamed data.
         def stream(path, params)
           Enumerator.new do |data_stream|
+            before = params[:before]
             loop do
-              params[:before] = nil
-              params[:after] = nil
-              build_listing(path, params).each { |thing| data_stream << thing }
-              sleep(5)
+              params[:before] = before
+              listing = build_listing(path, params)
+              listing.each { |thing| data_stream << thing }
+              before = listing.first.name unless listing.empty?
+              sleep(1)
             end
           end
         end
