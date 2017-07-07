@@ -78,6 +78,20 @@ module NeonRAW
             end
           end
         end
+
+        # Get info on a link/comment/subreddit.
+        # @!method info(params = {})
+        # @param params [Hash] The parameters.
+        # @option params :name [String] The fullname of the thing.
+        # @option params :url [String] The URL of the thing.
+        # @return [NeonRAW::Objects::Listing] Returns a listing with the items.
+        # @note :name and :url can take multiple fullnames separated by commas.
+        # @see https://www.reddit.com/dev/api#fullnames
+        def info(params = {})
+          params[:id] = params[:name]
+          params.delete(:name)
+          build_listing('/api/info', params)
+        end
         private :stream
       end
     end

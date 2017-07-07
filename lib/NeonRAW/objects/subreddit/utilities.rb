@@ -3,29 +3,6 @@ module NeonRAW
     class Subreddit
       # Utilities for subreddits.
       module Utilities
-        # Get info on a link/comment/subreddit.
-        # @!method info(params = {})
-        # @param params [Hash] The parameters.
-        # @option params :name [String] The fullname of the thing.
-        # @option params :url [String] The URL of the thing.
-        # @return [NeonRAW::Objects::Comment/Submission/Subreddit] Returns the
-        #   object.
-        # @see https://www.reddit.com/dev/api#fullnames
-        def info(params = {})
-          params[:id] = params[:name]
-          params.delete(:name)
-          path = "/r/#{display_name}/api/info"
-          data = @client.request_data(path, :get, params)
-          case data[:data][:children][0][:kind]
-          when 't1'
-            Comment.new(@client, data[:data][:children][0][:data])
-          when 't3'
-            Submission.new(@client, data[:data][:children][0][:data])
-          when 't5'
-            Subreddit.new(@client, data[:data][:children][0][:data])
-          end
-        end
-
         # Submit a thread to the subreddit.
         # @!method submit(title, params = {})
         # @param title [String] The title of the submission (300

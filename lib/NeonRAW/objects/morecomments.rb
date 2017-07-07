@@ -31,20 +31,13 @@ module NeonRAW
       end
 
       # Expands the MoreComments object.
-      # @!method expand(subreddit)
-      # @param subreddit [String] The name of the subreddit where the
-      #   MoreComments object resides.
-      # @return [Array] Returns a list of the comments that were expanded.
-      def expand(subreddit)
-        comments = []
+      # @!method expand
+      # @return [NeonRAW::Objects::Listing] Returns a listing with all of the
+      #   comments that were expanded.
+      def expand
         return [] if children.nil?
-        params = { id: children.map { |the_id| 't1_' + the_id }.join(',') }
         # /api/morechildren is buggy shit. This is better.
-        data = @client.request_data("/r/#{subreddit}/api/info", :get, params)
-        data[:data][:children].each do |comment|
-          comments << Comment.new(@client, comment[:data])
-        end
-        comments
+        @client.info(name: children.map { |the_id| 't1_' + the_id }.join(','))
       end
     end
   end
