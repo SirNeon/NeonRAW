@@ -17,10 +17,16 @@ module NeonRAW
     # @!attribute [r] hide_from_robots?
     #   @return [Boolean] Returns whether or not the user doesn't
     #     want web crawlers indexing their profile page.
+    # @!attribute [r] suspended?
+    #   @return [Boolean] Returns whether or not the user is suspended.
     # @!attribute [r] link_karma
     #   @return [Integer] Returns the link karma of the user.
     # @!attribute [r] comment_karma
     #   @return [Integer] Returns the comment karma of the user.
+    # @!attribute [r] name
+    #   @return [String] Returns the fullname of the user.
+    # @!attribute [r] username
+    #   @return [String] Returns the username of the user.
     class User < Thing
       include Thing::Createable
       include Thing::Refreshable
@@ -31,6 +37,10 @@ module NeonRAW
       # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client
+        # is_suspended only gets included when the user is actually suspended
+        data[:is_suspended] = false unless data.key?(:is_suspended)
+        data[:username] = data.delete(:name) # this is for consistency
+        data[:name] = 't2_' + data[:id]
         data.each do |key, value|
           # for consistency, empty strings/arrays/hashes are set to nil
           # because most of the keys returned by Reddit are nil when they
@@ -46,6 +56,7 @@ module NeonRAW
           alias_method :moderator?, :is_mod
           alias_method :verified_email?, :has_verified_email
           alias_method :hide_from_robots?, :hide_from_robots
+          alias_method :suspended?, :is_suspended
         end
       end
 
@@ -76,7 +87,7 @@ module NeonRAW
       %w[overview comments submitted gilded upvoted downvoted
          hidden saved].each do |type|
         define_method :"#{type}" do |params = { limit: 25 }|
-          path = "/user/#{name}/#{type}"
+          path = "/user/#{username}/#{type}"
           @client.send(:build_listing, path, params)
         end
       end
@@ -103,7 +114,7 @@ module NeonRAW
       #     comment.reply 'world' if comment.body =~ /hello/i
       #   end
       def stream(queue, params = { limit: 25 })
-        @client.send(:stream, "/user/#{name}/#{queue}", params)
+        @client.send(:stream, "/user/#{username}/#{queue}", params)
       end
       # @!endgroup
 
@@ -112,7 +123,7 @@ module NeonRAW
       # @param months [1..36] The number of months worth of gold to give.
       def give_gold(months)
         params = { months: months }
-        @client.request_data("/api/v1/gold/give/#{name}", :post, params)
+        @client.request_data("/api/v1/gold/give/#{username}", :post, params)
         refresh!
       end
 
@@ -136,7 +147,7 @@ module NeonRAW
       #   multireddits.
       def multireddits
         params = { expand_srs: false }
-        data = @client.request_data("/api/multi/user/#{name}", :get, params)
+        data = @client.request_data("/api/multi/user/#{username}", :get, params)
         data.map { |multireddit| MultiReddit.new(@client, multireddit[:data]) }
       end
 
@@ -144,21 +155,22 @@ module NeonRAW
       # @!method friend
       def friend
         body = { 'name' => name }.to_json
-        @client.request_data("/api/v1/me/friends/#{name}", :put, {}, body)
+        @client.request_data("/api/v1/me/friends/#{username}", :put, {}, body)
       end
 
       # Remove the user from your friends list.
       # @!method unfriend
       def unfriend
         params = { id: name }
-        @client.request_nonjson("/api/v1/me/friends/#{name}", :delete, params)
+        path = "/api/v1/me/friends/#{username}"
+        @client.request_nonjson(path, :delete, params)
       end
 
       # Fetches the user's trophies.
       # @!method trophies
       # @return [Array<NeonRAW::Objects::Trophy>] Returns a list of trophies.
       def trophies
-        path = "/api/v1/user/#{name}/trophies"
+        path = "/api/v1/user/#{username}/trophies"
         data = @client.request_data(path, :get)[:data]
         data[:trophies].map { |trophy| Trophy.new(trophy[:data]) }
       end

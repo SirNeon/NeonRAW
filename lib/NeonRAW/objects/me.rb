@@ -1,7 +1,7 @@
 require_relative 'user'
 require_relative 'trophy'
 require_relative 'multireddit'
-# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 module NeonRAW
@@ -34,6 +34,8 @@ module NeonRAW
       # @param data [Hash] The object data.
       def initialize(client, data)
         @client = client
+        data[:username] = data.delete(:name) # this is for consistency
+        data[:name] = 't2_' + data[:id]
         data.each do |key, value|
           # for consistency, empty strings/arrays/hashes are set to nil
           # because most of the keys returned by Reddit are nil when they
