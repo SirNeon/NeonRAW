@@ -20,7 +20,7 @@ module NeonRAW
           params[:sr] = display_name
           params[:title] = title
           response = @client.request_data('/api/submit', :post, params)
-          info(name: response[:json][:data][:name])
+          @client.info(name: response[:json][:data][:name])
         end
 
         # Gets recommended subreddits for the subreddit.
@@ -72,6 +72,20 @@ module NeonRAW
         #   end
         def stream(queue, params = { limit: 25 })
           @client.send(:stream, "/r/#{display_name}/#{queue}", params)
+        end
+
+        # Returns data on the moderators of the subreddit.
+        # @!method moderators
+        # @return [Array<Hash<String, String, Array<String>, Float, String,
+        #  String>>] Returns data on the moderators.
+        def moderators
+          path = "/r/#{display_name}/about/moderators"
+          data = @client.request_data(path, :get)[:data][:children]
+          data.each do |user|
+            user[:username] = user.delete(:name)
+            user[:name] = user.delete(:id) # this is for consistency
+          end
+          data
         end
       end
     end
