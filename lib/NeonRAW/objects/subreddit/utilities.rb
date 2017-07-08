@@ -20,7 +20,7 @@ module NeonRAW
           params[:sr] = display_name
           params[:title] = title
           response = @client.request_data('/api/submit', :post, params)
-          @client.info(name: response[:json][:data][:name])
+          @client.info(name: response[:json][:data][:name]).first
         end
 
         # Gets recommended subreddits for the subreddit.
