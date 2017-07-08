@@ -1,3 +1,25 @@
+## 0.1.7
+
+* Changed Me#purge! so you can now edit archived posts.
+* Error handling has been refactored a bit.
+* Refactored how subreddit#submit buildings submission objects.
+* Renamed Comment#link_id and Comment#parent_id to link_name and parent_name.
+* \#distinguished renamed to distinguished!
+* Subreddit#info was moved to client#info and returns a listing now.
+* User/Me objects now have a \#username attribute and \#name returns the object's fullname now.
+
+### Added
+
+* Content streams have been added to user and subreddit objects.
+* Added support for /r/popular.
+* You can now sticky distinguished comments.
+* MoreComments object has a comment? method now to make sifting through listings easier.
+* Hashie is now a runtime dependency.
+* You can now fetch duplicates of submissions.
+* Comments now have a permalink method.
+* User objects have a \#suspended? attribute now.
+* Subreddits have a \#moderators method now.
+
 ## 0.1.6
 
 ### Added
