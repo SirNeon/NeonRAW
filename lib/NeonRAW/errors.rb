@@ -78,13 +78,17 @@ module NeonRAW
       return assign_data_errors(errors)
     end
 
-    # Checks data for any errors that wouldn't have otherwise thrown an
+    # Checks data for any errors that wouldn't have otherwise raised an
     # exception.
     # @!method assign_data_errors(errors)
     # @param errors [Array<String>] The errors.
     def assign_data_errors(errors)
       return nil if errors.empty?
-      error = errors.first
+      error = if errors.first == :row # handles flair errors
+                errors[1]
+              else
+                errors.first
+              end
       case error
       when /improperly formatted row/i then BadFlairRowFormat
       when /no_subject/i               then NoSubject
