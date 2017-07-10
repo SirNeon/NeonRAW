@@ -47,7 +47,7 @@ module NeonRAW
     #     /r/subreddit/comments, that type of stuff).
     # @!attribute [r] num_reports
     #   @return [Integer, nil] Returns the number of times the comment has been
-    #     reported or nil if it hasn't or you aren't a moderator.
+    #     reported or nil if you aren't a moderator.
     # @!attribute [r] parent_name
     #   @return [String] Returns the name of either the link or the comment that
     #     this comment is a reply to.
