@@ -11,9 +11,10 @@ module NeonRAW
           params = { api_type: 'json', text: text, thing_id: name }
           data = @client.request_data('/api/comment', :post, params)
           object_data = data[:json][:data][:things][0][:data]
-          if data[:kind] == 't1'
+          kind = data[:json][:data][:things][0][:kind]
+          if kind == 't1'
             Comment.new(@client, object_data)
-          elsif data[:kind] == 't4'
+          elsif kind == 't4'
             PrivateMessage.new(@client, object_data)
           end
         end
