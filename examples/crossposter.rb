@@ -8,9 +8,13 @@ require 'NeonRAW'
 def login(config)
   print "Logging in...\r"
   reddit_exception_handling do
-    client = NeonRAW.script(config['username'], config['password'],
-                            config['client_id'], config['secret'],
-                            user_agent: 'Crossposting bot by /u/SirNeon')
+    client = NeonRAW.script(
+      username: config['username'],
+      password: config['password'],
+      client_id: config['client_id'],
+      secret: config['secret'],
+      user_agent: 'Crossposting bot by /u/SirNeon'
+    )
     return client
   end
 end
