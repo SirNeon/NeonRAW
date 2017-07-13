@@ -31,17 +31,20 @@ module NeonRAW
         end
 
         # Distinguish a submission/comment.
-        # @!method distinguish!(type, params = { sticky: nil })
-        # @param type [String] The type of distinguish you want to do [yes, no,
-        #   admin, special].
+        # @!method distinguish!(params = { sticky: nil })
+        # @!method undistinguish!(params = { sticky: nil })
         # @param params [Hash<Symbol>] Optional parameters.
         # @option params :sticky [Boolean] Whether or not you want the post
         #   stickied (top level mod comments only!)
         # @!group Moderators
-        def distinguish!(type, params = { sticky: nil })
-          params.merge!(api_type: 'json', how: type, id: name)
-          @client.request_data('/api/distinguish', :post, params)
-          refresh!
+        %w[distinguish! undistinguish!].each do |type|
+          define_method :"#{type}" do |params = { sticky: nil }|
+            params[:api_type] = 'json'
+            params[:id] = name
+            type == 'distinguish!' ? params[:how] = 'yes' : params[:how] = 'no'
+            @client.request_data('/api/distinguish', :post, params)
+            refresh!
+          end
         end
 
         # Checks who distinguished the thing.
