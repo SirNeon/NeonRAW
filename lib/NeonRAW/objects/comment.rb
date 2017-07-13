@@ -137,6 +137,8 @@ module NeonRAW
       # @return [Array<NeonRAW::Objects::Comment,
       #   NeonRAW::Objects::MoreComments>, nil] Returns either a list of the
       #   Comments/MoreComments or nil if there were no replies.
+      # @note Reddit only lists replies to comments if you find the comments
+      #   through Submission#comments rather than using Clients::Base#info.
       def replies
         return nil if @replies.nil?
         comments = []
