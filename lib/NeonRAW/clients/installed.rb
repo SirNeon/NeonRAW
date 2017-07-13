@@ -5,12 +5,12 @@ module NeonRAW
   module Clients
     # The installed app client.
     class Installed < Base
-      def initialize(client_id, redirect_uri, opts = {})
-        @client_id = client_id
-        @redirect_uri = redirect_uri
+      def initialize(creds)
+        @client_id = creds[:client_id]
+        @redirect_uri = creds[:redirect_uri]
         @requests_remaining = 1
         @ratelimit_reset = 0
-        @user_agent = opts[:user_agent] ||
+        @user_agent = creds[:user_agent] ||
                       "Powered by NeonRAW v#{NeonRAW::VERSION}"
       end
 

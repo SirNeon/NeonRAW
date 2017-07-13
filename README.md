@@ -30,15 +30,26 @@ require 'NeonRAW'
 
 ```ruby
 # Make a web app.
-client = NeonRAW.web('client_id', 'secret', 'redirect_uri', user_agent: 'test')
+client = NeonRAW.web(
+  client_id: 'client_id',
+  secret: 'secret',
+  redirect_uri: 'redirect_uri',
+  user_agent: 'test'
+)
+
 url = client.auth_url('state', ['identity', 'read'], 'permanent')
 puts "Go to #{url} and enter the code below: "
 code = gets.chomp
 client.authorize! code
 
 # Make a script app. Script apps automatically authorize themselves for you.
-client = NeonRAW.script('username', 'password', 'client_id',
-                        'secret', user_agent: 'test')
+client = NeonRAW.script(
+  username: 'username',
+  password: 'password',
+  client_id: 'client_id',
+  secret: 'secret',
+  user_agent: 'test'
+)
 
 # Fetch some submissions from /r/programming's hot queue.
 subreddit = client.subreddit 'programming'

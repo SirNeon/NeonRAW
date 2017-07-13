@@ -4,15 +4,15 @@ module NeonRAW
   module Clients
     # The script app client.
     class Script < Base
-      def initialize(username, password, client_id, secret, opts = {})
-        @username = username
-        @password = password
-        @client_id = client_id
-        @secret = secret
-        @redirect_uri = opts[:redirect_uri] || 'http://127.0.0.1:'
+      def initialize(creds)
+        @username = creds[:username]
+        @password = creds[:password]
+        @client_id = creds[:client_id]
+        @secret = creds[:secret]
+        @redirect_uri = creds[:redirect_uri] || 'http://127.0.0.1:'
         @requests_remaining = 1
         @ratelimit_reset = 0
-        @user_agent = opts[:user_agent] ||
+        @user_agent = creds[:user_agent] ||
                       "Powered by NeonRAW v#{NeonRAW::VERSION}"
         authorize!
       end
