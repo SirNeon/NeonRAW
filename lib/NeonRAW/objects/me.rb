@@ -1,7 +1,7 @@
 require_relative 'user'
 require_relative 'trophy'
 require_relative 'multireddit'
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/ClassLength
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 module NeonRAW
@@ -124,7 +124,10 @@ module NeonRAW
       # @return [Array<Hash<String, Integer, Integer>>] Returns a list with your
       #   karma distribution in it.
       def karma_breakdown
-        @client.request_data('/api/v1/me/karma', :get)[:data]
+        data = @client.request_data('/api/v1/me/karma', :get)[:data]
+        # done for consistency
+        data.each { |subreddit| subreddit[:subreddit] = subreddit.delete(:sr) }
+        data
       end
 
       # Fetches your preferences.
@@ -132,17 +135,6 @@ module NeonRAW
       # @return [Hash] Returns your account preferences.
       def prefs
         @client.request_data('/api/v1/me/prefs', :get)
-      end
-
-      # Edits your preferences.
-      # @!method edit_prefs(data)
-      # @param data [JSON] Your preferences data. Read Reddit's API docs for
-      #   how to format the data.
-      # @see https://www.reddit.com/dev/api#PATCH_api_v1_me_prefs
-      # @todo Figure out why this is raising BadRequest exceptions when I try
-      #   to use it.
-      def edit_prefs(data)
-        @client.request_data('/api/v1/me/prefs', :patch, {}, content: data)
       end
 
       # Fetches your trophies.
@@ -161,10 +153,15 @@ module NeonRAW
       # @option params :count [Integer] The number of items fetch already.
       # @option params :limit [1..100] The number of items to fetch.
       # @option params :show [String] Literally the string 'all'.
-      # @return [Array<Hash<Float, String, String>>] Returns the list of your
+      # @return [Array<Hash<Time, String, String>>] Returns the list of your
       #   friends.
       def friends(params = { limit: 25 })
         data = @client.request_data('/prefs/friends', :get, params)
+        data[0][:data][:children].each do |friend| # done for consistency
+          friend[:date] = Time.at(friend[:date])
+          friend[:username] = friend.delete(:name)
+          friend[:name] = friend.delete(:id)
+        end
         data[0][:data][:children].map { |friend| friend }
       end
 
@@ -180,6 +177,11 @@ module NeonRAW
       #   blocked users.
       def blocked(params = { limit: 25 })
         data = @client.request_data('/prefs/blocked', :get, params)
+        data[:data][:children].each do |blocked| # done for consistency
+          blocked[:date] = Time.at(blocked[:date])
+          blocked[:username] = blocked.delete(:name)
+          blocked[:name] = blocked.delete(:id)
+        end
         data[:data][:children].map { |blocked| blocked }
       end
 
