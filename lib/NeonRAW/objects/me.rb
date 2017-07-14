@@ -173,7 +173,7 @@ module NeonRAW
       # @option params :count [Integer] The number of items fetch already.
       # @option params :limit [1..100] The number of items to fetch.
       # @option params :show [String] Literally the string 'all'.
-      # @return [Array<Hash<Float, String, String>>] Returns the list of your
+      # @return [Array<Hash<Time, String, String>>] Returns the list of your
       #   blocked users.
       def blocked(params = { limit: 25 })
         data = @client.request_data('/prefs/blocked', :get, params)
