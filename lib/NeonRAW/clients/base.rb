@@ -34,6 +34,7 @@ module NeonRAW
       # @return [Typhoeus::Response] Returns the response.
       def api_connection(path, meth, params, opts = {}, json = true)
         sleep(@ratelimit_reset) if @requests_remaining <= 0
+        refresh_access! if @access.expired?
         response = Typhoeus::Request.new(
           'https://oauth.reddit.com' + path,
           method: meth,
@@ -87,7 +88,6 @@ module NeonRAW
       #   via the request body.
       # @return [Hash] Returns the parsed JSON containing the response data.
       def request_data(path, meth, params = {}, opts = {})
-        refresh_access! if @access.expired?
         response = api_connection(path, meth, params, opts)
         data = JSON.parse(response.body, symbolize_names: true)
         error = parse_errors(data)
@@ -103,7 +103,6 @@ module NeonRAW
       # @param opts [Hash] Optional parameters for methods that send stuff
       #   via the request body.
       def request_nonjson(path, meth, params = {}, opts = {})
-        refresh_access! if @access.expired?
         api_connection(path, meth, params, opts, false).body
       end
     end
